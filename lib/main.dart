@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
+import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/logic/content_importer.dart';
 import 'package:dnd_campaign_manager/logic/prefs_repository.dart';
 import 'package:dnd_campaign_manager/ui/screens/character_list_screen.dart';
@@ -9,6 +10,8 @@ import 'package:dnd_campaign_manager/ui/theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final repo = await PrefsCampaignRepository.create();
+  final googleDrive = GoogleDriveService();
+  await googleDrive.initialize();
 
   // To support a new content type, register a binding, e.g.:
   //   ..registerGeneric('spells', 'Spells')
@@ -17,7 +20,15 @@ Future<void> main() async {
   final campaign = CampaignController(repository: repo, registry: registry);
   await campaign.load();
 
-  runApp(ChangeNotifierProvider.value(value: campaign, child: const CampaignApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: campaign),
+        ChangeNotifierProvider.value(value: googleDrive),
+      ],
+      child: const CampaignApp(),
+    ),
+  );
 }
 
 class CampaignApp extends StatelessWidget {

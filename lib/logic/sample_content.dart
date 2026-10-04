@@ -71,11 +71,11 @@ const String sampleContentPack = r'''{
       "effects": [ { "target": "hp.max", "value": 2 } ]
     }
   ],
-  "affiliations": [
+  "backgrounds": [
     {
       "id": "fsb",
       "name": "FSB",
-      "description": "Federal Security Service operative.",
+      "description": "Federal Security Service operative background.",
       "skillProficiencies": ["investigation", "deception"],
       "saveProficiencies": ["dex", "con"],
       "features": [

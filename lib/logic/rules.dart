@@ -44,12 +44,73 @@ class Rules {
     for (final w in c.weapons) {
       yield* w.effects;
     }
+    for (final item in c.items) {
+      if (item.active && !item.isAmmo) yield* item.effects;
+    }
   }
 
   /// Sum of every effect (traits, equipped armor, weapons) for [target].
+  static int effectValue(Character c, Effect effect) {
+    final base = switch (effect.basedOn) {
+      'str' => c.abilityScores[Ability.str] ?? 10,
+      'dex' => c.abilityScores[Ability.dex] ?? 10,
+      'con' => c.abilityScores[Ability.con] ?? 10,
+      'int' => c.abilityScores[Ability.intelligence] ?? 10,
+      'wis' => c.abilityScores[Ability.wis] ?? 10,
+      'cha' => c.abilityScores[Ability.cha] ?? 10,
+      _ => null,
+    };
+    return (base == null
+            ? 0
+            : _scaled(base, effect.multiplier, effect.divisor)) +
+        effect.value +
+        effect.components.fold(
+          0,
+          (sum, component) => sum + _componentValue(c, component),
+        );
+  }
+
+  static int _componentValue(Character c, EffectComponent component) {
+    if (!{'str', 'dex', 'con', 'int', 'wis', 'cha'}
+        .contains(component.ability)) {
+      throw ArgumentError.value(
+          component.ability, 'ability', 'Unsupported effect ability.');
+    }
+    final ability = Ability.fromKey(component.ability);
+    final score = c.abilityScores[ability] ?? 10;
+    final value = switch (component.calculation) {
+      'score' => score,
+      'modifier' => modifier(score),
+      _ => throw ArgumentError.value(
+          component.calculation, 'calculation', 'Unsupported effect formula.'),
+    };
+    return _scaled(value, component.multiplier, component.divisor);
+  }
+
+  static int _scaled(int value, int multiplier, int divisor) {
+    if (divisor == 0) {
+      throw ArgumentError.value(
+          divisor, 'divisor', 'Effect divisor cannot be zero.');
+    }
+    return (value * multiplier / divisor).floor();
+  }
+
+  static bool _conditionApplies(Character c, Effect effect) {
+    switch (effect.condition) {
+      case null:
+        return true;
+      case 'noBallisticProtection':
+        return !c.armor.any((armor) => armor.equipped && armor.rating > 0);
+      default:
+        throw ArgumentError.value(
+            effect.condition, 'condition', 'Unsupported effect condition.');
+    }
+  }
+
   static int effectTotal(Character c, String target) => _allEffects(c)
-      .where((e) => e.target == target)
-      .fold(0, (sum, e) => sum + e.value);
+      .where((e) =>
+          e.target == target && e.operation == 'add' && _conditionApplies(c, e))
+      .fold(0, (sum, effect) => sum + effectValue(c, effect));
 
   static int abilityScore(Character c, Ability a) =>
       (c.abilityScores[a] ?? 10) + effectTotal(c, 'ability.${a.key}');
@@ -92,7 +153,18 @@ class Rules {
       w.attackBonus +
       effectTotal(c, 'attack');
 
-  static int armorClass(Character c) => c.armorClass + effectTotal(c, 'ac');
+  static int armorClass(Character c) {
+    var base = c.armorClass;
+    for (final effect in _allEffects(c)) {
+      if (effect.target == 'ac' &&
+          effect.operation == 'setBase' &&
+          _conditionApplies(c, effect)) {
+        base = effectValue(c, effect);
+      }
+    }
+    return base + effectTotal(c, 'ac');
+  }
+
   static int speed(Character c) => c.speed + effectTotal(c, 'speed');
   static int initiative(Character c) =>
       abilityMod(c, Ability.dex) +

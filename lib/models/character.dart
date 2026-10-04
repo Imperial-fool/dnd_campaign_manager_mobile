@@ -83,7 +83,7 @@ List<Skill> defaultSkills() => [
 class Character {
   Character({required this.id});
 
-  static const int schemaVersion = 1;
+  static const int schemaVersion = 2;
 
   final String id;
 
@@ -94,9 +94,9 @@ class Character {
   String affiliation = '';
   String alignment = '';
   String background = '';
+  String backgroundId = '';
   int xp = 0;
   int level = 1; // 1..20; proficiency bonus is derived from this
-  String affiliationId = ''; // catalog id of the applied affiliation, if any
   String classId = '';
   String className = '';
   int classHitDie = 0;
@@ -151,9 +151,10 @@ class Character {
     'affiliation',
     'alignment',
     'background',
+    'backgroundId',
+    'affiliationId',
     'xp',
     'level',
-    'affiliationId',
     'classId',
     'className',
     'classHitDie',
@@ -192,12 +193,9 @@ class Character {
     c.name = asStr(j['name'], c.name);
     c.player = asStr(j['player']);
     c.race = asStr(j['race']);
-    c.affiliation = asStr(j['affiliation']);
     c.alignment = asStr(j['alignment']);
-    c.background = asStr(j['background']);
     c.xp = asInt(j['xp']);
     c.level = asInt(j['level'], 1).clamp(1, 20);
-    c.affiliationId = asStr(j['affiliationId']);
     c.classId = asStr(j['classId']);
     c.className = asStr(j['className']);
     c.classHitDie = asInt(j['classHitDie']);
@@ -237,6 +235,28 @@ class Character {
     c.weapons = asMapList(j['weapons']).map(Weapon.fromJson).toList();
     c.armor = asMapList(j['armor']).map(Armor.fromJson).toList();
     c.traits = asMapList(j['traits']).map((m) => Trait.fromJson(m)).toList();
+    if (asInt(j['schemaVersion']) < schemaVersion) {
+      c.affiliation = asStr(j['background']);
+      c.background = asStr(j['affiliation']);
+      c.backgroundId = asStr(j['affiliationId']);
+      final oldOrigin =
+          c.backgroundId.isEmpty ? '' : 'affiliation:${c.backgroundId}';
+      final newOrigin =
+          c.backgroundId.isEmpty ? '' : 'background:${c.backgroundId}';
+      if (oldOrigin.isNotEmpty) {
+        for (final trait in c.traits.where((t) => t.origin == oldOrigin)) {
+          trait.origin = newOrigin;
+          if (trait.source.startsWith('Affiliation: ')) {
+            trait.source =
+                trait.source.replaceFirst('Affiliation: ', 'Background: ');
+          }
+        }
+      }
+    } else {
+      c.affiliation = asStr(j['affiliation']);
+      c.background = asStr(j['background']);
+      c.backgroundId = asStr(j['backgroundId']);
+    }
     c.equipment = asStr(j['equipment']);
     c.proficiencies = asStr(j['proficiencies']);
     c.notes = asStr(j['notes']);
@@ -255,9 +275,9 @@ class Character {
         'affiliation': affiliation,
         'alignment': alignment,
         'background': background,
+        'backgroundId': backgroundId,
         'xp': xp,
         'level': level,
-        'affiliationId': affiliationId,
         'classId': classId,
         'className': className,
         'classHitDie': classHitDie,
@@ -276,8 +296,8 @@ class Character {
         'deathSuccesses': deathSuccesses,
         'deathFailures': deathFailures,
         'exhaustion': exhaustion,
-        'weaponHp': weaponHp,
-        'armorHp': armorHp,
+        if (weapons.isNotEmpty) 'weaponHp': weaponHp,
+        if (armor.isNotEmpty) 'armorHp': armorHp,
         'abilityScores': {
           for (final a in Ability.values) a.key: abilityScores[a]
         },

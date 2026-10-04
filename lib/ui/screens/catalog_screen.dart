@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
+import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/logic/sample_content.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 
@@ -64,6 +65,79 @@ class CatalogScreen extends StatelessWidget {
     if (context.mounted) showImportResult(context, result);
   }
 
+  Future<void> _importFromDrive(BuildContext context) async {
+    final campaign = context.read<CampaignController>();
+    final drive = context.read<GoogleDriveService>();
+    if (!drive.isSignedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Connect Google Drive in Campaign Settings first.'),
+        ),
+      );
+      return;
+    }
+
+    final List<DriveJsonFile> files;
+    try {
+      files = await drive.listJsonFiles();
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not list Google Drive files: $error')),
+        );
+      }
+      return;
+    }
+    if (!context.mounted) return;
+
+    final selected = await showDialog<DriveJsonFile>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import content pack from Google Drive'),
+        content: SizedBox(
+          width: 480,
+          height: 420,
+          child: files.isEmpty
+              ? const Center(
+                  child: Text('No JSON files found in Google Drive.'))
+              : ListView.separated(
+                  itemCount: files.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final file = files[index];
+                    return ListTile(
+                      leading: const Icon(Icons.data_object),
+                      title: Text(file.name),
+                      onTap: () => Navigator.pop(dialogContext, file),
+                    );
+                  },
+                ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+    if (selected == null || !context.mounted) return;
+
+    try {
+      final text = await drive.readJsonFile(selected.id);
+      final result = await campaign.importContent(text);
+      if (context.mounted) showImportResult(context, result);
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not import ${selected.name}: $error'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final campaign = context.watch<CampaignController>();
@@ -78,6 +152,11 @@ class CatalogScreen extends StatelessWidget {
               tooltip: 'Import JSON text',
               icon: const Icon(Icons.content_paste),
               onPressed: () => _import(context),
+            ),
+            IconButton(
+              tooltip: 'Import JSON from Google Drive',
+              icon: const Icon(Icons.cloud_download_outlined),
+              onPressed: () => _importFromDrive(context),
             ),
             IconButton(
               tooltip: 'View catalog JSON',

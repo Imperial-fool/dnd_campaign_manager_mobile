@@ -183,7 +183,7 @@ class Trait implements CatalogItem {
   String description;
   String source;
 
-  /// Which catalog entry granted this (e.g. "affiliation:fsb"); lets us
+  /// Which catalog entry granted this (e.g. "background:outdoorsman"); lets us
   /// remove it again when that grant is replaced. Empty = added by hand.
   String origin;
   List<Effect> effects;
@@ -247,7 +247,9 @@ class InventoryItem implements CatalogItem {
     this.usesMax = 0,
     this.ammoType = '',
     this.origin = '',
-  });
+    this.active = false,
+    List<Effect>? effects,
+  }) : effects = effects ?? [];
 
   @override
   String id;
@@ -260,6 +262,8 @@ class InventoryItem implements CatalogItem {
   int usesMax; // 0 = no per-unit uses
   String ammoType;
   String origin;
+  bool active;
+  List<Effect> effects;
 
   bool get isAmmo => kind == 'ammo';
 
@@ -284,6 +288,8 @@ class InventoryItem implements CatalogItem {
       usesMax: usesMax,
       ammoType: asStr(j['ammoType']),
       origin: asStr(j['origin']),
+      active: asBool(j['active']),
+      effects: _effects(j['effects']),
     );
   }
 
@@ -298,13 +304,14 @@ class InventoryItem implements CatalogItem {
         'usesMax': usesMax,
         'ammoType': ammoType,
         'origin': origin,
+        'active': active,
+        'effects': effects.map((e) => e.toJson()).toList(),
       };
 }
 
-/// A faction/organisation. Applying it to a character sets their affiliation,
-/// grants its features, and optionally skill/save proficiencies.
-class Affiliation implements CatalogItem {
-  Affiliation({
+/// A character background. Applying it grants its features and proficiencies.
+class BackgroundDefinition implements CatalogItem {
+  BackgroundDefinition({
     this.id = '',
     this.name = '',
     this.description = '',
@@ -333,9 +340,9 @@ class Affiliation implements CatalogItem {
   static List<String> _strings(dynamic v) =>
       v is List ? v.map((e) => e.toString()).toList() : <String>[];
 
-  factory Affiliation.fromJson(Map<String, dynamic> j) {
+  factory BackgroundDefinition.fromJson(Map<String, dynamic> j) {
     final name = asStr(j['name']);
-    return Affiliation(
+    return BackgroundDefinition(
       id: idFor(j, name),
       name: name,
       description: asStr(j['description']),

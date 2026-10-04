@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:dnd_campaign_manager/logic/affiliations.dart';
+import 'package:dnd_campaign_manager/logic/backgrounds.dart';
 import 'package:dnd_campaign_manager/models/catalog.dart';
 import 'package:dnd_campaign_manager/models/class_definition.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
@@ -82,10 +82,10 @@ class ContentRegistry {
       apply: (c, i) => c.traits.add(i as Trait),
     ));
     r.register(ContentBinding(
-      key: 'affiliations',
-      label: 'Affiliations',
-      parse: Affiliation.fromJson,
-      apply: (c, i) => applyAffiliation(c, i as Affiliation),
+      key: 'backgrounds',
+      label: 'Backgrounds',
+      parse: BackgroundDefinition.fromJson,
+      apply: (c, i) => applyBackground(c, i as BackgroundDefinition),
     ));
     r.register(ContentBinding(
       key: 'classes',
@@ -121,7 +121,8 @@ class ImportResult {
 ///     "weapons":  [ {...}, {...} ],
 ///     "armor":    [ {...} ],
 ///     "traits":   [ {...} ],
-///     "features": [ {...} ]
+///     "features": [ {...} ],
+///     "backgrounds": [ {...} ]
 ///   }
 class ContentImporter {
   ContentImporter(this.registry);
@@ -151,7 +152,9 @@ class ContentImporter {
       [ImportResult? result]) {
     final res = result ?? ImportResult();
     for (final entry in json.entries) {
-      final binding = registry[entry.key];
+      // Older packs used "affiliations" for the same bundled definition.
+      final key = entry.key == 'affiliations' ? 'backgrounds' : entry.key;
+      final binding = registry[key];
       if (binding == null) {
         if (!_metaKeys.contains(entry.key)) {
           res.warnings.add('Unknown section "${entry.key}" ignored.');
@@ -159,25 +162,25 @@ class ContentImporter {
         continue;
       }
       if (entry.value is! List) {
-        res.errors.add('"${entry.key}" must be a list.');
+        res.errors.add('"$key" must be a list.');
         continue;
       }
       final list = entry.value as List;
       for (var i = 0; i < list.length; i++) {
         final raw = list[i];
         if (raw is! Map) {
-          res.errors.add('${entry.key}[$i] is not an object.');
+          res.errors.add('$key[$i] is not an object.');
           continue;
         }
         try {
           final item = binding.parse(Map<String, dynamic>.from(raw));
           if (item.name.trim().isEmpty) {
-            res.errors.add('${entry.key}[$i] has no "name".');
+            res.errors.add('$key[$i] has no "name".');
             continue;
           }
-          catalog.upsert(entry.key, item) ? res.updated++ : res.added++;
+          catalog.upsert(key, item) ? res.updated++ : res.added++;
         } catch (e) {
-          res.errors.add('${entry.key}[$i]: $e');
+          res.errors.add('$key[$i]: $e');
         }
       }
     }

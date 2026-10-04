@@ -100,7 +100,10 @@ class CharacterListScreen extends StatelessWidget {
                         title: Text(c.name),
                         subtitle: Text([
                           c.race,
-                          c.affiliation,
+                          if (c.background.isNotEmpty)
+                            'Background: ${c.background}',
+                          if (c.affiliation.isNotEmpty)
+                            'Affiliation: ${c.affiliation}',
                           if (c.player.isNotEmpty) 'Player: ${c.player}'
                         ].where((s) => s.isNotEmpty).join(' · ')),
                         onTap: () => _open(context, c),

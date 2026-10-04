@@ -32,23 +32,28 @@ class IdentityPanel extends StatelessWidget {
             label: 'Race',
             value: c.race,
             onChanged: (v) => ctrl.edit((c) => c.race = v))),
-        box(Row(children: [
-          Expanded(
-              child: TextBinding(
-                  label: 'Affiliation',
-                  value: c.affiliation,
-                  onChanged: (v) => ctrl.edit((c) => c.affiliation = v))),
-          catalogButton(context, 'affiliations',
-              tooltip: 'Apply affiliation from catalog (adds its features)'),
-        ])),
+        box(TextBinding(
+            label: 'Affiliation',
+            value: c.affiliation,
+            onChanged: (v) => ctrl.edit((c) => c.affiliation = v))),
         box(TextBinding(
             label: 'Alignment',
             value: c.alignment,
             onChanged: (v) => ctrl.edit((c) => c.alignment = v))),
-        box(TextBinding(
-            label: 'Background',
-            value: c.background,
-            onChanged: (v) => ctrl.edit((c) => c.background = v))),
+        box(Row(children: [
+          Expanded(
+            child: TextBinding(
+              label: 'Background',
+              value: c.background,
+              onChanged: (v) => ctrl.edit((c) => c.background = v),
+            ),
+          ),
+          catalogButton(
+            context,
+            'backgrounds',
+            tooltip: 'Apply background from catalog (adds its features)',
+          ),
+        ])),
         SizedBox(
             width: 120,
             child: IntBinding(

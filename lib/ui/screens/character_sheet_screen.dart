@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
+import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/ui/screens/catalog_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/ability_panel.dart';
@@ -83,6 +84,40 @@ class _SheetView extends StatelessWidget {
     }
   }
 
+  Future<void> _saveCharacterToDrive(
+    BuildContext context,
+    GoogleDriveService drive,
+    CampaignController campaign,
+    Character character,
+  ) async {
+    if (!drive.isSignedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Connect Google Drive in Campaign Settings first.'),
+        ),
+      );
+      return;
+    }
+    try {
+      await drive.saveCharacterJson(
+        id: character.id,
+        name: character.name,
+        json: campaign.exportCharacter(character),
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Character saved to Google Drive.')),
+        );
+      }
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not save to Google Drive: $error')),
+        );
+      }
+    }
+  }
+
   String _fileNameFor(String name) {
     final safeName = name
         .replaceAll(RegExp(r'[<>:"/\\|?*\x00-\x1F]'), '_')
@@ -102,6 +137,7 @@ class _SheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<CharacterController>();
+    final drive = context.watch<GoogleDriveService>();
     final campaign = context.read<CampaignController>();
 
     final left = _stack(const [AbilityPanel(), SkillsPanel()]);
@@ -124,6 +160,16 @@ class _SheetView extends StatelessWidget {
             tooltip: 'Save character JSON file',
             icon: const Icon(Icons.save_alt),
             onPressed: () => _saveCharacterJson(context, ctrl.character),
+          ),
+          IconButton(
+            tooltip: 'Save character to Google Drive',
+            icon: const Icon(Icons.cloud_upload_outlined),
+            onPressed: () => _saveCharacterToDrive(
+              context,
+              drive,
+              campaign,
+              ctrl.character,
+            ),
           ),
           IconButton(
             tooltip: 'Catalog',

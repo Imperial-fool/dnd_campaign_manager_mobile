@@ -16,7 +16,8 @@ class AbilityPanel extends StatelessWidget {
     return SheetCard(
       title: 'Ability Scores',
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Score · modifier (tap to roll a check) · save (tick = proficient, die = roll)',
+        Text(
+            'Ability modifier (tap to roll) · save (tick = proficient, die = roll)',
             style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 8),
         for (final a in Ability.values)
@@ -24,23 +25,46 @@ class AbilityPanel extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(children: [
               SizedBox(
-                  width: 40,
-                  child: Text(a.label, style: const TextStyle(fontWeight: FontWeight.w800))),
+                  width: 32,
+                  child: Text(a.label,
+                      style: const TextStyle(fontWeight: FontWeight.w800))),
               SizedBox(
                 width: 70,
-                child: IntBinding(
-                  label: 'Score',
-                  value: c.abilityScores[a] ?? 10,
-                  onChanged: (v) => ctrl.edit((ch) => ch.abilityScores[a] = v),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    IntBinding(
+                      label: 'Score',
+                      value: c.abilityScores[a] ?? 10,
+                      onChanged: (v) =>
+                          ctrl.edit((ch) => ch.abilityScores[a] = v),
+                    ),
+                    if (Rules.effectTotal(c, 'ability.${a.key}') != 0)
+                      Tooltip(
+                        message:
+                            'Base score ${c.abilityScores[a] ?? 10} ${signed(Rules.effectTotal(c, 'ability.${a.key}'))} bonus = ${Rules.abilityScore(c, a)}',
+                        child: Text(
+                          '${signed(Rules.effectTotal(c, 'ability.${a.key}'))} bonus\nTotal ${Rules.abilityScore(c, a)}',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 4),
               InkWell(
                 borderRadius: BorderRadius.circular(20),
-                onTap: () => showRoll(
-                    context, ctrl.rollCheck('${a.label} check', Rules.abilityMod(c, a))),
+                onTap: () => showRoll(context,
+                    ctrl.rollCheck('${a.label} check', Rules.abilityMod(c, a))),
                 child: Container(
-                  width: 46,
+                  width: 40,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -55,17 +79,18 @@ class AbilityPanel extends StatelessWidget {
               Checkbox(
                 visualDensity: VisualDensity.compact,
                 value: c.saveProficiencies.contains(a),
-                onChanged: (on) => ctrl.edit((ch) =>
-                    on == true ? ch.saveProficiencies.add(a) : ch.saveProficiencies.remove(a)),
+                onChanged: (on) => ctrl.edit((ch) => on == true
+                    ? ch.saveProficiencies.add(a)
+                    : ch.saveProficiencies.remove(a)),
               ),
-              SizedBox(width: 30, child: Text(signed(Rules.saveBonus(c, a)))),
+              SizedBox(width: 26, child: Text(signed(Rules.saveBonus(c, a)))),
               IconButton(
                 tooltip: 'Roll ${a.label} save',
                 visualDensity: VisualDensity.compact,
                 iconSize: 18,
                 icon: const Icon(Icons.casino_outlined),
-                onPressed: () => showRoll(
-                    context, ctrl.rollCheck('${a.label} save', Rules.saveBonus(c, a))),
+                onPressed: () => showRoll(context,
+                    ctrl.rollCheck('${a.label} save', Rules.saveBonus(c, a))),
               ),
             ]),
           ),

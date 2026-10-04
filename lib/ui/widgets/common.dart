@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/effect.dart';
 import 'package:dnd_campaign_manager/ui/theme.dart';
 
@@ -82,14 +83,25 @@ class _TextBindingState extends State<TextBinding> {
   }
 
   @override
-  Widget build(BuildContext context) => TextField(
-        controller: _c,
-        focusNode: _focus,
-        maxLines: widget.maxLines,
-        minLines: widget.minLines,
-        onTapOutside: (_) => _focus.unfocus(),
-        decoration: InputDecoration(labelText: widget.label),
-        onChanged: widget.onChanged,
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _BindingLabel(widget.label),
+          TextField(
+            controller: _c,
+            focusNode: _focus,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            onTapOutside: (_) => _focus.unfocus(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            onChanged: widget.onChanged,
+          ),
+        ],
       );
 }
 
@@ -130,31 +142,380 @@ class _IntBindingState extends State<IntBinding> {
   }
 
   @override
-  Widget build(BuildContext context) => TextField(
-        controller: _c,
-        focusNode: _focus,
-        keyboardType: const TextInputType.numberWithOptions(signed: true),
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^-?\d*'))],
-        onTapOutside: (_) => _focus.unfocus(),
-        decoration: InputDecoration(labelText: widget.label),
-        onChanged: (s) => widget.onChanged(int.tryParse(s) ?? 0),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _BindingLabel(widget.label),
+          TextField(
+            controller: _c,
+            focusNode: _focus,
+            keyboardType: const TextInputType.numberWithOptions(signed: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^-?\d*'))
+            ],
+            onTapOutside: (_) => _focus.unfocus(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            onChanged: (s) => widget.onChanged(int.tryParse(s) ?? 0),
+          ),
+        ],
       );
 }
 
-/// "ac=1, ability.dex=2" <-> List<Effect>
+class _BindingLabel extends StatelessWidget {
+  const _BindingLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: 2, bottom: 4),
+        child: Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+      );
+}
+
+/// Opens a structured editor for numeric effects.
 class EffectsField extends StatelessWidget {
   const EffectsField(
-      {super.key, required this.effects, required this.onChanged});
+      {super.key, required this.effects, required this.onChanged, this.skills});
 
   final List<Effect> effects;
   final ValueChanged<List<Effect>> onChanged;
+  final List<Skill>? skills;
 
   @override
-  Widget build(BuildContext context) => TextBinding(
-        label: 'Effects  (e.g. ac=1, ability.dex=2, skill.stealth=-1)',
-        value: Effect.toText(effects),
-        onChanged: (s) => onChanged(Effect.parseText(s)),
+  Widget build(BuildContext context) => OutlinedButton.icon(
+        icon: const Icon(Icons.tune),
+        label: Text(effects.isEmpty
+            ? 'Edit effects'
+            : 'Edit effects (${effects.length})'),
+        onPressed: () async {
+          final edited = await _editEffects(
+              context, effects, [...defaultSkills(), ...?skills]);
+          if (edited != null) onChanged(edited);
+        },
       );
+
+  Future<List<Effect>?> _editEffects(
+      BuildContext context, List<Effect> currentEffects, List<Skill> skills) {
+    final options = <String, String>{
+      'ac': 'Armor Class',
+      'speed': 'Speed',
+      'initiative': 'Initiative',
+      'proficiency': 'Proficiency bonus',
+      'hp.max': 'Maximum HP',
+      'attack': 'Attack rolls',
+      for (final ability in ['str', 'dex', 'con', 'int', 'wis', 'cha'])
+        'ability.$ability': 'Ability: ${ability.toUpperCase()}',
+      for (final ability in ['str', 'dex', 'con', 'int', 'wis', 'cha'])
+        'save.$ability': 'Saving throw: ${ability.toUpperCase()}',
+      for (final skill in skills) 'skill.${skill.key}': 'Skill: ${skill.name}',
+    };
+    for (final effect in currentEffects) {
+      options.putIfAbsent(
+        effect.target,
+        () => _customTargetLabel(effect.target),
+      );
+    }
+    return showDialog<List<Effect>>(
+      context: context,
+      builder: (dialogContext) {
+        final edited = currentEffects
+            .map(
+              (effect) => Effect(
+                target: effect.target,
+                value: effect.value,
+                basedOn: effect.basedOn,
+                multiplier: effect.multiplier,
+                divisor: effect.divisor,
+                components: effect.components
+                    .map(
+                      (component) => EffectComponent(
+                        ability: component.ability,
+                        calculation: component.calculation,
+                        multiplier: component.multiplier,
+                        divisor: component.divisor,
+                      ),
+                    )
+                    .toList(),
+                condition: effect.condition,
+                operation: effect.operation,
+              ),
+            )
+            .toList();
+        return StatefulBuilder(
+          builder: (context, setDialogState) => AlertDialog(
+            title: const Text('Effects'),
+            content: SizedBox(
+              width: 520,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (edited.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: Text(
+                            'No effects. Add one to modify a character stat.'),
+                      ),
+                    for (var index = 0; index < edited.length; index++)
+                      Padding(
+                        key: ObjectKey(edited[index]),
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: DropdownButtonFormField<String>(
+                                    key: ValueKey(
+                                        'effect-target-$index-${edited[index].target}'),
+                                    initialValue: edited[index].target,
+                                    isExpanded: true,
+                                    decoration: const InputDecoration(
+                                        labelText: 'Stat'),
+                                    items: [
+                                      for (final option in options.entries)
+                                        DropdownMenuItem(
+                                          value: option.key,
+                                          child: Text(
+                                            option.value,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                    ],
+                                    onChanged: (target) {
+                                      if (target == null) {
+                                        return;
+                                      }
+                                      setDialogState(
+                                          () => edited[index].target = target);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: TextFormField(
+                                    key: ValueKey(
+                                        'effect-value-$index-${edited[index].value}'),
+                                    initialValue: '${edited[index].value}',
+                                    decoration: const InputDecoration(
+                                        labelText: 'Bonus'),
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            signed: true),
+                                    onChanged: (text) {
+                                      final value = int.tryParse(text);
+                                      if (value != null) {
+                                        edited[index].value = value;
+                                      }
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                  tooltip: 'Remove effect',
+                                  icon: const Icon(Icons.delete_outline),
+                                  onPressed: () => setDialogState(
+                                      () => edited.removeAt(index)),
+                                ),
+                              ],
+                            ),
+                            for (var componentIndex = 0;
+                                componentIndex <
+                                    edited[index].components.length;
+                                componentIndex++)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 6, left: 12),
+                                child: Row(
+                                  children: [
+                                    const Text('Add'),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: DropdownButtonFormField<String>(
+                                        initialValue: edited[index]
+                                            .components[componentIndex]
+                                            .ability,
+                                        decoration: const InputDecoration(
+                                            labelText: 'Ability'),
+                                        items: [
+                                          for (final ability in [
+                                            'str',
+                                            'dex',
+                                            'con',
+                                            'int',
+                                            'wis',
+                                            'cha',
+                                          ])
+                                            DropdownMenuItem(
+                                              value: ability,
+                                              child:
+                                                  Text(ability.toUpperCase()),
+                                            ),
+                                        ],
+                                        onChanged: (ability) {
+                                          if (ability == null) return;
+                                          setDialogState(() {
+                                            final old = edited[index]
+                                                .components[componentIndex];
+                                            edited[index].components[
+                                                    componentIndex] =
+                                                EffectComponent(
+                                              ability: ability,
+                                              calculation: old.calculation,
+                                              multiplier: old.multiplier,
+                                              divisor: old.divisor,
+                                            );
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: DropdownButtonFormField<String>(
+                                        initialValue: edited[index]
+                                            .components[componentIndex]
+                                            .calculation,
+                                        decoration: const InputDecoration(
+                                            labelText: 'Use'),
+                                        items: const [
+                                          DropdownMenuItem(
+                                              value: 'modifier',
+                                              child: Text('Modifier')),
+                                          DropdownMenuItem(
+                                              value: 'score',
+                                              child: Text('Score')),
+                                        ],
+                                        onChanged: (calculation) {
+                                          if (calculation == null) return;
+                                          setDialogState(() {
+                                            final old = edited[index]
+                                                .components[componentIndex];
+                                            edited[index].components[
+                                                    componentIndex] =
+                                                EffectComponent(
+                                              ability: old.ability,
+                                              calculation: calculation,
+                                              multiplier: old.multiplier,
+                                              divisor: old.divisor,
+                                            );
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    IconButton(
+                                      tooltip: 'Remove ability scaling',
+                                      onPressed: () => setDialogState(() =>
+                                          edited[index]
+                                              .components
+                                              .removeAt(componentIndex)),
+                                      icon: const Icon(Icons.close),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () => setDialogState(
+                                      () => edited[index].components.add(
+                                            EffectComponent(ability: 'dex'),
+                                          )),
+                                  icon: const Icon(Icons.functions),
+                                  label: const Text('Add ability scaling'),
+                                ),
+                                DropdownButton<String>(
+                                  hint: const Text('Condition'),
+                                  value: edited[index].condition,
+                                  items: const [
+                                    DropdownMenuItem(
+                                      value: null,
+                                      child: Text('Always applies'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 'noBallisticProtection',
+                                      child: Text('No ballistic armor'),
+                                    ),
+                                  ],
+                                  onChanged: (condition) => setDialogState(() =>
+                                      edited[index].condition = condition),
+                                ),
+                                if (edited[index].target == 'ac')
+                                  DropdownButton<String>(
+                                    value: edited[index].operation,
+                                    items: const [
+                                      DropdownMenuItem(
+                                          value: 'add',
+                                          child: Text('Add to base')),
+                                      DropdownMenuItem(
+                                          value: 'setBase',
+                                          child: Text('Set AC base')),
+                                    ],
+                                    onChanged: (operation) {
+                                      if (operation == null) return;
+                                      setDialogState(() =>
+                                          edited[index].operation = operation);
+                                    },
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => setDialogState(
+                          () => edited.add(
+                            Effect(
+                              target: options.keys.first,
+                              value: 1,
+                            ),
+                          ),
+                        ),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add effect'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, edited),
+                child: const Text('Apply'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _customTargetLabel(String target) {
+    if (target.startsWith('skill.')) {
+      final name = target.substring('skill.'.length).replaceAll('_', ' ');
+      return 'Skill: $name (custom)';
+    }
+    return '$target (custom)';
+  }
 }
 
 Widget gap([double w = 8, double h = 8]) => SizedBox(width: w, height: h);

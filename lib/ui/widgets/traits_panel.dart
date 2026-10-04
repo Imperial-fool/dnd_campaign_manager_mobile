@@ -35,40 +35,54 @@ class TraitsPanel extends StatelessWidget {
             key: ObjectKey(t),
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: kTan, borderRadius: BorderRadius.circular(8)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Row(children: [
-                Expanded(
-                  child: TextBinding(label: 'Name', value: t.name, onChanged: (v) => ctrl.edit((_) => t.name = v)),
-                ),
-                const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: t.category == 'feature' ? 'feature' : 'trait',
-                  items: const [
-                    DropdownMenuItem(value: 'feature', child: Text('Feature')),
-                    DropdownMenuItem(value: 'trait', child: Text('Trait')),
-                  ],
-                  onChanged: (v) => ctrl.edit((_) => t.category = v ?? 'trait'),
-                ),
-                IconButton(
-                  tooltip: 'Remove',
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () => ctrl.edit((ch) => ch.traits.remove(t)),
-                ),
-              ]),
-              const SizedBox(height: 8),
-              TextBinding(
-                label: 'Description',
-                value: t.description,
-                maxLines: 6,
-                minLines: 2,
-                onChanged: (v) => ctrl.edit((_) => t.description = v),
-              ),
-              const SizedBox(height: 8),
-              TextBinding(label: 'Source', value: t.source, onChanged: (v) => ctrl.edit((_) => t.source = v)),
-              const SizedBox(height: 8),
-              EffectsField(effects: t.effects, onChanged: (e) => ctrl.edit((_) => t.effects = e)),
-            ]),
+            decoration: BoxDecoration(
+                color: kTan, borderRadius: BorderRadius.circular(8)),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(children: [
+                    Expanded(
+                      child: TextBinding(
+                          label: 'Name',
+                          value: t.name,
+                          onChanged: (v) => ctrl.edit((_) => t.name = v)),
+                    ),
+                    const SizedBox(width: 8),
+                    DropdownButton<String>(
+                      value: t.category == 'feature' ? 'feature' : 'trait',
+                      items: const [
+                        DropdownMenuItem(
+                            value: 'feature', child: Text('Feature')),
+                        DropdownMenuItem(value: 'trait', child: Text('Trait')),
+                      ],
+                      onChanged: (v) =>
+                          ctrl.edit((_) => t.category = v ?? 'trait'),
+                    ),
+                    IconButton(
+                      tooltip: 'Remove',
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () => ctrl.edit((ch) => ch.traits.remove(t)),
+                    ),
+                  ]),
+                  const SizedBox(height: 8),
+                  TextBinding(
+                    label: 'Description',
+                    value: t.description,
+                    maxLines: 6,
+                    minLines: 2,
+                    onChanged: (v) => ctrl.edit((_) => t.description = v),
+                  ),
+                  const SizedBox(height: 8),
+                  TextBinding(
+                      label: 'Source',
+                      value: t.source,
+                      onChanged: (v) => ctrl.edit((_) => t.source = v)),
+                  const SizedBox(height: 8),
+                  EffectsField(
+                      effects: t.effects,
+                      skills: ctrl.character.skills,
+                      onChanged: (e) => ctrl.edit((_) => t.effects = e)),
+                ]),
           ),
       ]),
     );
