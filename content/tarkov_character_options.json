@@ -1,0 +1,2747 @@
+{
+  "pack": "Tarkov Character Options",
+  "description": "Generated from the supplied campaign options text. Class features are grouped by level; source wording is preserved in feature descriptions. Weapon damage profiles are not specified and remain blank.",
+  "schemaVersion": 1,
+  "classes": [
+    {
+      "id": "operator",
+      "name": "Operator",
+      "description": "Usually acting as team leaders, these soldiers tend to possess a superior tactical mindset and weapon handling. ",
+      "hitDie": 10,
+      "levels": [
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Class Training & Starting Equipment",
+              "description": "1D10 Hit Dice \nProficient with Light and Medium Armour. \nProficient with Assault Rifles, Carbines, DMRs, Submachine Guns, underbarrel grenade launchers, both Automatic Pistols & Revolvers. \nSkills (Choose 3) \nAthletics\nAcrobatics \nSurvival \nPerception \nWeapon Maintenance \nStarting Equipment \nOps Core FAST MT (Level 4 Medium Armour Helmet) \n1 Plate Carrier (Level 3 plates) or one level 3 armoured vest with a blackrock tactical rig \n1 CAT Tourniquet \n1 Army Bandage pack (2 uses)\n1 Aluminum Splint (5 Uses) \n1 IFAK medical kit (300 Hp, 200 to stop heavy bleeds, 100 to stop light bleeds. \n1 bottle of water and a ration \n1 Leatherman Multitool \nChoose one Primary Weapon and one secondary. \nPrimary Weapons \nM4A1          5.56 -M855\nHK416        5.56 - M855\nHKG36C    5.56 - M855\nStreyr Aug 5.56 - M855\nSCAR-L    5.56 - M855\nHK MP7   4.6 Jacketed Soft Points\nHK MP5  9x19 PST \nSig MPX  9x19\nSecondary Weapons\nUSP 45  .45 ACP- FMJ\nBeretta M9  9x19 PST",
+              "source": "Operator class"
+            }
+          ],
+          "choices": [
+            {
+              "id": "operator_skills",
+              "prompt": "Choose 3 Operator skills",
+              "count": 3,
+              "options": [
+                {
+                  "id": "athletics",
+                  "name": "Athletics",
+                  "grantType": "skill",
+                  "skillAbility": "str"
+                },
+                {
+                  "id": "acrobatics",
+                  "name": "Acrobatics",
+                  "grantType": "skill",
+                  "skillAbility": "dex"
+                },
+                {
+                  "id": "survival",
+                  "name": "Survival",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                },
+                {
+                  "id": "perception",
+                  "name": "Perception",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                },
+                {
+                  "id": "weapon_maintenance",
+                  "name": "Weapon Maintenance",
+                  "grantType": "skill",
+                  "skillAbility": "int"
+                }
+              ]
+            },
+            {
+              "id": "operator_primary",
+              "prompt": "Choose one primary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "m4a1",
+                  "name": "M4A1",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "m4a1"
+                },
+                {
+                  "id": "hk416",
+                  "name": "HK416",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk416"
+                },
+                {
+                  "id": "hkg36c",
+                  "name": "HKG36C",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hkg36c"
+                },
+                {
+                  "id": "steyr_aug",
+                  "name": "Steyr AUG",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "steyr_aug"
+                },
+                {
+                  "id": "scar_l",
+                  "name": "SCAR-L",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "scar_l"
+                },
+                {
+                  "id": "hk_mp7",
+                  "name": "HK MP7",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_mp7"
+                },
+                {
+                  "id": "hk_mp5",
+                  "name": "HK MP5",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_mp5"
+                },
+                {
+                  "id": "sig_mpx",
+                  "name": "Sig MPX",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "sig_mpx"
+                }
+              ]
+            },
+            {
+              "id": "operator_secondary",
+              "prompt": "Choose one secondary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "usp_45",
+                  "name": "USP 45",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "usp_45"
+                },
+                {
+                  "id": "beretta_m9",
+                  "name": "Beretta M9",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "beretta_m9"
+                }
+              ]
+            },
+            {
+              "id": "operator_armor",
+              "prompt": "Choose one armor option",
+              "count": 1,
+              "options": [
+                {
+                  "id": "plate_carrier_level_3",
+                  "name": "Plate Carrier with Level 3 Plates",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "plate_carrier_level_3"
+                },
+                {
+                  "id": "armored_vest_level_3",
+                  "name": "Level 3 Armored Vest",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "armored_vest_level_3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Level 1 Operator progression",
+              "description": "Tip of the spear \nWhen you make an attack roll with a weapon you are proficient with you and up to 3 friendlies can take a free reaction and move up to half YOUR movement speed. \n\n\nTactical Reloads\nIf you choose to reload a primary or secondary weapon that you are proficient with during your turn before it runs out it doesn't cost a bonus action \n\n\nEmergency Reloads/Transitions \nShould an attack roll made during a reaction make you run out of ammunition you automatically reload as part of the same reaction. If you have no more loaded magazines for that weapon you automatically switch to another equipped weapon.\n\n\nWhen Wearing an armor you're proficient with your movement speed increases by 10.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "features": [
+            {
+              "name": "Level 2 Operator progression",
+              "description": "Focus Fire\nWhen engaging a target you can tell other friendlies to focus fire on the target. When you do so any friendlies that can see the target can use their reaction to make an attack roll against the target. Once you have focused fire on a target you cannot do it again until the original target has been killed.  And can only be done a number of times per long rest equal to your proficiency bonus.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "features": [
+            {
+              "name": "Level 3 Operator progression",
+              "description": "No additional class feature text was provided.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "features": [
+            {
+              "name": "Level 4 Operator progression",
+              "description": "No additional class feature text was provided.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "features": [
+            {
+              "name": "Level 5 Operator progression",
+              "description": "Follow Up Shot (extra attack)",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 6,
+          "features": [
+            {
+              "name": "Level 6 Operator progression",
+              "description": "No additional class feature text was provided.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 7,
+          "features": [
+            {
+              "name": "Level 7 Operator progression",
+              "description": "Tactical assault \nIf the attack roll used to trigger tip of the spear was a hit the friendlies that moved can also make an attack roll as part of the same reaction. \n\n\nWhen you command focus fire \nYour friendlies can immediately use a free reaction to make one attack roll against the target. \nAdditionally all attack rolls against the target are at advantage until it dies.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 8,
+          "features": [
+            {
+              "name": "Level 8 Operator progression",
+              "description": "feat/ability score increase",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 9,
+          "features": [
+            {
+              "name": "Level 9 Operator progression",
+              "description": "Overwhelming Assault \nOnce per turn or reaction when you kill a target with a headshot your action or reaction is refreshed allowing you to attack again. Additionally you and upto 3 friendlies can take a free reaction to move your full movement speed.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 10,
+          "features": [
+            {
+              "name": "Level 10 Operator progression",
+              "description": "Subclass Ability",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 11,
+          "features": [
+            {
+              "name": "Level 11 Operator progression",
+              "description": "Weapon Mastery \nYou no longer need to use a bonus action to reload weapons you are proficient with. Additionally when dealing with weapon malfunctions you no longer need to use a bonus action to clear the malfunction. You only need to inspect the weapon and have the tools required (if necessary)",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 12,
+          "features": [
+            {
+              "name": "Level 12 Operator progression",
+              "description": "Subclass Ability\nFeat/Ability Score increase",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 13,
+          "features": [
+            {
+              "name": "Level 13 Operator progression",
+              "description": "Lethal Aggression \nWhenever you take the attack action after moving 10feet you gain advantage on both the attack roll and the d100 roll when/if determining the shot was a headshot.",
+              "source": "Operator class"
+            }
+          ]
+        },
+        {
+          "level": 14,
+          "features": [
+            {
+              "name": "Level 14 Operator progression",
+              "description": "Tier-1/Ability Score Increase\nSubclass Ability",
+              "source": "Operator class"
+            }
+          ]
+        }
+      ],
+      "subclassLevel": 3,
+      "subclasses": [
+        {
+          "id": "grenadier",
+          "name": "Grenadier",
+          "description": "Grenadiers are masters of grenade launchers and other explosive devices.",
+          "features": [
+            {
+              "level": 3,
+              "name": "Grenadier subclass selection features",
+              "description": "Grenadiers are masters of grenade launchers and other explosive devices."
+            },
+            {
+              "level": 3,
+              "name": "Grenadier level 3 features",
+              "description": "Heavy Artillery \nStarting at level three when the subclass is chosen you become Proficient with Shotguns, LMGs, all Grenade Launchers, Rocket Launchers, Mines and trip wire traps. Additionally you can craft improvised Explosives.\n\n\nSuppressive Fire \n(Requires Belt Fed LMG)\nAs an action, you can choose one piece of cover or entry way (such as barriers doorways etc) that enemies are taking cover behind and choose to suppress it until the start of your next turn. When you suppress an area all enemies being suppressed have disadvantage on attack and headshot/OLPS rolls. Additionally if an enemy leaves cover and you can see them or tries to move through your suppressive fire they automatically take your weapon damage x2 for every 5 feet. you can also roll the D100 against them. (Once) \nIf you have 16 strength or higher you can walk while suppressing.\n\n\nPhatman \nGrenades and 40mm shells no longer add to your total weight. Reloading underbarrel Grenade Launchers no longer costs a bonus action."
+            },
+            {
+              "level": 6,
+              "name": "Grenadier level 6 features",
+              "description": "Master of Ordnance\nYou have advantage on perception and slight of hand checks for finding and disarming enemy mines and trip wires \n\n\nYour explosive traps do not trigger from you or your allies. Your trap DC increases by 5 and deals an additional 3d8 damage to enemies. \n\n\nHeavy Hitter \nWhen you make a successful attack with a shotgun regardless of what ammo type you're using an enemy within 10 feet of the target of your choice will take the weapon damage as well. \nAdditionally when making a successful attack with explosives you deal an additional 3d8 to each enemy in your AOE."
+            },
+            {
+              "level": 10,
+              "name": "Grenadier level 10 features",
+              "description": "Speed loader \nReloading Belt Fed LMGs or the Milkor M32A1 40mm  no longer costs you a full action and can be done during a bonus action."
+            },
+            {
+              "level": 12,
+              "name": "Grenadier level 12 features",
+              "description": "EOD \nIf you choose to use your reaction to lay down on top of a grenade you also make yourself resistant to force damage until the start of your next turn. \n\n\nAs a reaction you can also shoot in coming overhead nades that you can see."
+            },
+            {
+              "level": 14,
+              "name": "Grenadier level 14 features",
+              "description": "Peace Pipe \nYou receive a corn cob pipe similar to Big Pipe's. (Player determines what it looks like). \nYou can use this pipe as a bonus action in combat to recover from all non fatal and permanent injuries instantly."
+            }
+          ]
+        },
+        {
+          "id": "breacher",
+          "name": "Breacher",
+          "description": "These Operators possess an unrivaled combination of Aggression and Tactical Superiority",
+          "features": [
+            {
+              "level": 3,
+              "name": "Breacher subclass selection features",
+              "description": "These Operators possess an unrivaled combination of Aggression and Tactical Superiority"
+            },
+            {
+              "level": 3,
+              "name": "Breacher level 3 features",
+              "description": "Tactical Aggression"
+            },
+            {
+              "level": 3,
+              "name": "Breacher level 3 features",
+              "description": "Tools of the Trade\nYou receive the Ruhl Tech Compact Breaching kit which consists of \n\n\nBolt Cutters w/h retractable grips\n\n\nSledge hammer w/h retractable grip \n\n\nRetractable Prybar"
+            },
+            {
+              "level": 6,
+              "name": "Breacher level 6 features",
+              "description": "Hot swap \nWhen an enemy comes within 10 feet of you, you can use your reaction to attack them with your pistol. When determining the damage you roll as if you made 3 attacks with Semiautomatic pistols or revolvers. If you have a full automatic pistol you treat it as a max bullet dice roll."
+            },
+            {
+              "level": 10,
+              "name": "Breacher level 10 features",
+              "description": "Full Auto Mastery \nWhen shooting full auto you ignore the hot condition and do not roll with disadvantage on the d100 when determining headshots. \n\n\nYou also gain the Mag Dump Action \nAs an action you can pick upto 5 enemies within close proximity of eachother and shoot your entire magazine at them. When you do this you force them to make a dexterity saving throw. The dc is equal to 8 + proficiency + DEX  Modifier. On a failed save they each take the full damage. On a successful save they do not suffer any damage. \nThe damage varies depending on what gun and current magazines are being used. But if we use an m4 w/h a stanag 60 for example it would work out to 60d6 damage."
+            },
+            {
+              "level": 12,
+              "name": "Breacher level 12 features",
+              "description": "Knight's Perseverance \nOnce per long rest When reduced to 0 hit points (except for headshots) you ignore all Damage on Turn effects for 1 minute you also do not go down and continue to fight until you have rolled 3 unsuccessful death saving throws. In which case you will go down and have to roll three more. However, if you roll 3 saves you not only stabilize yourself but you also regain half your hp."
+            },
+            {
+              "level": 14,
+              "name": "Breacher level 14 features",
+              "description": "Knight's Trophy Collection \nYou collect the dog tags and patches of fallen PMCs that you have killed and decorate your right arm with them. When you do this you receive different abilities. \n\n\nPatches (Max 5, can be mixed) \nUSEC patch +1 to attack rolls per patch\nBEAR Patch +1 to AC Per Patch \nDog Tags (must be the same) \nWith 20 USEC dog tags you gain the ability\n USEC Aggression \n+2 Initiative, You gain an additional action, Your movement speed increases by 50 and your Dexterity is increased by 4 to a maximum of 24. \n With 20 BEAR Dog Tags you gain the ability \nBear Raw Power \n+2 Constitution, You become Resistant to all Damage, and you cannot suffer from bleeds or dismemberment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cqb",
+      "name": "CQB",
+      "description": "1d10 hit dice ",
+      "hitDie": 10,
+      "levels": [
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Class Training & Starting Equipment",
+              "description": "Proficient with Light Armor \nProficient with \nAssault Rifles & Carbines, Submachine Guns, shotguns, automatic pistols, revolvers, and one handed melee weapons \n(Choose 3) \nAthletics\nAcrobatics \nSurvival \nPerception \nStealth\nStarting Equipment \n1 CAT Tourniquet \n1 Army Bandage pack (2 uses)\n1 Aluminum Splint (5 Uses) \n1 IFAK medical kit (300 Hp, 200 to stop heavy bleeds, 100 to stop light bleeds. \n1 bottle of water and a ration\n2 Flash Bangs \n(Choose a primary, secondary and melee.) \nHK MP7A2 4.6 FMJ SX \nHK MP5 9x19 AP 6.3 \nHK MPX 9x19 AP 6.3 \nHK UMP .45 ACP FMJ\nRemington R870 12 Ga 00 Buckshot\nMossberg 590A1 12 Ga 00 Buckshot\nBenelli M3 Super 90 12 Ga 00 Buckshot\nGlock 17 9x19 AP 6.3 \nGlockenspiel 19x 9x19 AP 6.3 \nBeretta M9 9x19 AP 6.3 \nUSP .45 ACP FMJ \nSOG Voodoo Tactical Tomahawk\nMiller Bros M-2 Tactical Sword \nCaimen Hybrid helmet (no mods) Lvl 3 or \nUSEC Ball cap (any color) lvl 0\n1 6 slot plate carrier w/h lvl 3 plates or 1 bulletproof vest (level 3 ceramic) and a 6 slot tactical rig.",
+              "source": "CQB class"
+            }
+          ],
+          "choices": [
+            {
+              "id": "cqb_skills",
+              "prompt": "Choose 3 CQB skills",
+              "count": 3,
+              "options": [
+                {
+                  "id": "athletics",
+                  "name": "Athletics",
+                  "grantType": "skill",
+                  "skillAbility": "str"
+                },
+                {
+                  "id": "acrobatics",
+                  "name": "Acrobatics",
+                  "grantType": "skill",
+                  "skillAbility": "dex"
+                },
+                {
+                  "id": "survival",
+                  "name": "Survival",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                },
+                {
+                  "id": "perception",
+                  "name": "Perception",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                },
+                {
+                  "id": "stealth",
+                  "name": "Stealth",
+                  "grantType": "skill",
+                  "skillAbility": "dex"
+                }
+              ]
+            },
+            {
+              "id": "cqb_primary",
+              "prompt": "Choose one primary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "hk_mp7a2",
+                  "name": "HK MP7A2",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_mp7a2"
+                },
+                {
+                  "id": "hk_mp5_ap_6_3",
+                  "name": "HK MP5 (AP 6.3)",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_mp5_ap_6_3"
+                },
+                {
+                  "id": "hk_mpx_ap_6_3",
+                  "name": "HK MPX (AP 6.3)",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_mpx_ap_6_3"
+                },
+                {
+                  "id": "hk_ump",
+                  "name": "HK UMP",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "hk_ump"
+                },
+                {
+                  "id": "remington_r870",
+                  "name": "Remington R870",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "remington_r870"
+                },
+                {
+                  "id": "mossberg_590a1",
+                  "name": "Mossberg 590A1",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "mossberg_590a1"
+                },
+                {
+                  "id": "benelli_m3_super_90",
+                  "name": "Benelli M3 Super 90",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "benelli_m3_super_90"
+                }
+              ]
+            },
+            {
+              "id": "cqb_secondary",
+              "prompt": "Choose one secondary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glock_17",
+                  "name": "Glock 17",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "glock_17"
+                },
+                {
+                  "id": "glock_19x",
+                  "name": "Glock 19x",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "glock_19x"
+                },
+                {
+                  "id": "beretta_m9_ap_6_3",
+                  "name": "Beretta M9 (AP 6.3)",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "beretta_m9_ap_6_3"
+                },
+                {
+                  "id": "usp_45_fmj",
+                  "name": "USP 45 (FMJ)",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "usp_45_fmj"
+                }
+              ]
+            },
+            {
+              "id": "cqb_melee",
+              "prompt": "Choose one melee weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "sog_voodoo_tactical_tomahawk",
+                  "name": "SOG Voodoo Tactical Tomahawk",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "sog_voodoo_tactical_tomahawk"
+                },
+                {
+                  "id": "miller_bros_m_2_tactical_sword",
+                  "name": "Miller Bros M-2 Tactical Sword",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "miller_bros_m_2_tactical_sword"
+                }
+              ]
+            },
+            {
+              "id": "cqb_headgear",
+              "prompt": "Choose one headgear option",
+              "count": 1,
+              "options": [
+                {
+                  "id": "cqb_caimen_helmet",
+                  "name": "Caimen Hybrid Helmet",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "cqb_caimen_helmet"
+                },
+                {
+                  "id": "usec_ball_cap",
+                  "name": "USEC Ball Cap",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "usec_ball_cap"
+                }
+              ]
+            },
+            {
+              "id": "cqb_armor",
+              "prompt": "Choose one armor option",
+              "count": 1,
+              "options": [
+                {
+                  "id": "cqb_plate_carrier_level_3",
+                  "name": "Six-Slot Plate Carrier with Level 3 Plates",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "cqb_plate_carrier_level_3"
+                },
+                {
+                  "id": "bulletproof_vest_level_3",
+                  "name": "Level 3 Ceramic Bulletproof Vest",
+                  "grantType": "catalog",
+                  "catalogKey": "armor",
+                  "itemId": "bulletproof_vest_level_3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Level 1 CQB progression",
+              "description": "Prefire - Reaction\nWhen an enemy makes an attack roll against you or a friendly within 10 feet of you that you can see. You can make an attack roll against their attack roll and if you roll higher they not only take your weapon damage but their attack is canceled. \n\n\nShotgun Mastery\nYou automatically reload shotguns after firing. \nAdditionally on a successful attack roll against an enemy target, once per turn upto 2 other enemies within 5 feet of the target take the weapon damage. \n\n\nEnhanced Peek \nWhen leaning from behind cover you gain +2 AC and attack rolls against you roll the d100 with disadvantage when determining if it was a headshot. \n\n\nClose Quarters Tactics \nOn the first attack you make on your turn you gain +1 to attack and damage rolls (maximum 5) for each enemy within 10 feet.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "features": [
+            {
+              "name": "Level 2 CQB progression",
+              "description": "Enhanced Stealth Takedowns\nWhen attempting a stealth takedown you have advantage on the roll. Additionally, you can attempt a stealth takedown on targets around corners even if they're facing the direction you're coming from \n\n\nMelee Combat \nWhen attacking with a melee weapon you can use  1d8+STR to determine the damage. Attacks with one handed melee weapons can be made with an action or bonus action. You can also choose upto 2 effects to impose on the target. Once an effect is used it cannot be used again until you finish a long rest. \n\n\nDisarming Strike \nYou disarm the target of the weapon they're currently using. If you need a weapon you automatically equip it, if not the weapon is kicked away as part of the same action \n\n\nKnock Prone \nYou knock the target prone \n\n\nWeapon Malfunction \nYou hit the weapon in such a way that you manage to cause it to malfunction somehow.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "features": [
+            {
+              "name": "Level 3 CQB progression",
+              "description": "Choose Subclass",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "features": [
+            {
+              "name": "Level 4 CQB progression",
+              "description": "Ability increase/feat",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "features": [
+            {
+              "name": "Level 5 CQB progression",
+              "description": "Follow up shot\nWhen you use your action to attack with a weapon you are proficient with you can make another action so long as it also an attack roll.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 6,
+          "features": [
+            {
+              "name": "Level 6 CQB progression",
+              "description": "Subclass ability",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 7,
+          "features": [
+            {
+              "name": "Level 7 CQB progression",
+              "description": "Close Quarters Tactics \nYour bonuses for being near enemies are no longer capped at at once per turn. \n\n\nThe range of your prefire is extended to 30 feet\nYou can also choose 2 additional Melee effects \n\n\nBlinding Slash \nYou slash an enemies eyes permanently blinding them. Enemies are immune if wearing a face shield or other full face ballistic protection. \n\n\nStripping Strike \nWith a successful d100 roll you can knock a targets helmet off their head.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 8,
+          "features": [
+            {
+              "name": "Level 8 CQB progression",
+              "description": "Feat/Ability score increase",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 9,
+          "features": [
+            {
+              "name": "Level 9 CQB progression",
+              "description": "Peripheral Processing \nWhen holding an Angle and an enemy flanks you, you can use your reaction to make an attack roll against them. \nAdditionally, already in combat and additional enemies appear. You can use your reaction to make one attack roll against a number of enemies equal to your proficiency bonus so long as the targets are not completely out of your sight when they enter.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 10,
+          "features": [
+            {
+              "name": "Level 10 CQB progression",
+              "description": "Subclass Ability \n\n\nClose Quarters Tactics\nYour bonuses for being near enemies are now capped at +10\n\n\nGrappling\nAfter making a successful melee attack against an enemy you can choose to try to grapple them. If successful the target is restrained and you can choose to do one of the following \n\n\nField Strips\nYou can use your bonus action to disassemble one of their weapons. When you choose to this the target is knocked prone and the grapple ends. \n\n\nHuman Shield \nYou can use the enemy as total cover to move through sustained fire or be saved from attack rolls so long as the target is alive.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 11,
+          "features": [
+            {
+              "name": "Level 11 CQB progression",
+              "description": "Close Quarters Tactics \nWhen engaging enemies within 30 feet or less your DCs on the D100 are decreased by 10. Per enemy. (Maximum of 50) \nAdditionally Shotguns can now be fired with only a Bonus action.",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 12,
+          "features": [
+            {
+              "name": "Level 12 CQB progression",
+              "description": "Feat/ABI \nSubclass Ability",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 13,
+          "features": [
+            {
+              "name": "Level 13 CQB progression",
+              "description": "Iron Skull \nYou can now wear medium and heavy armored helmets without penalty. (With the exception of those caused by certain Face shields)",
+              "source": "CQB class"
+            }
+          ]
+        },
+        {
+          "level": 14,
+          "features": [
+            {
+              "name": "Level 14 CQB progression",
+              "description": "Tier-1 \nSubclass Ability",
+              "source": "CQB class"
+            }
+          ]
+        }
+      ],
+      "subclassLevel": 3,
+      "subclasses": [
+        {
+          "id": "enforcer",
+          "name": "Enforcer",
+          "description": "Elite Specialists in hand to hand combat and close quarters engagements. These soldiers excel in highly aggressive tactics in tight spaces. ",
+          "features": [
+            {
+              "level": 3,
+              "name": "Enforcer subclass selection features",
+              "description": "Elite Specialists in hand to hand combat and close quarters engagements. These soldiers excel in highly aggressive tactics in tight spaces. \n\n\nStarting at level 3 when this subclass is chosen you gain the ability to roll the D100 to determine headshots with melee weapons. Additionally the number of times you can use additional melee effects increases to a number equal to your proficiency bonus. \n\n\nPenetrating Strike \nWhen using a melee weapon to determine a headshot if the target is wearing head/face protection that cannot be avoided you can ignore it if your strength modifier is equal to or higher than the armour class. \nHowever, when you do this the ignored armour is automatically ruined beyond repair."
+            },
+            {
+              "level": 6,
+              "name": "Enforcer level 6 features",
+              "description": "Weapon Jam Aura \nOnce per Long Rest if you start your turn only holding a melee weapon you can select up to five targets within 10 feet of you and cause their weapons to malfunction. When used against Scav Bosses, or other Elite Enemies they have to roll an Armaments check against your Strength Score. \n\n\nMartial Artist \nYou gain an additional reaction per round.\nWhen an Enemy within five feet of you makes an attack roll you can use your reaction to attempt a disarming strike."
+            },
+            {
+              "level": 10,
+              "name": "Enforcer level 10 features",
+              "description": "Heavy Hitter\nYou deal extra damage equal to your proficiency bonus when using melee weapons. \n\n\nWeapon Jam Aura\nYour Weapon Jam aura can be used twice per long rest."
+            },
+            {
+              "level": 12,
+              "name": "Enforcer level 12 features",
+              "description": "Kollontay's Weapon Mastery \nWhen using The KS-23M or any variation you gain the following benefits. \n+3 to attack and damage rolls\nThe target automatically fails any constitution saves against additional ammunition effects. \nYou automatically reload at the end of your turn"
+            },
+            {
+              "level": 14,
+              "name": "Enforcer level 14 features",
+              "description": "Kollontay's Jam Aura \nOnce per round you can select up to 5 enemies that you are aware of and cause their weapons to automatically malfunction. \n\n\nMartial Artist \nYou gain an additional reaction per round (3 total)"
+            }
+          ]
+        },
+        {
+          "id": "medic",
+          "name": "Medic",
+          "description": "Medics are Soldiers who specialize in the medical field. Capable of utilizing medical supplies much more efficiently.",
+          "features": [
+            {
+              "level": 3,
+              "name": "Medic subclass selection features",
+              "description": "Medics are Soldiers who specialize in the medical field. Capable of utilizing medical supplies much more efficiently.\n\n\nStarting at level three when the subclass is chosen. You gain the ability to heal teammates while in combat. You only use 150 hp to stop heavy bleeds with IFAKs and AFAKs or 50 HP to stop Light bleeds. \n\n\nBig Pharma \nYou can now craft medical supplies and combat stimulants. Medical supplies such as first aid packs and tourniquets only require that you have  the needed supplies. At level 3 you can craft Propital regenerative and SJ1 Combat Stimulants.  You learn to craft more stimulants at higher levels or by studying them in places with specialized equipment and samples."
+            },
+            {
+              "level": 6,
+              "name": "Medic level 6 features",
+              "description": "CPR Revival \nIf a friendly has died within one minute and you don't have a defibrillator you can attempt to use CPR to revive them. (Does not work if the target has been headshot) \n\n\nCall an Ambulance... \nWhen you use your action to heal a friendly you can make one attack roll with your primary weapon during your bonus action. \n\n\nBig Pharma \nYou learn how to craft SJ6, Zagustin and M.U.L.E Stimulants"
+            },
+            {
+              "level": 10,
+              "name": "Medic level 10 features",
+              "description": "When you use a med pack to stop a bleed you can roll the d20. If the roll is 10 or higher you do not consume any of the medpack's hp to stop the bleed. \n\n\nSanitar's CMS Kit\nYou receive Sanitar's CMS kit. This CMs kit contains special tools that when used by you and only you has infinite uses. Additionally this kit can also be used to reattach limbs. To do this you must succeed a DC 10 medicine check. The DC increases by 5 each time you reattach the same limb onto the same person. \n\n\nBig Pharma \nYou learn how to craft the N-1 & Melidonin stimulants and prosthetic legs."
+            },
+            {
+              "level": 12,
+              "name": "Medic level 12 features",
+              "description": "Toxic Ammunition \nYou learn how to craft Cultist Toxin and Toxic Ammunition. Targets shot by you automatically suffer the effects of Cultist Toxin immediately."
+            },
+            {
+              "level": 14,
+              "name": "Medic level 14 features",
+              "description": "Sanitar's Vitality \nYour maximum HP increases by 150, you do not suffer the negative effects of stimulants and  painkillers. Their positive effects last twice as long. \n\n\nSanitar's Surgery \nWhen using Medkits to stop heavy or light bleeds you do not consume any of the medpacks HP. Using Medpacks and surgery kits on yourself can now be done during a bonus action. Stimulants no longer cost a bonus action. \n\n\nSanitar's Cruelty \nYou can revive recently fallen enemies and use a drug concoction to immediately turn them against their friendlies for 1 minute and then their heart explodes. \n\n\nBig Pharma \nYou know how to craft all stimulants."
+            }
+          ]
+        },
+        {
+          "id": "virtuoso",
+          "name": "Virtuoso",
+          "description": "Utilizing a combination of Long guns and compact assault rifles or sub machine guns these soldiers are prepared for all sorts of",
+          "features": [
+            {
+              "level": 3,
+              "name": "Virtuoso subclass selection features",
+              "description": "Gain proficiency with DMRs and choose one benefit below."
+            },
+            {
+              "level": 6,
+              "name": "Virtuoso level 6 features",
+              "description": "Choose one of the following benefits."
+            },
+            {
+              "level": 10,
+              "name": "Virtuoso level 10 features",
+              "description": "Choose one of the following benefits."
+            },
+            {
+              "level": 12,
+              "name": "Virtuoso level 12 features",
+              "description": "Choose one of the following benefits."
+            },
+            {
+              "level": 14,
+              "name": "Virtuoso level 14 features",
+              "description": "Choose one of the following benefits."
+            },
+            {
+              "level": 14,
+              "name": "Virtuoso Synergy",
+              "description": "If all level 3, 6, 10, 12, and 14 choices are from Glukhar, gain his FSB tattoo and treat one bullet as three when determining damage with weapons of 7.62x51 caliber or higher. If all choices are from Shturman, gain his sniper glove and rapid-fire DMRs using a D6 bullet die (D8 for SVD or TKPD). If all choices are from Reshala, gain his facial tattoos and, when you rush to a DM-approved safe place at combat start and hide behind your team, friendlies gain advantage on d20 rolls and damage dice. If you chose one ability from each boss, you may gain an ability of your choice from another class or subclass (True Virtuoso)."
+            }
+          ],
+          "choices": [
+            {
+              "level": 3,
+              "id": "virtuoso_level_3",
+              "prompt": "Choose one level 3 Virtuoso benefit",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glukhar_s_aggression",
+                  "name": "Glukhar's Aggression",
+                  "description": "When firing without being behind partial cover or canting, you gain advantage on attack rolls with firearms you're proficient with."
+                },
+                {
+                  "id": "shturman_s_cunning",
+                  "name": "Shturman's Cunning",
+                  "description": "When you hear gunshots from gunfights you're not involved in, you automatically know where to find the best angle to third party."
+                },
+                {
+                  "id": "reshala_s_cowardice",
+                  "name": "Reshala's Cowardice",
+                  "description": "If you use the Dash or Disengage action and move away from enemies, all attack rolls against you have disadvantage."
+                }
+              ]
+            },
+            {
+              "level": 6,
+              "id": "virtuoso_level_6",
+              "prompt": "Choose one level 6 Virtuoso benefit",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glukhar_s_intimidation",
+                  "name": "Glukhar's Intimidation",
+                  "description": "Gain Expertise in Intimidation. As a bonus action, force enemies within 30 feet to make a Charisma save (DC 8 + proficiency + half your level); on a failure they are frightened for one day. Scav Bosses and Elite PMCs are unaffected."
+                },
+                {
+                  "id": "shturman_s_lure",
+                  "name": "Shturman's Lure",
+                  "description": "Unsuppressed weapons attract twice as many enemies; those enemies have the highest tier of tactics, equipment, and valuables."
+                },
+                {
+                  "id": "reshala_s_charisma",
+                  "name": "Reshala's Charisma",
+                  "description": "You have advantage on Charisma checks and saving throws."
+                }
+              ]
+            },
+            {
+              "level": 10,
+              "id": "virtuoso_level_10",
+              "prompt": "Choose one level 10 Virtuoso benefit",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glukhar_s_power_slide_one_tap",
+                  "name": "Glukhar's Power Slide One Tap",
+                  "description": "Within 10 feet of an enemy, use your action to power slide and attack. On a hit, the target suffers a fatal injury after it can make one available reaction attack against you."
+                },
+                {
+                  "id": "shturman_s_hot_swap",
+                  "name": "Shturman's Hot Swap",
+                  "description": "When up to three enemies move within 10 feet, switch to your second primary weapon and make an attack roll against each."
+                },
+                {
+                  "id": "reshala_s_bait",
+                  "name": "Reshala's Bait",
+                  "description": "When fleeing a fight and engaged from behind, use a free reaction to retaliate with your pistol."
+                }
+              ]
+            },
+            {
+              "level": 12,
+              "id": "virtuoso_level_12",
+              "prompt": "Choose one level 12 Virtuoso benefit",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glukhar_s_armor",
+                  "name": "Glukhar's Armor",
+                  "description": "Receive a personal level 4 vest. It does not need repairs; plate carriers may be worn over it."
+                },
+                {
+                  "id": "shturman_s_parka",
+                  "name": "Shturman's Parka",
+                  "description": "Receive a Kevlar-lined parka offering level 3 protection. While wearing it, AC increases by 2 and you ignore cold. It may be worn over plate carriers."
+                },
+                {
+                  "id": "reshala_s_leather_jacket",
+                  "name": "Reshala's Leather Jacket",
+                  "description": "Receive a jacket with no ballistic protection. While wearing it, carry three additional pistols or up to six magazines. It may be worn under bulletproof vests and plate carriers."
+                }
+              ]
+            },
+            {
+              "level": 14,
+              "id": "virtuoso_level_14",
+              "prompt": "Choose one level 14 Virtuoso benefit",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glukhar_s_toughness",
+                  "name": "Glukhar's Toughness",
+                  "description": "Ignore all additional ammunition effects, including dismemberment from high-caliber weapons."
+                },
+                {
+                  "id": "shturman_s_precision",
+                  "name": "Shturman's Precision",
+                  "description": "When shooting DMRs, fire an additional round and have advantage on D100 headshot determination."
+                },
+                {
+                  "id": "reshala_s_delicacy",
+                  "name": "Reshala's Delicacy",
+                  "description": "When attacking with a pistol, choose advantage on both the d20 and d100 rolls; if you fail, all your weapons malfunction."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "juggernaut",
+      "name": "Juggernaut",
+      "description": "Support Gunners usually wear heavy armor and carry belt fed LMGs to provide suppressive fire and area denial for their squad. ",
+      "hitDie": 12,
+      "levels": [
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Class Training & Starting Equipment",
+              "description": "D12 Hit dice \nProficient with all armor \nProficient with \nAssault Rifles, Carbines, Light & Heavy Machine Guns, Mounted Grenade launchers,, Submachine guns, Shotguns, and all pistols. \nProficient with (Choose 3) \nAthletics\nArmaments \nPerception \nArmor Repair \nStarting equipment \n1 CAT Tourniquet \n1 Army Bandage pack (2 uses)\n1 Aluminum Splint (5 Uses) \n1 IFAK medical kit (300 Hp, 200 to stop heavy bleeds, 100 to stop light bleeds. \n1 bottle of water and a ration\n1 Leatherman multi tool\n1 entrenching tool\nFAST MT W/H Multi Hit Face shield (Level 4 head, LVL 3 face) \nAVS plate carrier w/h level 4 plates \nM249 LMG 5.56 M855 100 BOX X2 & Stanag 60s X2\nAA12 12 Gauge 00 Buckshot W/H 20 round drums X2 & 10 round magazines x2\nM1911 .45 ACP AP \nUSP .45 ACP AP \nBeretta M9 9x19 AP 6.3\nGlock 17 9x19 AP 6.3",
+              "source": "Juggernaut class"
+            }
+          ],
+          "choices": [
+            {
+              "id": "juggernaut_skills",
+              "prompt": "Choose 3 Juggernaut skills",
+              "count": 3,
+              "options": [
+                {
+                  "id": "athletics",
+                  "name": "Athletics",
+                  "grantType": "skill",
+                  "skillAbility": "str"
+                },
+                {
+                  "id": "armaments",
+                  "name": "Armaments",
+                  "grantType": "skill",
+                  "skillAbility": "int"
+                },
+                {
+                  "id": "perception",
+                  "name": "Perception",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                },
+                {
+                  "id": "armor_repair",
+                  "name": "Armor Repair",
+                  "grantType": "skill",
+                  "skillAbility": "int"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Level 1 Juggernaut progression",
+              "description": "Strong Arm \nYour use of heavy weapons requires you to be strong to operate effectively. When making attacks with firearms you add your strength instead of dexterity. \n\n\nSuppressive Fire \nRequires 50 rifle rounds or 15 Shotgun shells to be loaded in your current magazine or drum. \nAs an action, you can choose one piece of cover or entry way (such as barriers doorways etc) that enemies are taking cover behind and choose to suppress it until the start of your next turn. When you suppress an area all enemies being suppressed have disadvantage on attack and headshot/OLPS rolls. Additionally if an enemy leaves cover and you can see them or tries to move through your suppressive fire they automatically take your weapon damage x2 for every 5 feet. you can also roll the D100 against them. (Once) \nIf you have 16 strength or higher you can walk while suppressing. ",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "features": [
+            {
+              "name": "Level 2 Juggernaut progression",
+              "description": "SLAAP Plate \nWhen you get headshot while wearing a helmet you can choose to give the bullet disadvantage on the Ricochet save. You can do this a number of times equal to your proficiency bonus.\n\n\n\n\nTW25B Synthetic Grease \nThis High Performance Lubricant was specifically designed for modern heavy weapon systems. You can apply this grease to your weapon's bolt carrier as a bonus action. When you do this you make the possibility of your weapon malfunctioning impossible for one minute.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "features": [
+            {
+              "name": "Level 3 Juggernaut progression",
+              "description": "Choose Subclass",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "features": [
+            {
+              "name": "Level 4 Juggernaut progression",
+              "description": "Feat/ABI",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "features": [
+            {
+              "name": "Level 5 Juggernaut progression",
+              "description": "Follow Up Shot/ Extra Attack \n\n\nQuick Shot\nYou can make one attack roll with your action and then use your extra attack to use Suppressive Fire.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 6,
+          "features": [
+            {
+              "name": "Level 6 Juggernaut progression",
+              "description": "Subclass Ability",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 7,
+          "features": [
+            {
+              "name": "Level 7 Juggernaut progression",
+              "description": "Anti-Spall Coat \nYour body armor cannot be damaged by bullets that failed to penetrate it.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 8,
+          "features": [
+            {
+              "name": "Level 8 Juggernaut progression",
+              "description": "Feat/ABI",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 9,
+          "features": [
+            {
+              "name": "Level 9 Juggernaut progression",
+              "description": "Belt Feed Mastery \nReloading Belt Fed LMGs now only costs a bonus action.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 10,
+          "features": [
+            {
+              "name": "Level 10 Juggernaut progression",
+              "description": "Subclass Ability",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 11,
+          "features": [
+            {
+              "name": "Level 11 Juggernaut progression",
+              "description": "Felina \nIn combat when you become aware of enemies that are behind concealment or inside modern construction homes or other structures with no ballistic resistance. As an action you can choose to shoot your entire mag or belt into the structure or piece of concealment. When you do this you force all enemies to roll a dexterity saving throw at disadvantage. On a failed save they take 10D10 Damage and suffer a heavy bleed. On a successful save they take half the damage. However, regardless of if they save or not all enemies are considered suppressed until the start of your next turn. Can also work on large groups of enemies not behind concealment.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 12,
+          "features": [
+            {
+              "name": "Level 12 Juggernaut progression",
+              "description": "Feat/ABI",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 13,
+          "features": [
+            {
+              "name": "Level 13 Juggernaut progression",
+              "description": "Thick Skulled \nWhen your helmet stops a bullet you no longer suffer the concussed condition.",
+              "source": "Juggernaut class"
+            }
+          ]
+        },
+        {
+          "level": 14,
+          "features": [
+            {
+              "name": "Level 14 Juggernaut progression",
+              "description": "Tier-1 \nSubclass Ability \n\n\n\n\nKaban\nPick up mounted weapons \nSuppression causes the Pinned condition \nWhen enemies are pinned their movement is reduced to 0 and they cannot make actions, bonus actions or reactions until the condition ends.",
+              "source": "Juggernaut class"
+            },
+            {
+              "name": "Kaban option",
+              "description": "Pick up mounted weapons \nSuppression causes the Pinned condition \nWhen enemies are pinned their movement is reduced to 0 and they cannot make actions, bonus actions or reactions until the condition ends. ",
+              "source": "Juggernaut class; source places this after level 14"
+            }
+          ]
+        }
+      ],
+      "subclassLevel": 3,
+      "subclasses": [
+        {
+          "id": "one_man_army",
+          "name": "One Man Army",
+          "description": "These Juggernauts while equipped with heavy ballistic protection are known to aggressively engage enemies often facing overwhelming numbers alone. ",
+          "features": [
+            {
+              "level": 3,
+              "name": "One Man Army subclass selection features",
+              "description": "These Juggernauts while equipped with heavy ballistic protection are known to aggressively engage enemies often facing overwhelming numbers alone. \n\n\nStarting at level 3\nWhen this subclass is chosen you become proficient with SMGs and your movement speed when wearing heavy armor is doubled. \n\n\nI do not know why I'm here...\nWhen wearing heavy steel helmets that have face shields (Such as the Maska or Altyn) you gain +3 to attack rolls with firearms and their face shields do not give you disadvantage on perception checks or the d100 when determining headshots \n\n\nAdrenaline Points\nYou gain Adrenaline Points equal to twice your level.  (6) The maximum number of Adrenaline Points you can have increases at each level by one. You regain all spent Adrenaline Points after taking a long rest. These adrenaline points allow you to shrug off wounds that would otherwise be life changing or Fatal. When you take damage you can use a free reaction to spend one or more adrenaline points to \n1 Ignore Additional Ammunition Effects\n1 Reduce the damage done to you and your armor by half \n2 Retaliate against the attacker"
+            },
+            {
+              "level": 6,
+              "name": "One Man Army level 6 features",
+              "description": "Increased Penetration \nWhen using any type of ammunition that is not a hollow or soft point your bullets can pierce through light concrete barriers and steel walls or objects that are not being worn by another person. \n\n\nZig Zag \nWhen an enemy makes an attack roll against you, you can choose to spend 3 adrenaline points and Zig Zag through their attack. When you do this you take no damage and can choose to spend an additional adrenaline point to retaliate."
+            },
+            {
+              "level": 10,
+              "name": "One Man Army level 10 features",
+              "description": "Killa's Helmet \nWhen shot in the head while wearing a helmet if the bullet succeeds the ricochet saving throw you can choose to spend one Adrenaline point to cause the round to ricochet BEFORE the dm declares if the round has high enough penetration to bypass the helmet. \n\n\nKilla's Power Slide \nAs an action you can choose to spend 4 Adrenaline points to immediately move to an enemy that is 10 feet or less away from you or an ally that is no further away from you than 50 feet and immediately open fire on them. When you do this you force them to make a dexterity saving throw. DC equal to 8+prof+Dex or Str which ever is higher \nOn a failed save the enemy takes your normal weapon damage plus a d10 for each adrenaline point spent. While determining the damage you can choose to spend additional Adrenaline points to increase the damage. On a successful save the target only takes half damage. Can be used as a reaction when an enemy makes an attack roll against you or a friendly, however even if the target dies their attack still hits you."
+            },
+            {
+              "level": 12,
+              "name": "One Man Army level 12 features",
+              "description": "Killa's Constitution \nYou no longer need to spend Adrenaline Points to shrug off serious injuries. You simply cannot be affected by any additional ammunition effects."
+            },
+            {
+              "level": 14,
+              "name": "One Man Army level 14 features",
+              "description": "The Stylish One \nYou gain a Tracksuit that resembles Killa's. Wearing it causes any scav to ignore you unless attacked. The tracksuit can be worn under any armor and gives additional benefits. When wearing your tracksuit your movement speed increases by 30, you gain +2 initiative and AC. \nThe cost of all offensive Adrenaline point abilities are reduced by 2 to a minimum of 1. Additionally you do not need to spend adrenaline points to reduce damage."
+            }
+          ]
+        },
+        {
+          "id": "berserker",
+          "name": "Berserker",
+          "description": "Mad men and Stimulant Fiends or both in Tagilla's case. These Juggernauts have gone Berserk. In combat they often use overwhelming firepower to close in on their enemies only to abandon their guns for brutal melee weapons.",
+          "features": [
+            {
+              "level": 3,
+              "name": "Berserker subclass selection features",
+              "description": "Mad men and Stimulant Fiends or both in Tagilla's case. These Juggernauts have gone Berserk. In combat they often use overwhelming firepower to close in on their enemies only to abandon their guns for brutal melee weapons."
+            },
+            {
+              "level": 3,
+              "name": "Berserker level 3 features",
+              "description": "Defensive Savagery \nWhen you find a new vest or plate carrier you immediately tear it apart giving it a savage appearance and making it lighter. If you and only you equip this armour you gain +2AC. \nAdditionally When wearing your savage armour and facemask your movement speed doubles. \n\n\nBerserk 3/Day (Berserker- Juggernaut Subclass) \nWhen you become aware of nearby enemies you gain the ability to go Berserk. Berserk can last for upto 10 minutes. When you do so you gain the following benefits \n\n\nWhile Berserk you cannot drop below 1HP. (unless headshot or other fatal injuries.)\n\n\nYou have advantage on attack rolls with melee weapons and deal extra damage equal to your proficiency bonus. \n\n\nHowever when Berserk you can hardly control yourself often yelling and screaming like a mad man. Each turn you spend Berserk \nGives you a -5 to attack rolls with firearms. This can stack all the way up to -15 and lasts until the end of your Berserk state. Every 1 minute you must roll a wisdom saving throw on a failed save you lose the ability to distinguish between friend and foe for 2 turns."
+            },
+            {
+              "level": 6,
+              "name": "Berserker level 6 features",
+              "description": "Intimidating Aura \nWhen you enter the Berserk state Scavs within 10 feet of you immediately become frightened of you. When they become frightened of you they drop their current weapon and spend their turn using all their movement to get away from you. Does not work on Scav Bosses. \n\n\nManiac's Hand \nWhen an enemy within 5 feet of you hits you with an attack roll you can use a reaction to drop a grenade at your foot."
+            },
+            {
+              "level": 10,
+              "name": "Berserker level 10 features",
+              "description": "Savage Assault \nWhen you make an attack roll with a melee weapon while Berserk your damage bonus is doubled and you can make one additional attack with your bonus action. Your movement speed increases by 20. \n\n\nYou can now Craft level 6 face masks"
+            },
+            {
+              "level": 12,
+              "name": "Berserker level 12 features",
+              "description": "Savage Aura \nYour Aura can now effect scavs upto 20 feet away and can force enemy PMC to make wisdom saving throws. (DC 8 + proficiency + STR Modifier)"
+            },
+            {
+              "level": 14,
+              "name": "Berserker level 14 features",
+              "description": "Tagilla's Madness\nBerserk only ends when you die or choose to end it. \nWhen you go Berserk you gain an additional +4 armor class, are now immune to dismemberment, DOT effects and are capable of surviving one headshot per Berserk state. If you are headshot by an enemy and survive you can use a reaction to retaliate against them. So long as they are no more than 20 feet away. You rush to them without provoking opportunity and attack with advantage. If the attack hits you double your damage rolled and the target suffers dismemberment. (You choose the limb they lose) additionally all attack rolls against you have disadvantage for the next minute. \n\n\nThe Factory Butcher \nYou only need to roll an 18 or higher to roll a critical hit. When you roll a critical hit with a melee weapon while Berserk your weapon causes them to suffer dismemberment."
+            }
+          ]
+        },
+        {
+          "id": "kingpin",
+          "name": "Kingpin",
+          "description": "These Juggernauts value heavy weapons and more ammunition over heavy ballistic protection. Suppressing large numbers of enemies with only sheer overwhelming firepower. ",
+          "features": [
+            {
+              "level": 3,
+              "name": "Kingpin subclass selection features",
+              "description": "These Juggernauts value heavy weapons and more ammunition over heavy ballistic protection. Suppressing large numbers of enemies with only sheer overwhelming firepower. \n\n\nStarting at level 3 when this subclass is chosen you gain a large trench coat that allows you to carry more ammunition. Only un armoured tactical rigs can be worn under your trench coat. When wearing your trench coat instead of armour your AC is equal to 10+STR+CON. \n\n\nEnhanced Suppression \nWhen you use Suppressive fire all effected enemies must roll a constitution saving throw. On a failed save the effected enemy receives the Pinned condition and is considered stunned until the start of your next turn. \nThe DC is equal to 8+STR+Prof"
+            },
+            {
+              "level": 6,
+              "name": "Kingpin level 6 features",
+              "description": "Turret Stealer \nStarting at level 6 you gain the ability to rip large mounted weapons (such as AGS & 23mm MGs) off of their tri pods and carry them until they run out of ammunition."
+            },
+            {
+              "level": 10,
+              "name": "Kingpin level 10 features",
+              "description": "Kaban's Terror\nWhile suppressing you can use your bonus action to Laugh like Kaban. When you choose to do this you force all affected enemies to make an additional charisma saving throw at disadvantage. \nDC= 8+STR+PROF\nOn a failed save\nThe effected enemy is pinned until the end of your next turn. \nEnemies that were already pinned are now pinned for an additional round. \nOn a successful save The effected the effected enemy is frightened until the start of your next turn. \nYou can use this feature a number of times equal to your proficiency bonus."
+            },
+            {
+              "level": 12,
+              "name": "Kingpin level 12 features",
+              "description": "Kaban's Felina\nWhen you use the Felina action against enemies that were not already aware of you, they automatically fail the saving throw and suffer maximum damage. \n\n\nKaban's Arm\nYour Strength is Added to your attack and damage rolls twice"
+            },
+            {
+              "level": 14,
+              "name": "Kingpin level 14 features",
+              "description": "Kaban's Defence \nYou Gain Kaban's Trench coat. While wearing Kaban's trench coat you gain +2 to AC additional plate carriers can be worn under it without losing the benefits from Unarmored Defence. \n\n\nKaban's Constitution \nYou can no longer suffer additional ammunition effects."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "description": "1d8 Hit Dice ",
+      "hitDie": 8,
+      "levels": [
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Class Training & Starting Equipment",
+              "description": "Proficient with Bolt Action Rifles, DMRs, Assault Rifles, Carbines, Submachine guns and all pistols. \n(Choose 3)\nAcrobatics\nInvestigation \nSlight of Hand \nPerception  \nInvestigation \nStarting Equipment  \n1 CAT Tourniquet \n1 Army Bandage pack (2 uses)\n1 Aluminum Splint (5 Uses) \n1 IFAK medical kit (300 Hp, 200 to stop heavy bleeds, 100 to stop light bleeds. \n1 bottle of water and a ration\n1 Survival Lighter \nLockpick Set\nChoose one Primary and one secondary\nRemington M700 7.62x51 M80 \nKnight's Armament SR-25 7.62x51 M80\nLone Star Armories TX 5.56 M855A1 \nGlock 17 9x19 AP 6.3 \nGlock 19x 9x19 AP 6.3 \nBeretta M9 9x19 AP 6.3 \nUSP .45 ACP FMJ",
+              "source": "Scout class"
+            }
+          ],
+          "choices": [
+            {
+              "id": "scout_skills",
+              "prompt": "Choose 3 Scout skills",
+              "count": 3,
+              "options": [
+                {
+                  "id": "acrobatics",
+                  "name": "Acrobatics",
+                  "grantType": "skill",
+                  "skillAbility": "dex"
+                },
+                {
+                  "id": "investigation",
+                  "name": "Investigation",
+                  "grantType": "skill",
+                  "skillAbility": "int"
+                },
+                {
+                  "id": "sleight_of_hand",
+                  "name": "Sleight of Hand",
+                  "grantType": "skill",
+                  "skillAbility": "dex"
+                },
+                {
+                  "id": "perception",
+                  "name": "Perception",
+                  "grantType": "skill",
+                  "skillAbility": "wis"
+                }
+              ]
+            },
+            {
+              "id": "scout_primary",
+              "prompt": "Choose one primary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "remington_m700",
+                  "name": "Remington M700",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "remington_m700"
+                },
+                {
+                  "id": "knight_s_armament_sr_25",
+                  "name": "Knight?s Armament SR-25",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "knight_s_armament_sr_25"
+                },
+                {
+                  "id": "lone_star_armories_tx",
+                  "name": "Lone Star Armories TX",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "lone_star_armories_tx"
+                }
+              ]
+            },
+            {
+              "id": "scout_secondary",
+              "prompt": "Choose one secondary weapon",
+              "count": 1,
+              "options": [
+                {
+                  "id": "glock_17",
+                  "name": "Glock 17",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "glock_17"
+                },
+                {
+                  "id": "glock_19x",
+                  "name": "Glock 19x",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "glock_19x"
+                },
+                {
+                  "id": "beretta_m9",
+                  "name": "Beretta M9",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "beretta_m9"
+                },
+                {
+                  "id": "usp_45_fmj",
+                  "name": "USP 45 (FMJ)",
+                  "grantType": "catalog",
+                  "catalogKey": "weapons",
+                  "itemId": "usp_45_fmj"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Level 1 Scout progression",
+              "description": "Scouts honor \nWhen this class is chosen you become Proficient in Stealth and Survival. Additionally you have advantage on perception checks.\n\n\nUnarmored Defense \nWhen not wearing any ballistic protection your AC is determined by 10+DEX&WIS\n\n\nPlain Sight\nWhen unarmored and away from your friendlies enemy PMC have a harder time determining your affiliation. Any enemy PMC more than 20 feet away from you will be hesitant to engage you unless given a reason to. \n\n\nHold Breath\nAs a bonus action you can choose to hold your breath. When you do this your movement speed is halved and your DCs on the D100 are decreased by 10. Ends at the end of your turn.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "features": [
+            {
+              "name": "Level 2 Scout progression",
+              "description": "DOPE\nBecause of your Data on Previous Engagements with various rifles, calibers, and optics. When using DMRs or Bolt Action Rifles you are able to ignore your weapon's MOA. \n\n\nUnarmored Movement \nYour movement speed increases by 20ft when not wearing any armor.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "features": [
+            {
+              "name": "Level 3 Scout progression",
+              "description": "Choose Subclass",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "features": [
+            {
+              "name": "Level 4 Scout progression",
+              "description": "Feat/ABI Increase",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "features": [
+            {
+              "name": "Level 5 Scout progression",
+              "description": "When making a successful headshot against a target wearing a helmet, before the bullet rolls the ricochet save you can choose to skip it. You can do this a number of times equal to your proficiency bonus per short or long rest.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 6,
+          "features": [
+            {
+              "name": "Level 6 Scout progression",
+              "description": "Subclass Ability",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 7,
+          "features": [
+            {
+              "name": "Level 7 Scout progression",
+              "description": "Counter Intelligence \nYou gain the ability to listen in on nearby enemy radio communication. If you do not speak russian you will only understand certain words when listening in on BEARs or other Russian enemies. \n\n\nUnarmored Movement\nYour movement speed increases by an additional 20ft when not wearing armor.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 8,
+          "features": [
+            {
+              "name": "Level 8 Scout progression",
+              "description": "Feat/ABI",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 9,
+          "features": [
+            {
+              "name": "Level 9 Scout progression",
+              "description": "Billy Goat \nYour movement speed increases an additional 30 ft and Rocky/difficult land terrain can no longer slow you down. Additionally you gain the Red Rebel Ice pick and can use it to climb moutains or large rocks.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 10,
+          "features": [
+            {
+              "name": "Level 10 Scout progression",
+              "description": "Subclass Ability",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 11,
+          "features": [
+            {
+              "name": "Level 11 Scout progression",
+              "description": "Perfect Sight \nWhen wearing NVGs or T-7 Thermal Goggles you can still look through optics. However, this does NOT increase/ignore the range limit of the goggles. Any other glass cannot be seen through with T-7s.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 12,
+          "features": [
+            {
+              "name": "Level 12 Scout progression",
+              "description": "Subclass Ability \nFeat/ABI Increase",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 13,
+          "features": [
+            {
+              "name": "Level 13 Scout progression",
+              "description": "Aim Small, Miss Small\nAfter failing the d100 roll when determining if an attack was a headshot the attack is automatically considered to be a critical hit.",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 14,
+          "features": [
+            {
+              "name": "Level 14 Scout progression",
+              "description": "Tier-1 \nSubclass Ability",
+              "source": "Scout class"
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "features": [
+            {
+              "name": "Hidden in Plain Sight & Hold Breath",
+              "description": "Hidden in plain sight \nWhen not wearing a helmet or other military gear most enemies will have a hard time determining your faction and are reluctant to open fire until shown otherwise.\n\n\nAs a bonus action you can choose to hold your breath until the end of your turn. When you do this your DC on the d100 for hitting more specific parts of the head (eyes,ears,nape etc) is the same as your regular headshot dc.",
+              "source": "Scout class (unlevelled source abilities)"
+            }
+          ]
+        }
+      ],
+      "subclassLevel": 3,
+      "subclasses": [
+        {
+          "id": "ghost",
+          "name": "Ghost",
+          "description": "Hidden in plane sight these scouts are equipped with Ghillie suits. They are masters of  extended long range shooting and camouflage. However they often operate at far distances from their squad and encounter their own problems. ",
+          "features": [
+            {
+              "level": 3,
+              "name": "Ghost subclass selection features",
+              "description": "Hidden in plane sight these scouts are equipped with Ghillie suits. They are masters of  extended long range shooting and camouflage. However they often operate at far distances from their squad and encounter their own problems. \nStarting at level 3 when the subclass is chosen you gain the following benefits. \n\n\nAlready Dead\nWhen engaging targets while hidden/sneaking or targets that haven't already had a turn in combat you gain advantage on the attack roll and when determining the damage you add 4d6 piercing damage. The number of D6s increases at level 6, 9 and 14.\n\n\nZryachiy's Eyes (Ghost- Scout Subclass)\nYour eyes turn white like a blind person's. However you're not blind and can now see at night as if it was broad day. When wielding Bolt Action rifles you only need to roll a 25 or higher on the D100 to hit a headshot or 50 and higher for more specific shots such as eyes, ears, throat, etc. You also have advantage on perception checks. \n\n\nGhillie Up \nYou have become a master of hiding in your environment. When entering a new area or returning to an area you're already familiar with you can quickly gather things around you to make your Ghillie suit more effective in your environment. These can include leaves, pieces of tall grass small sticks/tree branches, or even garbage and other small things found in urban environments. When you do so you gain advantage on stealth checks."
+            },
+            {
+              "level": 6,
+              "name": "Ghost level 6 features",
+              "description": "Cold Blooded\nYou have trained your body to match the temperature of your surroundings making you nearly impossible to detect with thermal imaging. \nAdditionally when wielding a Bolt Action Sniper you can now engage targets another 500 meters out \n\n\nZryachiy's Hot swap\nWhen you use your action to fire a bolt action rifle you can use your bonus action to make 2 attack rolls with your pistol \n\n\nCult Tactics \nYou receive a ceremonial Cultist Dagger and gain proficiency with it. \nYou automatically become aware of enemy targets that come within 20 feet of you. When you are in stealth you have advantage on stealth takedowns with your cultist dagger. \n\n\nAlready Dead \n+2 D6"
+            },
+            {
+              "level": 9,
+              "name": "Ghost level 9 features",
+              "description": "Already Dead +2 d6"
+            },
+            {
+              "level": 10,
+              "name": "Ghost level 10 features",
+              "description": "Slow breathing"
+            },
+            {
+              "level": 12,
+              "name": "Ghost level 12 features",
+              "description": "Zryachiy's Hand \nWhen you pull the bolt back on a bolt action rilfe you load a round into the chamber before finishing the cycle. Allowing you to avoid reloading"
+            },
+            {
+              "level": 14,
+              "name": "Ghost level 14 features",
+              "description": "The One Who Sees \nFrom your sniper positions your eyes detect any target no matter how hard they hide. Not even Cultists can hide from you. \n\n\nThe Lighthouse Keeper \nWhen firing upon an enemy that is between 150-1000 feet away from you, if the d20 roll hits the target automatically dies from a \"Gunshot wound\" to the head."
+            }
+          ]
+        },
+        {
+          "id": "sharpshooter_radioman",
+          "name": "Sharpshooter Radioman",
+          "description": "Equipped with Long Range Communication Radios these scouts play key roles in providing their teams with various types of information as well as support from base and other allies in Tarkov. Birdeye will tattoo your hand and dress you with a mexican sweater & fanny pack similar to his while you're sleeping.",
+          "features": [
+            {
+              "level": 3,
+              "name": "Sharpshooter Radioman subclass selection features",
+              "description": "Equipped with Long Range Communication Radios these scouts play key roles in providing their teams with various types of information as well as support from base and other allies in Tarkov. Birdeye will tattoo your hand and dress you with a mexican sweater & fanny pack similar to his while you're sleeping."
+            },
+            {
+              "level": 3,
+              "name": "Sharpshooter Radioman level 3 features",
+              "description": "When this subclass is chosen you immediately receive a special backpack that contains your radio. This radio can be used to contact base and request helicopter extraction or relocation. Perhaps even the BTR driver could also be called. Additionally the radio can also be used to complete certain quests and accept new quests without having to return to base or trader location. (Rewards are sent to Water Treatment) \n\n\nBird's Eye \nYou can choose to spend time during a long rest to familiarize yourself with a weapon that you are proficient with. When you do so you give the weapon a name. You also gain the following benefits \nWhen using a familiarized weapon that is a marksman or bolt action rifle that has a rifle scope equipped (minimum 3x magnification) you only need to roll a 25 or higher on the d100 or 50 or higher for more specific shots. \nWhen making an attack roll with a familiarized Marksman or Bolt Action rifle you can choose to shoot twice \nAdditionally you can see a mile further in any weather condition so long as it is during the day. \n\n\nMaster of Angles \nWhen wielding a rifle you are able to engage targets while you're behind total cover"
+            },
+            {
+              "level": 6,
+              "name": "Sharpshooter Radioman level 6 features",
+              "description": "Birdeye's Release Audio \nExcept for when firing unsuppressed weapons and talking.  You make no noise because somehow someone forgot to add that to you for 2 whole years.\n\n\nBombardment \nOnce Per Long Rest the Radio can be used to request mortar fire."
+            },
+            {
+              "level": 10,
+              "name": "Sharpshooter Radioman level 10 features",
+              "description": "Dead Eye \nWhen you kill an enemy with a headshot your DCs on the d100 decrease by 5. This will continue to stack until both DCs reach 0 and lasts until you miss a headshot or take a long rest. Your passive perception increases by 5. Additionally when outside during the day half your extended vision range is a 360 degree radius. Centered on you."
+            },
+            {
+              "level": 12,
+              "name": "Sharpshooter Radioman level 12 features",
+              "description": "Counter Sniper\nWhenever you engage or are engaged by an enemy your friendlies automatically know exactly where they are. Even if the enemy is hiding."
+            },
+            {
+              "level": 14,
+              "name": "Sharpshooter Radioman level 14 features",
+              "description": "Bird Eye's Trophy Collection \nYou collect the patches of PMCs you've killed. These patches can be mixed and give different bonus based on Faction. Maximum of 10.\nUSEC Patches\nYour headshot DCs on the D100 are decreased by 1 for each USEC patch. \nBEAR Patches \n+1 AC per bear patch. \n\n\nUSEC Long Range Optics \nIf all 10 patches are USEC:\nyou can no longer miss attack rolls with sniper rifles and DMRs and you always have advantage on the d100 when determining headshots. \n\n\nBEAR Heavy Caliber \nIf all 10 patches are Bear Patches:\nWhen you make an attack roll with .338 or higher caliber rifles you automatically inflict maximum damage and all additional ammunition effects"
+            }
+          ]
+        },
+        {
+          "id": "hunter",
+          "name": "Hunter",
+          "description": "Hunters are scouts that specialize in ambush tactics and explosives.",
+          "features": [
+            {
+              "level": 3,
+              "name": "Hunter subclass selection features",
+              "description": "Hunters are scouts that specialize in ambush tactics and explosives.\n\n\nStarting at level 3 when this subclass is chosen you become proficient with Underbarrel grenade launchers, and trip wire traps. You learn how to craft grenades and 40mm shells. Additionally, you have a sudden fondness of Birds and can form unique friendships with them. Your Trap DC is equal to 8+Prof+WIS \n\n\n\n\nHunter's Companion \nYou can use a free action to whistle. When you do so you summon your Bird Companion. Bird companions can have unique uses depending on the species. However, all bird companions will be able to find and retrieve small items you might find useful. You can only have one bird as a companion at a time. Your Bird can be one of the following \nGreat Tit \nHooded Crow\nMallard (The Most Abundant Duck Species) \nWestern Capercaillie (Large Grouse) \nGreat Grey Owl (Night only)\nWhite Tailed Sea Eagle\nSiberian Accentor \nSiberian Black Bird \nAlexandrine Parakeet (Can be taught simple words and sentences) \n\n\nFavorite Prey \nYou can choose one faction to become your favorite prey. When one faction becomes your favorite prey you have an easier time tracking and attacking them. You have advantage on perception, investigation and attack rolls against them. You can change your favorite prey during a short or long rest."
+            },
+            {
+              "level": 5,
+              "name": "Hunter level 5 features",
+              "description": "Follow up Shot/Extra Attack"
+            },
+            {
+              "level": 6,
+              "name": "Hunter level 6 features",
+              "description": "Samsara Wheel\nYour bird companion can now recognize your favorite prey and will repeatedly circle around their position in the sky revealing their location to you and your squad. You can also spend one long rest teaching it how to drop a grenade.\n\n\nCrow Swarm \nOnce per 2 Long Rests you are able to summon a swarm of crows. These Crows caw loudly and ruthlessly assault upto 10 enemies of your choosing. If any of the enemies are not wearing full face protection the crows will peck their eyes out and permanently blind them. All enemies attacked by the Swarm suffer 80 damage."
+            },
+            {
+              "level": 10,
+              "name": "Hunter level 10 features",
+              "description": "Hunter's Paradise \nYou can now have upto 2 factions marked as your favorite prey. When you attack your favorite prey you now roll the d100 with advantage against them when determining headshots or other Low Percentage Shots."
+            },
+            {
+              "level": 12,
+              "name": "Hunter level 12 features",
+              "description": "Hunter's Intuition \nWhen an enemy you cannot see is making an attack roll against you the hair on the back of your neck stands up. You can use your reaction to dive just as they pull the trigger."
+            },
+            {
+              "level": 14,
+              "name": "Hunter level 14 features",
+              "description": "Partisan's Prey \nYou automatically become aware of enemies hiding in bushes, or other \"Rat\" spots. You have advantage on attack and headshot rolls against these enemies, these enemies automatically fail on saving throws against your explosives, and take double the damage. \n\n\nPartisan's Trophy Collection \nPatches must be mixed to acquire the ultimate ability. (Max 10) \nUSEC Patches (Per Patch) \n+1 attack rolls \n-1 Headshot DC \nBEAR Patches (Per Patch) \n+1 CON\n+1 AC\n5 USEC & 5 BEAR \nThe Norvinsk Reaper \nDifficult Terrain can no longer slow you down.\nYou no longer need materials to craft explosives."
+            }
+          ],
+          "choices": [
+            {
+              "level": 3,
+              "id": "hunter_bird_companion",
+              "prompt": "Choose one bird companion species",
+              "count": 1,
+              "options": [
+                {
+                  "id": "great_tit",
+                  "name": "Great Tit",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "hooded_crow",
+                  "name": "Hooded Crow",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "mallard",
+                  "name": "Mallard",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "western_capercaillie",
+                  "name": "Western Capercaillie",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "great_grey_owl",
+                  "name": "Great Grey Owl",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "white_tailed_sea_eagle",
+                  "name": "White-Tailed Sea Eagle",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "siberian_accentor",
+                  "name": "Siberian Accentor",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "siberian_blackbird",
+                  "name": "Siberian Blackbird",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                },
+                {
+                  "id": "alexandrine_parakeet",
+                  "name": "Alexandrine Parakeet",
+                  "description": "A bird companion that can find and retrieve small useful items.",
+                  "grantType": "feature"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "affiliations": [
+    {
+      "id": "zaslon",
+      "name": "Zaslon",
+      "description": "While officially Zaslon operates as security detail for the Kremlin and the Russian Prime Minister, the unit specializes in HVT assassination and retrieval, counter-intelligence, hostage rescue, and document retrieval.",
+      "features": [
+        {
+          "name": "Zaslon Operative",
+          "description": "You can understand and speak Russian, have expertise with the Armament skill, and are proficient with all types of ballistic protection.",
+          "source": "Zaslon"
+        }
+      ],
+      "skillProficiencies": [
+        "armaments"
+      ]
+    },
+    {
+      "id": "u_s_army",
+      "name": "U.S. Army",
+      "description": "Army Strong. Your carry weight doubles and you can travel on foot significantly longer than others before needing to eat and drink.",
+      "features": [
+        {
+          "name": "Army Strong",
+          "description": "Your carry weight doubles and additionally you can travel on foot significantly longer than others before needing to eat and drink.",
+          "source": "U.S. Army"
+        }
+      ]
+    },
+    {
+      "id": "canadian_army",
+      "name": "Canadian Army",
+      "description": "Vigilamus Pro Te. Referred to as ?Crazy Canucks,? ?Stormtrupp?n,? and ?Savages? for their brutal night raids and ruthlessness during the world wars.",
+      "features": [
+        {
+          "name": "Vigilamus Pro Te",
+          "description": "The Canadian Infantry is known as one of the most effective armed forces around the globe. You have a permanent +1 bonus to attack and damage rolls, may reroll damage once per turn and use whichever result is higher, and cannot suffer negative effects from cold weather.",
+          "source": "Canadian Army",
+          "effects": [
+            {
+              "target": "attack",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "green_berets",
+      "name": "Green Berets",
+      "description": "De Oppresso Liber. Known as ?The Snake Eaters,? Green Berets frequently operate behind enemy lines.",
+      "features": [
+        {
+          "name": "De Oppresso Liber",
+          "description": "From your experiences raising militias to overthrow governments you have learned to speak Russian, gained expertise in Persuasion and Deception, and learned Krav Maga.",
+          "source": "Green Berets"
+        }
+      ],
+      "skillProficiencies": [
+        "persuasion",
+        "deception"
+      ]
+    },
+    {
+      "id": "marsoc",
+      "name": "MARSOC",
+      "description": "Always Forward. Marine Raiders are pioneers of amphibious light infantry and frequently carry out counter-terrorism and direct-action missions around the globe.",
+      "features": [
+        {
+          "name": "Always Forward",
+          "description": "You cannot be slowed by difficult terrain on land or in water and have advantage on Perception checks. If you use your action to heal a friendly, you can use your bonus action to attack with your primary weapon.",
+          "source": "MARSOC"
+        }
+      ]
+    },
+    {
+      "id": "u_s_marines",
+      "name": "U.S. Marines",
+      "description": "Semper Fi. The USMC earned the name ?Devil Dogs? for its fighting at Belleau Wood and specializes in rapid response and amphibious assault.",
+      "features": [
+        {
+          "name": "Semper Fi",
+          "description": "Once per long rest, while in combat, use a bonus action to double your movement speed. When an ally you can see is attacked, use your reaction to retaliate against the attacker if they are within line of sight and effective range.",
+          "source": "U.S. Marines"
+        }
+      ]
+    },
+    {
+      "id": "seals",
+      "name": "SEALs",
+      "description": "The Only Easy Day Was Yesterday. The U.S. Navy SEALs conduct strike operations, counter-terrorism, and underwater reconnaissance; in wartime they also act as force multipliers.",
+      "features": [
+        {
+          "name": "The Only Easy Day Was Yesterday",
+          "description": "You have Expertise in Stealth and advantage on Stealth checks in water or forest environments. In water your movement doubles, even when swimming. You know Krav Maga and can still fight while swimming or falling.",
+          "source": "SEALs"
+        }
+      ],
+      "skillProficiencies": [
+        "stealth"
+      ]
+    },
+    {
+      "id": "royal_marines",
+      "name": "Royal Marines",
+      "description": "Per Mare, Per Terram. The Royal Marines are the UK amphibious infantry, specializing in anti-piracy and arctic warfare.",
+      "features": [
+        {
+          "name": "Per Mare, Per Terram",
+          "description": "You cannot suffer negative effects from cold weather; have Expertise in Stealth and advantage on Stealth checks in water or urban environments; water does not impose difficult terrain; and you know Commando CQC.",
+          "source": "Royal Marines"
+        }
+      ],
+      "skillProficiencies": [
+        "stealth"
+      ]
+    },
+    {
+      "id": "cjiru",
+      "name": "CJIRU",
+      "description": "Nunquam Nonparati. Canada?s Joint Incident Response Unit is a secretive Tier-2 special forces unit specializing in CBRN threats.",
+      "features": [
+        {
+          "name": "Nunquam Nonparati",
+          "description": "You cannot suffer negative effects from cold weather, have Expertise in Technology, and do not suffer negative effects from stimulants. You receive a level 3 armored gas mask wearable with helmets and night vision. At levels 6 and 9 you learn to craft level 4 and level 5 armored gas masks.",
+          "source": "CJIRU"
+        }
+      ],
+      "skillProficiencies": [
+        "technology"
+      ]
+    },
+    {
+      "id": "british_sas",
+      "name": "British SAS",
+      "description": "Who Dares Wins. Pioneer of modern special forces, specializing in hostage rescue, counter-aircraft hijacking, direct action, covert reconnaissance, and revolutionary warfare.",
+      "features": []
+    },
+    {
+      "id": "australian_sas_sasr",
+      "name": "Australian SAS (SASR)",
+      "description": "Who Dares Wins. Direct descendant of the British SAS and Australia?s Tier-1 force, specializing in maritime counter-terrorism, strategic reconnaissance, high-risk surgical raids, tracking and neutralizing high-value targets, and precision airstrikes.",
+      "features": []
+    },
+    {
+      "id": "devgru",
+      "name": "DEVGRU",
+      "description": "The U.S. Navy?s Tier-1 unit, specializing in capture or elimination of high-value targets, clandestine operations, and disposal of weapons of mass destruction behind enemy lines.",
+      "features": []
+    },
+    {
+      "id": "delta",
+      "name": "Delta",
+      "description": "Surrepsit. The U.S. Army?s Tier-1 unit, specializing in hiding in plain sight, battlefield preparation, and highly classified rapid-response operations.",
+      "features": []
+    },
+    {
+      "id": "jtf2",
+      "name": "JTF2",
+      "description": "Facta Non Verba. Canada?s Tier-1 special force group, known for operational secrecy and specialization in arctic warfare.",
+      "features": []
+    },
+    {
+      "id": "jaeger_corps",
+      "name": "Jaeger Corps",
+      "description": "Plus Esse Quam Simulatur. Denmark?s Tier-1 special forces group, specializing in extreme-environment warfare, counter-terrorism, and unconventional warfare.",
+      "features": []
+    }
+  ],
+  "traits": [
+    {
+      "id": "campaign_race_and_language_limit",
+      "name": "Campaign Character Restriction",
+      "category": "trait",
+      "description": "The source states that player characters are limited to male humans who speak English. This is a campaign rule, not an enforced character-creation validation.",
+      "source": "Tarkov character options",
+      "effects": []
+    }
+  ],
+  "items": [
+    {
+      "id": "cat_tourniquet",
+      "name": "CAT Tourniquet",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Starting equipment; standard issue tourniquet."
+    },
+    {
+      "id": "army_bandage_pack",
+      "name": "Army Bandage Pack",
+      "kind": "item",
+      "quantity": 1,
+      "usesMax": 2,
+      "description": "Starting equipment. Two uses."
+    },
+    {
+      "id": "aluminum_splint",
+      "name": "Aluminum Splint",
+      "kind": "item",
+      "quantity": 1,
+      "usesMax": 5,
+      "description": "Starting equipment. Five uses."
+    },
+    {
+      "id": "ifak_medical_kit",
+      "name": "IFAK Medical Kit",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Starting equipment. 300 HP medical capacity; 200 to stop heavy bleeds and 100 to stop light bleeds."
+    },
+    {
+      "id": "water_bottle",
+      "name": "Bottle of Water",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Starting equipment."
+    },
+    {
+      "id": "ration",
+      "name": "Ration",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Starting equipment."
+    },
+    {
+      "id": "leatherman_multitool",
+      "name": "Leatherman Multitool",
+      "kind": "item",
+      "quantity": 1
+    },
+    {
+      "id": "entrenching_tool",
+      "name": "Entrenching Tool",
+      "kind": "item",
+      "quantity": 1
+    },
+    {
+      "id": "survival_lighter",
+      "name": "Survival Lighter",
+      "kind": "item",
+      "quantity": 1
+    },
+    {
+      "id": "lockpick_set",
+      "name": "Lockpick Set",
+      "kind": "item",
+      "quantity": 1
+    },
+    {
+      "id": "flash_bang",
+      "name": "Flash Bang",
+      "kind": "item",
+      "quantity": 2
+    },
+    {
+      "id": "slaap_plate",
+      "name": "SLAAP Plate",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Juggernaut feature equipment; helmet plate used to improve ricochet saves."
+    },
+    {
+      "id": "tw25b_synthetic_grease",
+      "name": "TW25B Synthetic Grease",
+      "kind": "item",
+      "quantity": 1,
+      "description": "High-performance lubricant for modern heavy weapon systems."
+    },
+    {
+      "id": "breaching_kit",
+      "name": "Ruhl Tech Compact Breaching Kit",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Contains bolt cutters with retractable grips, a sledge hammer with retractable grip, and a retractable prybar."
+    },
+    {
+      "id": "radioman_radio_backpack",
+      "name": "Sharpshooter Radioman Radio Backpack",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Special backpack containing a long-range radio for contacting base."
+    },
+    {
+      "id": "cms_kit",
+      "name": "Sanitar?s CMS Kit",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Medic subclass equipment; infinite uses for its owner and can reattach limbs on a successful Medicine check."
+    },
+    {
+      "id": "armored_gas_mask_3",
+      "name": "Level 3 Armored Gas Mask",
+      "kind": "item",
+      "quantity": 1,
+      "description": "CJIRU affiliation equipment; wearable with helmets and night vision."
+    },
+    {
+      "id": "armored_gas_mask_4",
+      "name": "Level 4 Armored Gas Mask",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Crafting unlock at CJIRU level 6."
+    },
+    {
+      "id": "armored_gas_mask_5",
+      "name": "Level 5 Armored Gas Mask",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Crafting unlock at CJIRU level 9."
+    },
+    {
+      "id": "ammo_5_56_m855",
+      "name": "5.56 - M855 ammunition",
+      "kind": "ammo",
+      "ammoType": "5.56 - M855",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_4_6_jacketed_soft_points",
+      "name": "4.6 Jacketed Soft Points ammunition",
+      "kind": "ammo",
+      "ammoType": "4.6 Jacketed Soft Points",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_9x19_pst",
+      "name": "9x19 PST ammunition",
+      "kind": "ammo",
+      "ammoType": "9x19 PST",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_9x19",
+      "name": "9x19 ammunition",
+      "kind": "ammo",
+      "ammoType": "9x19",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_45_acp_fmj",
+      "name": ".45 ACP - FMJ ammunition",
+      "kind": "ammo",
+      "ammoType": ".45 ACP - FMJ",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_4_6_fmj_sx",
+      "name": "4.6 FMJ SX ammunition",
+      "kind": "ammo",
+      "ammoType": "4.6 FMJ SX",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_9x19_ap_6_3",
+      "name": "9x19 AP 6.3 ammunition",
+      "kind": "ammo",
+      "ammoType": "9x19 AP 6.3",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_12_ga_00_buckshot",
+      "name": "12 Ga 00 Buckshot ammunition",
+      "kind": "ammo",
+      "ammoType": "12 Ga 00 Buckshot",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_12_gauge_00_buckshot",
+      "name": "12 Gauge 00 Buckshot ammunition",
+      "kind": "ammo",
+      "ammoType": "12 Gauge 00 Buckshot",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_45_acp_ap",
+      "name": ".45 ACP AP ammunition",
+      "kind": "ammo",
+      "ammoType": ".45 ACP AP",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_7_62x51_m80",
+      "name": "7.62x51 M80 ammunition",
+      "kind": "ammo",
+      "ammoType": "7.62x51 M80",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "ammo_5_56_m855a1",
+      "name": "5.56 M855A1 ammunition",
+      "kind": "ammo",
+      "ammoType": "5.56 M855A1",
+      "quantity": 0,
+      "description": "Ammunition type named in the source loadouts. Starting quantity was not specified; set this for the campaign."
+    },
+    {
+      "id": "blackrock_tactical_rig",
+      "name": "Blackrock Tactical Rig",
+      "kind": "item",
+      "quantity": 1,
+      "description": "Operator starting-equipment option when paired with the level 3 armored vest."
+    }
+  ],
+  "armor": [
+    {
+      "id": "ops_core_fast_mt",
+      "name": "Ops Core FAST MT Helmet",
+      "rating": 4,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Medium armor helmet; Operator starting equipment."
+    },
+    {
+      "id": "plate_carrier_level_3",
+      "name": "Plate Carrier with Level 3 Plates",
+      "rating": 3,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Alternative Operator starting armor."
+    },
+    {
+      "id": "armored_vest_level_3",
+      "name": "Level 3 Armored Vest",
+      "rating": 3,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Alternative Operator starting armor."
+    },
+    {
+      "id": "cqb_caimen_helmet",
+      "name": "Caimen Hybrid Helmet",
+      "rating": 3,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "No modifications; CQB starting equipment."
+    },
+    {
+      "id": "usec_ball_cap",
+      "name": "USEC Ball Cap",
+      "rating": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Any color; CQB starting equipment."
+    },
+    {
+      "id": "cqb_plate_carrier_level_3",
+      "name": "Six-Slot Plate Carrier with Level 3 Plates",
+      "rating": 3,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "CQB starting equipment."
+    },
+    {
+      "id": "bulletproof_vest_level_3",
+      "name": "Level 3 Ceramic Bulletproof Vest",
+      "rating": 3,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "CQB starting equipment."
+    },
+    {
+      "id": "juggernaut_fast_mt",
+      "name": "FAST MT Multi-Hit Face Shield Helmet",
+      "rating": 4,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Level 4 head protection and level 3 face protection; Juggernaut starting equipment."
+    },
+    {
+      "id": "avs_level_4",
+      "name": "AVS Plate Carrier with Level 4 Plates",
+      "rating": 4,
+      "hp": 0,
+      "hpMax": 0,
+      "equipped": false,
+      "properties": "Juggernaut starting equipment."
+    }
+  ],
+  "weapons": [
+    {
+      "id": "m4a1",
+      "name": "M4A1",
+      "ammoType": "5.56 - M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 - M855. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk416",
+      "name": "HK416",
+      "ammoType": "5.56 - M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 - M855. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hkg36c",
+      "name": "HKG36C",
+      "ammoType": "5.56 - M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 - M855. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "steyr_aug",
+      "name": "Steyr AUG",
+      "ammoType": "5.56 - M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 - M855. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "scar_l",
+      "name": "SCAR-L",
+      "ammoType": "5.56 - M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 - M855. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_mp7",
+      "name": "HK MP7",
+      "ammoType": "4.6 Jacketed Soft Points",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 4.6 Jacketed Soft Points. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_mp5",
+      "name": "HK MP5",
+      "ammoType": "9x19 PST",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 PST. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "sig_mpx",
+      "name": "Sig MPX",
+      "ammoType": "9x19",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "usp_45",
+      "name": "USP 45",
+      "ammoType": ".45 ACP - FMJ",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: .45 ACP - FMJ. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "beretta_m9",
+      "name": "Beretta M9",
+      "ammoType": "9x19 PST",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 PST. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_mp7a2",
+      "name": "HK MP7A2",
+      "ammoType": "4.6 FMJ SX",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 4.6 FMJ SX. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_mp5_ap_6_3",
+      "name": "HK MP5 (AP 6.3)",
+      "ammoType": "9x19 AP 6.3",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 AP 6.3. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_mpx_ap_6_3",
+      "name": "HK MPX (AP 6.3)",
+      "ammoType": "9x19 AP 6.3",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 AP 6.3. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "hk_ump",
+      "name": "HK UMP",
+      "ammoType": ".45 ACP FMJ",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: .45 ACP FMJ. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "remington_r870",
+      "name": "Remington R870",
+      "ammoType": "12 Ga 00 Buckshot",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 12 Ga 00 Buckshot. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "mossberg_590a1",
+      "name": "Mossberg 590A1",
+      "ammoType": "12 Ga 00 Buckshot",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 12 Ga 00 Buckshot. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "benelli_m3_super_90",
+      "name": "Benelli M3 Super 90",
+      "ammoType": "12 Ga 00 Buckshot",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 12 Ga 00 Buckshot. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "glock_17",
+      "name": "Glock 17",
+      "ammoType": "9x19 AP 6.3",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 AP 6.3. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "glock_19x",
+      "name": "Glock 19x",
+      "ammoType": "9x19 AP 6.3",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 AP 6.3. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "usp_45_fmj",
+      "name": "USP 45 (FMJ)",
+      "ammoType": ".45 ACP FMJ",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: .45 ACP FMJ. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "m249_lmg",
+      "name": "M249 LMG",
+      "ammoType": "5.56 M855",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 M855; 100-round box x2; STANAG 60-round magazines x2. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "aa12",
+      "name": "AA12",
+      "ammoType": "12 Gauge 00 Buckshot",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 12 Gauge 00 Buckshot; 20-round drums x2; 10-round magazines x2. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "m1911",
+      "name": "M1911",
+      "ammoType": ".45 ACP AP",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: .45 ACP AP. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "usp_45_ap",
+      "name": "USP 45 (AP)",
+      "ammoType": ".45 ACP AP",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: .45 ACP AP. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "beretta_m9_ap_6_3",
+      "name": "Beretta M9 (AP 6.3)",
+      "ammoType": "9x19 AP 6.3",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 9x19 AP 6.3. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "remington_m700",
+      "name": "Remington M700",
+      "ammoType": "7.62x51 M80",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 7.62x51 M80. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "knight_s_armament_sr_25",
+      "name": "Knight?s Armament SR-25",
+      "ammoType": "7.62x51 M80",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 7.62x51 M80. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "lone_star_armories_tx",
+      "name": "Lone Star Armories TX",
+      "ammoType": "5.56 M855A1",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 5.56 M855A1. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "sog_voodoo_tactical_tomahawk",
+      "name": "SOG Voodoo Tactical Tomahawk",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "str",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: Melee. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "miller_bros_m_2_tactical_sword",
+      "name": "Miller Bros M-2 Tactical Sword",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "str",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: Melee. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "cultist_dagger",
+      "name": "Cultist Dagger",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "str",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: Melee. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "red_rebel_ice_pick",
+      "name": "Red Rebel Ice Pick",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "str",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: Melee. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "ks_23m",
+      "name": "KS-23M",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: Shotgun; ammunition not specified. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    },
+    {
+      "id": "milkor_m32a1",
+      "name": "Milkor M32A1",
+      "ammoType": "",
+      "ammo": 0,
+      "ammoMax": 0,
+      "roundsPerShot": 1,
+      "damage": "",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "hp": 0,
+      "hpMax": 0,
+      "properties": "Source equipment option. Listed caliber/ammunition: 40mm grenade launcher. Damage dice and weapon rules were not specified in the source; configure before rolling damage.",
+      "effects": []
+    }
+  ]
+}
