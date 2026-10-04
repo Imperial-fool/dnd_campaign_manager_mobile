@@ -26,3 +26,6 @@ flutter:
   uses-material-design: true
   assets:
     - content/tarkov_character_options.json
+    - content/skills.json
+    - content/tarkov_mechanics.json
+    - content/tarkov_armory.json

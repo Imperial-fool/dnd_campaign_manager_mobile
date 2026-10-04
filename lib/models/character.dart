@@ -76,6 +76,7 @@ List<Skill> defaultSkills() => [
       Skill(name: 'Performance', ability: Ability.cha),
       Skill(name: 'Persuasion', ability: Ability.cha),
       Skill(name: 'Religion', ability: Ability.intelligence),
+      Skill(name: 'Technology', ability: Ability.intelligence),
       Skill(name: 'Sleight of Hand', ability: Ability.dex),
       Skill(name: 'Stealth', ability: Ability.dex),
     ];

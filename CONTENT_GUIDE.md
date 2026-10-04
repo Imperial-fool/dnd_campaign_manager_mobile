@@ -24,6 +24,9 @@ what you need.
   "weapons":      [ ],
   "armor":        [ ],
   "items":        [ ],
+  "skills":       [ ],
+  "feats":        [ ],
+  "actions":      [ ],
   "traits":       [ ],
   "features":     [ ],
   "backgrounds":  [ ],
@@ -37,6 +40,9 @@ what you need.
   and imported as `backgrounds`.
 - **Ammo is an item** with `"kind": "ammo"` and `"category": "ammo"` (see
   section 5).
+- Skills, feats, and actions are data-defined catalog sections. Skills define
+  the ability used for a check; feats can carry `effects`; actions are a
+  grouped reference list.
 - Class definitions are selected from the character's level-up control; they
   are not added to a character with the Catalog library button.
 
@@ -99,6 +105,17 @@ punctuation:
 | Sleight of Hand | `skill.sleight_of_hand` |
 | Animal Handling | `skill.animal_handling` |
 | Armaments | `skill.armaments` |
+| Technology | `skill.technology` |
+
+Skills are loaded from [`content/skills.json`](content/skills.json). Add skills
+to that section with an `id`, `name`, and ability key to include them in new
+characters. Class skill choices may also define a skill directly with
+`grantType: "skill"` and `skillAbility`.
+
+For compatibility with existing content, skill descriptions on a character's
+traits/features also grant proficiency or expertise when they explicitly say
+`proficient in/with <skill>` or `expertise in/with <skill>`. Prefer structured
+`skillProficiencies` or `grantType: "skill"` data for newly authored content.
 
 ### Programmatic effects
 
@@ -133,6 +150,8 @@ Rules to remember:
 - Armor effects only count while the armor is **Equipped**.
 - Trait/feature effects always count. Weapon effects count while the weapon is on the sheet.
 - Inventory item effects apply only while that item is marked **Active**.
+- Expertise or proficiency described in a trait/feature is included in the
+  matching skill bonus. Numeric modifiers should still use `effects`.
 - A misspelled target is **silently ignored**. If a bonus isn't showing, check the spelling first.
 
 Armor Class is displayed as the calculated total: base AC plus effects from
@@ -167,8 +186,16 @@ equipment bonuses.
 | `ammoType` | `""` | Must match an ammo item's `ammoType` (not case-sensitive). **Blank = needs no ammo** (melee). |
 | `ammoMax` | `0` | Magazine size. **0 = fire straight from inventory ammo.** Above 0 = the weapon holds loaded rounds and you use **Reload**. |
 | `ammo` | `0` | Rounds currently loaded. Only used when `ammoMax` > 0. |
-| `roundsPerShot` | `1` | Rounds spent per Fire (use 3 for a burst; still one attack roll). |
+| `roundsPerShot` | `1` | Rounds spent in semi or burst mode. |
+| `burstRounds` | `0` | Exact number of bullets spent in burst mode. When zero, burst falls back to `roundsPerShot`. |
 | `damage` | `""` | Dice expression: `1d8`, `2d6+2`, `1d10-1`, `1d8+1d6+3`. |
+| `fireModes` | `["semi"]` | Available modes: `"semi"`, `"burst"`, `"fullAuto"`. |
+| `firingMode` | `"semi"` | Selected firing mode; chosen by the player in the weapon panel. |
+| `bulletDice` | `""` | Full-auto dice, e.g. `"1d6"`. The maximum is the rounds spent; the roll is the number of hits. |
+| `burstDamage` | `""` | Combined damage expression for the burst (e.g. `"3d6"` for three rounds). |
+| `damageAbility` | `""` | Optional ability modifier (`"str"` or `"dex"`) added to the damage roll. |
+| `weightKg` | `0` | Optional weapon weight, in kilograms. |
+| `weaponType` | `""` | Optional equipment classification. |
 | `attackAbility` | `"dex"` | `str`, `dex`, `con`, `int`, `wis`, `cha`. |
 | `proficient` | `true` | Adds proficiency bonus to the attack roll. |
 | `attackBonus` | `0` | Flat bonus to attack (magic, optics, ...). |
@@ -176,9 +203,19 @@ equipment bonuses.
 | `properties` | `""` | Free text. |
 | `effects` | `[]` | See section 2. |
 
-Attack roll = d20 + ability modifier + proficiency (if proficient) + `attackBonus`
+Semi/full-auto attack roll = d20 + ability modifier + proficiency (if proficient) + `attackBonus`
 (+ any `attack` effects). **Put damage bonuses in the `damage` text** (e.g.
-`2d6+2`); the ability modifier is not added to damage automatically.
+`2d6+2`); the ability modifier is not added to damage automatically unless
+`damageAbility` is set.
+
+For full auto, set `bulletDice` (for example `"1d6"`). Each trigger pull spends
+the maximum number of rounds shown by that expression and rolls it to determine
+how many rounds hit; damage is rolled once per hit. Burst mode spends
+`burstRounds`, rolls one d20 attack, and on a hit all bullets in that burst
+hit; it does not roll `bulletDice`. `burstDamage` is rolled once for the
+combined burst. Full auto instead spends the maximum of `bulletDice` and uses
+the value rolled on that die as the number of bullets that hit. The selected
+mode is saved with the weapon.
 
 A minimal melee weapon:
 ```json
@@ -262,6 +299,12 @@ Stacks of different names but the same `ammoType` (FMJ and AP, say) are pooled.
 | `usesMax` | `0` | Uses per unit. `0` = no uses; pressing **Use** just removes one from the stack. |
 | `uses` | `usesMax` | Uses left on the current unit. |
 | `ammoType` | `""` | Ammo only. Must match the weapon's `ammoType`. |
+| `penetration` | `0` | Ammunition penetration rating, if provided. |
+| `durabilityBurn` | `1` | Weapon durability multiplier for this ammunition. |
+| `damage` | `""` | Optional damage dice rolled by **Use**, e.g. for a grenade. |
+| `damageType` | `""` | Damage type displayed with the roll. |
+| `areaRadius` | `0` | Optional area radius in feet, shown when the item is used. |
+| `saveDc` / `saveAbility` | `0` / `""` | Optional saving-throw details shown when the item is used. |
 | `description` | `""` | Free text. |
 | `active` | `false` | When true, non-ammo item effects apply to the character. |
 | `effects` | `[]` | Numeric modifiers; only apply while the item is active. |
@@ -274,6 +317,12 @@ Set `category` on every new catalog item:
 - `"medical"` for medical supplies and treatment kits. Use `"kind": "item"`.
 - `"misc"` for tools, equipment, consumables, and anything outside the other
   groups. Use `"kind": "item"`.
+
+Ammo entries may also define `penetration` (integer penetration rating) and
+`durabilityBurn` (weapon-durability multiplier). These values are retained in
+the item data; the detailed armor-vs-ammo outcome table is currently a
+reference in [`content/tarkov_mechanics.json`](content/tarkov_mechanics.json),
+not an automatic target-damage calculator.
 
 `category` only controls the catalog picker group; `kind` controls ammunition
 behavior. For compatibility, older entries without `category` continue to
@@ -319,8 +368,54 @@ section you put them in (which sets their label on the sheet).
 | `effects` | `[]` | See section 2. |
 
 Rules text that has no numeric effect (advantage, once-per-rest abilities,
-narrative perks) goes in `description` only. Only add `effects` for flat
-numeric bonuses or penalties, since that is all the system can calculate.
+narrative perks) goes in `description` only. Add `effects` for numeric bonuses
+or penalties. Skill proficiency and expertise explicitly described in a
+granted trait/feature also affect that skill's bonus.
+
+### Feats
+
+Feats are imported as catalog entries under the top-level `feats` key. A feat
+uses the same fields as a feature and may define numeric `effects`:
+
+```json
+{
+  "feats": [
+    {
+      "id": "field_awareness",
+      "name": "Field Awareness",
+      "description": "A campaign-specific feat.",
+      "effects": [{ "target": "initiative", "value": 1 }]
+    }
+  ]
+}
+```
+
+Define the class levels at which characters choose a feat with `featLevels`.
+The standard progression is levels 4, 8, and 12. At those levels, level-up
+requires choosing one feat from the imported catalog; the selected feat is
+copied onto the character and its effects apply. Import at least one feat
+before advancing a character to one of those levels.
+
+```json
+{
+  "id": "vanguard",
+  "name": "Vanguard",
+  "hitDie": 10,
+  "featLevels": [4, 8, 12],
+  "levels": []
+}
+```
+
+### Actions and player stash
+
+Entries in the top-level `actions` list use `id`, `name`, `actionType`
+(`"action"`, `"bonus"`, or `"reaction"`), and `description`. They appear in
+the character sheet's Combat Actions lookup.
+
+The player stash is saved separately from each character and keyed by the
+character's Player field (case-insensitive). Use **Move to player stash** on
+weapons, armor, and items, then transfer them to any character assigned to the
+same player. Characters without a player name cannot use the shared stash.
 
 ---
 
@@ -381,6 +476,7 @@ currently supported).
   "id": "vanguard",
   "name": "Vanguard",
   "hitDie": 10,
+  "featLevels": [4, 8, 12],
   "savingThrows": ["str", "con"],
   "subclassLevel": 3,
   "levels": [
@@ -426,6 +522,7 @@ currently supported).
 | `name` | **yes** | Class name shown on the character. |
 | `hitDie` | **yes** | Hit die size from 1 to 20 (normally 6, 8, 10 or 12). It determines automatic average HP gained on level-up. |
 | `savingThrows` | no | Ability keys (`str`, `dex`, `con`, `int`, `wis`, `cha`) granted when the class is first selected. |
+| `featLevels` | no | Levels that require a feat choice. The standard progression is `[4, 8, 12]`; options come from imported `feats`. |
 | `subclassLevel` | no | Level at which a subclass is selected; defaults to 3. |
 | `levels` | no | Level entries with class features unlocked at that level. Levels must be 1-20. |
 | `subclasses` | no | Subclass definitions; each has an optional `id`, required `name`, optional `description`, and `features`. |
@@ -435,6 +532,11 @@ Each `levels` entry has a `level` and optional `features` list. Each subclass
 feature is an object with its own `level`, `name`, and optional `description`,
 `source`, and `effects`. Feature effects work like any other trait effects:
 they apply automatically and appear in Features & Traits.
+
+If `featLevels` is present, those class levels require choosing an imported
+feat. Import feat definitions with the top-level `feats` section, using the
+same `name`, `description`, and `effects` fields as features. The chosen feat
+is copied to the character and its effects recalculate like other traits.
 
 ### Enforced level-up choices
 

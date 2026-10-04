@@ -27,6 +27,7 @@ class TraitsPanel extends StatelessWidget {
         ),
         catalogButton(context, 'features', tooltip: 'Add feature from catalog'),
         catalogButton(context, 'traits', tooltip: 'Add trait from catalog'),
+        catalogButton(context, 'feats', tooltip: 'Add feat from catalog'),
       ],
       child: Column(children: [
         if (c.traits.isEmpty) const Text('No features or traits yet.'),
@@ -49,10 +50,13 @@ class TraitsPanel extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     DropdownButton<String>(
-                      value: t.category == 'feature' ? 'feature' : 'trait',
+                      value: {'feature', 'feat'}.contains(t.category)
+                          ? t.category
+                          : 'trait',
                       items: const [
                         DropdownMenuItem(
                             value: 'feature', child: Text('Feature')),
+                        DropdownMenuItem(value: 'feat', child: Text('Feat')),
                         DropdownMenuItem(value: 'trait', child: Text('Trait')),
                       ],
                       onChanged: (v) =>

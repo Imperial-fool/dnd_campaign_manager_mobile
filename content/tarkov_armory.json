@@ -1,0 +1,3209 @@
+{
+  "pack": "Tarkov Armory and Ammunition",
+  "description": "Weapon profiles and ammunition entries parsed from the supplied reference documents. Original weapon notes are retained in properties.",
+  "weapons": [
+    {
+      "id": "adar_2_15",
+      "name": "Adar 2-15",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Adar 2-15  5.56 1d6+Dex Piercing Damage 3kg AR",
+      "weightKg": 3.0
+    },
+    {
+      "id": "as_val_vas",
+      "name": "AS-Val/VAS",
+      "ammoType": "9x39",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "2D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AS-Val/VAS 9x39 (1d8) 2d8+Dex Piercing Damage 2kg AR",
+      "bulletDice": "1d8",
+      "weightKg": 2.0
+    },
+    {
+      "id": "as_val_mod_4",
+      "name": "AS- Val Mod 4",
+      "ammoType": "9x39",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AS- Val Mod 4 9x39 (1d8) 1d8+Dex (+3 to damage and attack rolls) 3kg AR",
+      "bulletDice": "1d8",
+      "weightKg": 3.0
+    },
+    {
+      "id": "ash_12",
+      "name": "Ash-12",
+      "ammoType": "12.7x55",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "4D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Ash-12 12.7x55 (1d4) 4d12+DEX 6 KG AR",
+      "bulletDice": "1d4",
+      "weightKg": 6.0
+    },
+    {
+      "id": "axmc",
+      "name": "AXMC",
+      "ammoType": ".338 Lapua Magnum",
+      "ammoMax": 5,
+      "ammo": 5,
+      "roundsPerShot": 1,
+      "damage": "4D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "AXMC .338 LM Bolt Action 4d12+DEX 5 KG SNI",
+      "weightKg": 5.0
+    },
+    {
+      "id": "velociraptor",
+      "name": "Velociraptor",
+      "ammoType": ".300 BLK",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Velociraptor .300 BLK (1d6) 1D8+DEX 3 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 3.0
+    },
+    {
+      "id": "mp9",
+      "name": "MP9",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MP9 9x19 (1d10) 1d8+DEX 1kg SUB",
+      "bulletDice": "1d10",
+      "weightKg": 1.0
+    },
+    {
+      "id": "benelli_m3",
+      "name": "Benelli M3",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Benelli M3 12 Ga 2d12+DEX 3KG SG",
+      "weightKg": 3.0
+    },
+    {
+      "id": "beretta_m9",
+      "name": "Beretta M9",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Beretta M9 9x19 1d8+DEX 1KG PIS",
+      "weightKg": 1.0
+    },
+    {
+      "id": "mk47_mutant",
+      "name": "MK47 Mutant",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MK47 Mutant 7.62x39 (1d8) 1d8+DEX 2 KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 2.0
+    },
+    {
+      "id": "rhino_50_ds",
+      "name": "Rhino 50 DS",
+      "ammoType": ".357",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Rhino 50 DS .357 1d12+DEX 1KG 6 Shot Revolver",
+      "weightKg": 1.0
+    },
+    {
+      "id": "rhino_200ds",
+      "name": "Rhino 200DS",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Rhino 200DS 9x19 1d8+DEX 0.5 KG 6 Shot Revolver",
+      "weightKg": 0.5
+    },
+    {
+      "id": "m4a1",
+      "name": "M4A1",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "M4A1 5.56 (1d8) 1d6+DEX 2.5 KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 2.5
+    },
+    {
+      "id": "m16a1",
+      "name": "M16A1",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "3D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "M16A1 5.56 3d6+DEX 2.5 KG AR",
+      "weightKg": 2.5
+    },
+    {
+      "id": "m45a1_m1911a1",
+      "name": "M45A1/M1911A1",
+      "ammoType": ".45 ACP",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D10",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "M45A1/M1911A1 .45 ACP 1D10+DEX PIS 0.5 KG",
+      "weightKg": 0.5
+    },
+    {
+      "id": "nl545",
+      "name": "NL545",
+      "ammoType": "5.45x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "NL545 5.45x39 (1d8) 1d6+DEX 2.5 KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 2.5
+    },
+    {
+      "id": "sa58",
+      "name": "SA58",
+      "ammoType": "7.62X51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "SA58 7.62X51 (1D4) 1D12+DEX 4 a amKG AR",
+      "bulletDice": "1d4"
+    },
+    {
+      "id": "rpd_rpdn",
+      "name": "RPD/RPDN",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "RPD/RPDN 7.62x39 (1d6) 1d8+DEX  (cannot suffer weapon malfunctions) 7KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 7.0
+    },
+    {
+      "id": "mdr",
+      "name": "MDR",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MDR 5.56 (1d6) 1d6+DEX 4KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 4.0
+    },
+    {
+      "id": "mdr_2",
+      "name": "MDR",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MDR 7.62x51 (1d6) 1d12+DEX 4.5 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 4.5
+    },
+    {
+      "id": "fn40gl_mk2",
+      "name": "FN40GL MK2",
+      "ammoType": "40mm",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "60D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "FN40GL MK2 40mm Splash: 20ft Radius DC20 DEX at disadvantage on Fail 60d6+DEX piercing Damage. Direct Impact: 60d8+DEX force damage, on his target automatically fails the DEX saving throw. GL 3 KG",
+      "weightKg": 3.0,
+      "weaponType": "grenadeLauncher"
+    },
+    {
+      "id": "fn_5_7",
+      "name": "FN 5.7",
+      "ammoType": "5.7x28",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "FN 5.7 5.7x28 1d6+DEX 0.5KG PIS",
+      "weightKg": 0.5
+    },
+    {
+      "id": "fn_p90",
+      "name": "FN P90",
+      "ammoType": "5.7x28",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "FN P90 5.7x28 (1d10) 1d6+DEX 3KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 3.0
+    },
+    {
+      "id": "fn_scar_h_x_17",
+      "name": "FN Scar H/X-17",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "FN Scar H/X-17 7.62x51 (1d6) 1d12+DEX 4KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 4.0
+    },
+    {
+      "id": "fn_scar_l",
+      "name": "FN Scar L",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "FN Scar L 5.56x45 (1d6) 1d6+DEX 3KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 3.0
+    },
+    {
+      "id": "glock_17_19x",
+      "name": "Glock 17/19x",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Glock 17/19x 9x19 1d8+DEX 1KG PIS",
+      "weightKg": 1.0
+    },
+    {
+      "id": "glock_18c",
+      "name": "Glock 18c",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Glock 18c 9x19 (1d12) 1d8+DEX 1kg PIS",
+      "bulletDice": "1d12",
+      "weightKg": 1.0
+    },
+    {
+      "id": "hk_g28",
+      "name": "HK G28",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "HK G28 7.62x51 1d12+DEX 6KG DMR",
+      "weightKg": 6.0
+    },
+    {
+      "id": "hk_g36",
+      "name": "HK G36",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "burst",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "HK G36 5.56x45 (1d6) 1d6/3d6+DEX 4KG AR",
+      "bulletDice": "1d6",
+      "burstDamage": "3D6",
+      "weightKg": 4.0,
+      "burstRounds": 3
+    },
+    {
+      "id": "hk_mp5sd_mp5_mp5k",
+      "name": "HK MP5SD/MP5/MP5k",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "burst",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "HK MP5SD/MP5/MP5k 9x19 (1d8) 1d8/3d8+DEX SUB 2.5 KG",
+      "bulletDice": "1d8",
+      "burstDamage": "3D8",
+      "weightKg": 2.5,
+      "burstRounds": 3
+    },
+    {
+      "id": "hk_mp7a1_mp7a2",
+      "name": "HK MP7A1/MP7A2",
+      "ammoType": "4.6x30",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "1D4",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "HK MP7A1/MP7A2 4.6x30 (1d8) 1d4+DEX 1.5 KG SUB",
+      "bulletDice": "1d8",
+      "weightKg": 1.5
+    },
+    {
+      "id": "hk_ump",
+      "name": "HK UMP",
+      "ammoType": ".45 ACP",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D10",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "HK UMP .45 ACP (1d6) 1d10+DEX 2.5 KG SUB",
+      "bulletDice": "1d6",
+      "weightKg": 2.5
+    },
+    {
+      "id": "usp",
+      "name": "USP",
+      "ammoType": ".45 ACP",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D10",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "USP .45 ACP 1d10+DEX 1 KG PIS",
+      "weightKg": 1.0
+    },
+    {
+      "id": "type_20",
+      "name": "Type 20",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6+3",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 3,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Type 20 5.56x45 (1d6) 1d6+DEX (+3 to attack and damage rolls) 2.5 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 2.5
+    },
+    {
+      "id": "uzi",
+      "name": "UZI",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "UZI 9x19 (1d6) 1d8+DEX 1.5KG SUB",
+      "bulletDice": "1d6",
+      "weightKg": 1.5
+    },
+    {
+      "id": "uzi_pro_uzi_pro_p",
+      "name": "UZI PRO/UZI PRO P",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "UZI PRO/UZI PRO P 9x19 (1d10) 1d8+DEX 0.5 KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 0.5
+    },
+    {
+      "id": "9a_91_vsk_94",
+      "name": "9A 91/VSK-94",
+      "ammoType": "9x39",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "9A 91/VSK-94 9x39 (1d6) 1d8+DEX 0.5 KG SUB",
+      "bulletDice": "1d6",
+      "weightKg": 0.5
+    },
+    {
+      "id": "ak_12",
+      "name": "AK 12",
+      "ammoType": "5.45x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6+1",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 1,
+      "fireModes": [
+        "semi",
+        "burst",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AK 12 5.45x39 (1d6) 1d6/2d6+DEX 3.5 KG AR (+1 to attack and damage rolls)",
+      "bulletDice": "1d6",
+      "burstDamage": "2D6",
+      "weightKg": 3.5,
+      "burstRounds": 2
+    },
+    {
+      "id": "akm_akmn_akms_akmsn",
+      "name": "AKM/AKMN/AKMS/AKMSN",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AKM/AKMN/AKMS/AKMSN 7.62x39 (1d6) 1d8+DEX 3 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 3.0
+    },
+    {
+      "id": "ak_103_104",
+      "name": "AK 103/104",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8+1",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 1,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AK 103/104 7.62x39 (1d6) 1d8+ DEX (+1 to attack and damage rolls) 2 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 2.0
+    },
+    {
+      "id": "ak_308",
+      "name": "AK 308",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AK 308 7.62x51 (1d6) 1d12+DEX 2KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 2.0
+    },
+    {
+      "id": "pkm",
+      "name": "PKM",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "PKM 7.62x54R (1d10) 1d12+DEX 8KG LMG",
+      "bulletDice": "1d10",
+      "weightKg": 8.0
+    },
+    {
+      "id": "pkp",
+      "name": "PKP",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "PKP 7.62x54R (1d6) 1d12+DEX 9.5KG LMG",
+      "bulletDice": "1d6",
+      "weightKg": 9.5
+    },
+    {
+      "id": "rfb",
+      "name": "RFB",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "RFB 7.62x51 1d12+DEX 5KG DMR",
+      "weightKg": 5.0
+    },
+    {
+      "id": "sr_25",
+      "name": "SR-25",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SR-25 7.62x51 1d12+DEX 3.5KG DMR",
+      "weightKg": 3.5
+    },
+    {
+      "id": "pl_15",
+      "name": "PL 15",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "PL 15 9x19 1d8+DEX 1KG PIS",
+      "weightKg": 1.0
+    },
+    {
+      "id": "dvl_10",
+      "name": "DVL 10",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "DVL 10 7.62x51 1d12+DEX 2.5KG Bolt Action",
+      "weightKg": 2.5
+    },
+    {
+      "id": "tx_15",
+      "name": "TX 15",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6+3",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 3,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "TX 15 5.56x45 1d6+DEX (+3 to attack and damage rolls) 2KG DMR",
+      "weightKg": 2.0
+    },
+    {
+      "id": "mp_18",
+      "name": "MP 18",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MP 18 7.62x54R 1d12+DEX 3KG Single Shot Rifle",
+      "weightKg": 3.0
+    },
+    {
+      "id": "mp_43",
+      "name": "MP 43",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "burst"
+      ],
+      "firingMode": "semi",
+      "properties": "MP 43 12 Ga 2d12/4d12+DEX 2KG SG (Double Barrel)",
+      "burstDamage": "4D12",
+      "weightKg": 2.0,
+      "burstRounds": 4
+    },
+    {
+      "id": "mp_133",
+      "name": "MP 133",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MP 133 12 Ga 2d12+DEX 4KG SG (Pump Action)",
+      "weightKg": 4.0
+    },
+    {
+      "id": "mp_155_153",
+      "name": "MP 155/153",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MP 155/153 12 GA 2d12+DEX 4KG SG (Semi)",
+      "weightKg": 4.0
+    },
+    {
+      "id": "aa_12",
+      "name": "AA 12",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AA 12 12 GA (1d4) 2d12+DEX 6KG SG",
+      "bulletDice": "1d4",
+      "weightKg": 6.0
+    },
+    {
+      "id": "desert_eagle",
+      "name": "Desert Eagle",
+      "ammoType": ".50 AE",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Desert Eagle .50 AE/.357 1d12+DEX 2KG PIS",
+      "weightKg": 2.0
+    },
+    {
+      "id": "makarov",
+      "name": "Makarov",
+      "ammoType": "9x18",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Makarov 9x18 1d8+DEX 0.5 KG PIS",
+      "weightKg": 0.5
+    },
+    {
+      "id": "mxlr",
+      "name": "MXLR",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MXLR .308 ME 2d12+DEX 2KG Lever Action",
+      "weightKg": 2.0
+    },
+    {
+      "id": "sks",
+      "name": "SKS",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SKS 7.62x39 1d8+DEX 2KG DMR",
+      "weightKg": 2.0
+    },
+    {
+      "id": "vepr_hunter",
+      "name": "Vepr Hunter",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Vepr Hunter 7.62x51 1d12+DEX 4KG DMR",
+      "weightKg": 4.0
+    },
+    {
+      "id": "vepr_km",
+      "name": "Vepr KM",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Vepr KM 7.62x39 1d8+DEX 2.5KG DMR",
+      "weightKg": 2.5
+    },
+    {
+      "id": "vpo_209",
+      "name": "VPO 209",
+      "ammoType": ".366",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "VPO 209 .366 1d8+DEX 2.5 KG DMR",
+      "weightKg": 2.5
+    },
+    {
+      "id": "vpo_215",
+      "name": "VPO 215",
+      "ammoType": ".366",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "VPO 215 .366 1d8+DEX 1.5 KG Bolt Action",
+      "weightKg": 1.5
+    },
+    {
+      "id": "mosin",
+      "name": "Mosin",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Mosin 7.62x54R 1d12+Dex 1.5 KG Bolt Action",
+      "weightKg": 1.5
+    },
+    {
+      "id": "590a1",
+      "name": "590A1",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "590A1 12Ga 2d12+DEX 2.5 KG SG (Pump Action)",
+      "weightKg": 2.5
+    },
+    {
+      "id": "qbz_191",
+      "name": "QBZ-191",
+      "ammoType": "5.8",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8+2",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 2,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "QBZ-191 5.8X42 (1d8) 1d8+DEX (+2 to attack and damage rolls) 3KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 3.0
+    },
+    {
+      "id": "t_5000m",
+      "name": "T 5000m",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12+3",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 3,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "T 5000m 7.62x51 1d12+DEX (+3 to attack and damage rolls) 2.5KG Bolt Action",
+      "weightKg": 2.5
+    },
+    {
+      "id": "pp_9",
+      "name": "PP 9",
+      "ammoType": "9x18",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "PP 9 9x18 (1d10) 1d8+DEX 1.5KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 1.5
+    },
+    {
+      "id": "pp_19",
+      "name": "PP 19",
+      "ammoType": "9x18",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "PP 19 9x18 (1d6) 1d8+DEX 1.5KG SUB",
+      "bulletDice": "1d6",
+      "weightKg": 1.5
+    },
+    {
+      "id": "ppsh_41",
+      "name": "PPSH 41",
+      "ammoType": "7.62x25",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D4",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "PPSH 41 7.62x25 (1d10) 1d4+DEX (cannot malfunction) 4KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 4.0
+    },
+    {
+      "id": "rpk_16",
+      "name": "RPK 16",
+      "ammoType": "5.45x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "RPK 16 5.45x39 (1d8) 1d6+DEX 3KG LMG",
+      "bulletDice": "1d8",
+      "weightKg": 3.0
+    },
+    {
+      "id": "rsh_12",
+      "name": "RSH 12",
+      "ammoType": "12.7x55",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "RSH 12 12.7x55 2d12+DEX 2KG 5 Shot Revolver",
+      "weightKg": 2.0
+    },
+    {
+      "id": "rshg_2",
+      "name": "RShG 2",
+      "ammoType": "72.5MM",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "60D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "RShG 2 72.5MM Splash: DC 24 DEX Saving throw on failed save 60D12+DEX Force Damage. On a successful save effected targets take half damage. Direct Impact: 60D12+DEX Force Damage target automatically fails the splash saving throw.",
+      "weaponType": "grenadeLauncher"
+    },
+    {
+      "id": "model_1_fa",
+      "name": "Model 1 FA",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6+3",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 3,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Model 1 FA 5.56 (1D8) 1d6+DEX (+3 to Attack and Damage rolls) 2.5KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 2.5
+    },
+    {
+      "id": "model_m700",
+      "name": "Model M700",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Model M700 7.62x51 1d12+DEX 1.5 KG 2.5 Bolt Action",
+      "weightKg": 1.5
+    },
+    {
+      "id": "rsass",
+      "name": "RSASS",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12+1",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 1,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "RSASS 7.62x51 1d12+DEX (+1to attack and damage rolls) 3.5KG DMR",
+      "weightKg": 3.5
+    },
+    {
+      "id": "model_870",
+      "name": "Model 870",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "Model 870 12GA 2d12+ DEX 2.5 KG SG (Pump)",
+      "weightKg": 2.5
+    },
+    {
+      "id": "rd_704",
+      "name": "RD 704",
+      "ammoType": "7.62x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8+3",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 3,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "RD 704 7.62x39 (1d6) 1d8+DEX (+3to attack and damage rolls) 3.5 KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 3.5
+    },
+    {
+      "id": "sag_ak_545",
+      "name": "SAG AK 545",
+      "ammoType": "5.45x39",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SAG AK 545 5.45x39 1d6+DEX 2.5 KG DMR",
+      "weightKg": 2.5
+    },
+    {
+      "id": "mcx",
+      "name": "MCX",
+      "ammoType": ".300 BLK",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MCX .300 BLK (1d8) 1d8+DEX 3.5KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 3.5
+    },
+    {
+      "id": "mcx_spear",
+      "name": "MCX Spear",
+      "ammoType": "6.8x51",
+      "ammoMax": 25,
+      "ammo": 25,
+      "roundsPerShot": 1,
+      "damage": "2D8+1",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 1,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MCX Spear 6.8x51 (1d8) 2d8+DEX (+1 to attack and damage rolls 3.5KG AR",
+      "bulletDice": "1d8",
+      "weightKg": 3.5
+    },
+    {
+      "id": "mpx",
+      "name": "MPX",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "MPX 9x19 (1d8) 1d8+DEX 0.5KG SUB",
+      "bulletDice": "1d8",
+      "weightKg": 0.5
+    },
+    {
+      "id": "p226",
+      "name": "P226",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "P226 9x19 1d8+DEX 0.5KG PIS",
+      "weightKg": 0.5
+    },
+    {
+      "id": "sr_2m",
+      "name": "SR 2M",
+      "ammoType": "9x21",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "SR 2M 9x21 (1d10) 1d8+DEX 1KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 1.0
+    },
+    {
+      "id": "sr_3m",
+      "name": "SR 3M",
+      "ammoType": "9x39",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "2D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "SR 3M 9x39 (1d10) 2d8+DEX 2KG SUV",
+      "bulletDice": "1d10",
+      "weightKg": 2.0
+    },
+    {
+      "id": "sv_98",
+      "name": "SV 98",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SV 98 7.62x54R 2D12+DEX 3KG Bolt Action",
+      "weightKg": 3.0
+    },
+    {
+      "id": "svds",
+      "name": "SVDS",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SVDS 7.62x54R 2d12+DEX 4KG DMR",
+      "weightKg": 4.0
+    },
+    {
+      "id": "mk_18",
+      "name": "MK 18",
+      "ammoType": ".338 Lapua Magnum",
+      "ammoMax": 5,
+      "ammo": 5,
+      "roundsPerShot": 1,
+      "damage": "4D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MK 18 .338 LM 4d12+DEX 9KG DMR",
+      "weightKg": 9.0
+    },
+    {
+      "id": "saiga_12k",
+      "name": "Saiga 12k",
+      "ammoType": "12Ga",
+      "ammoMax": 6,
+      "ammo": 6,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Saiga 12k 12GA (1d4) 2d12+DEX 4.5KG SG",
+      "bulletDice": "1d4",
+      "weightKg": 4.5
+    },
+    {
+      "id": "trg_m10",
+      "name": "TRG M10",
+      "ammoType": ".338 Lapua Magnum",
+      "ammoMax": 5,
+      "ammo": 5,
+      "roundsPerShot": 1,
+      "damage": "4D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "TRG M10 .338 LM 4d12+DEX 3.5KG Bolt Action",
+      "weightKg": 3.5
+    },
+    {
+      "id": "sr_1mp",
+      "name": "SR 1MP",
+      "ammoType": "9x21",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SR 1MP 9x21 1d8+DEX 0.5KG PIS",
+      "weightKg": 0.5
+    },
+    {
+      "id": "stm_9",
+      "name": "STM 9",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "STM 9 9x19 1d8+DEX 1.5KG SUB",
+      "weightKg": 1.5
+    },
+    {
+      "id": "m1a",
+      "name": "M1A",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "M1A 7.62x51 1d12+DEX 2.5KG DMR",
+      "weightKg": 2.5
+    },
+    {
+      "id": "apb_aps",
+      "name": "ApB/APS",
+      "ammoType": "9x18",
+      "ammoMax": 8,
+      "ammo": 8,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "ApB/APS 9x18 (1d10) 1d8+DEX 0.5KG PIS",
+      "bulletDice": "1d10",
+      "weightKg": 0.5
+    },
+    {
+      "id": "aug_a1_a2",
+      "name": "Aug A1/A2",
+      "ammoType": "5.56x45",
+      "ammoMax": 30,
+      "ammo": 30,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Aug A1/A2 5.56 (1d6) 1d8+DEX 3.5KG AR",
+      "bulletDice": "1d6",
+      "weightKg": 3.5
+    },
+    {
+      "id": "vector",
+      "name": "Vector",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Vector 9x19 (1d12) 1d8+DEX 2.5KG SUB",
+      "bulletDice": "1d12",
+      "weightKg": 2.5
+    },
+    {
+      "id": "vector_45",
+      "name": "Vector 45",
+      "ammoType": ".45 ACP",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "1D10",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "Vector 45 .45 ACP (1d10) 1d10+DEX 3KG SUB",
+      "bulletDice": "1d10",
+      "weightKg": 3.0
+    },
+    {
+      "id": "tpkd",
+      "name": "TPKD",
+      "ammoType": "9.3x64",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "TPKD 9.3x64 2d12+DEX 5KG DMR",
+      "weightKg": 5.0
+    },
+    {
+      "id": "ak50",
+      "name": "AK50",
+      "ammoType": ".50BMG",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "5D20",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AK50 .50BMG (1d4) 5d20+DEX (requires 20 or higher strength to shoot while standing) 10KG AR",
+      "bulletDice": "1d4",
+      "weightKg": 10.0
+    },
+    {
+      "id": "ags",
+      "name": "AGS",
+      "ammoType": "40mm",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "60D6",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "AGS 40mm Splash: DC 22 Saving throw at disadvantage on failed save 60d6+DEX Piercing Damage",
+      "weaponType": "grenadeLauncher"
+    },
+    {
+      "id": "nvs",
+      "name": "NVS",
+      "ammoType": "12.7x108mm",
+      "ammoMax": 0,
+      "ammo": 0,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "NVS 12.7x108 (1d6) 2d12+DEX 12KG Mounted MG",
+      "bulletDice": "1d6",
+      "weightKg": 12.0
+    },
+    {
+      "id": "ks_23",
+      "name": "KS 23",
+      "ammoType": "23x75",
+      "ammoMax": 4,
+      "ammo": 4,
+      "roundsPerShot": 1,
+      "damage": "4D20",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "KS 23 23x75mm 4d20+DEX 5KG SG (Pump Action) effective range 25/40ft",
+      "weightKg": 5.0
+    },
+    {
+      "id": "toz_106",
+      "name": "TOZ 106",
+      "ammoType": "20GA",
+      "ammoMax": 4,
+      "ammo": 4,
+      "roundsPerShot": 1,
+      "damage": "1D10",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "TOZ 106 20GA 1d10+DEX 1.5KG SG (Bolt Action)",
+      "weightKg": 1.5
+    },
+    {
+      "id": "avt_40",
+      "name": "AVT-40",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "AVT-40 7.62x54R (1d6) 2d12+DEX 4.5KG DMR",
+      "bulletDice": "1d6",
+      "weightKg": 4.5
+    },
+    {
+      "id": "svr_40",
+      "name": "SVR-40",
+      "ammoType": "7.62x54R",
+      "ammoMax": 10,
+      "ammo": 10,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "SVR-40 7.62x54R 2d12+DEX 4.5KG DMR",
+      "weightKg": 4.5
+    },
+    {
+      "id": "m60e4_e6",
+      "name": "M60E4/E6",
+      "ammoType": "7.62x51",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "2D12",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi",
+        "fullAuto"
+      ],
+      "firingMode": "semi",
+      "properties": "M60E4/E6 7.62x51 (1d8) 2d12+DEX 6KG LMG",
+      "bulletDice": "1d8",
+      "weightKg": 6.0
+    },
+    {
+      "id": "mp_443",
+      "name": "MP 443",
+      "ammoType": "9x19",
+      "ammoMax": 20,
+      "ammo": 20,
+      "roundsPerShot": 1,
+      "damage": "1D8",
+      "damageAbility": "dex",
+      "attackAbility": "dex",
+      "proficient": true,
+      "attackBonus": 0,
+      "fireModes": [
+        "semi"
+      ],
+      "firingMode": "semi",
+      "properties": "MP 443 9x19 1d8+DEX 0.5KG PIS",
+      "weightKg": 0.5
+    }
+  ],
+  "items": [
+    {
+      "id": "ammo_5_8_dvc12_ap",
+      "name": "5.8 DVC12 AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.8",
+      "quantity": 1,
+      "penetration": 49,
+      "durabilityBurn": 2,
+      "description": "DVC12 AP 49 Pen 2x Durability Burn"
+    },
+    {
+      "id": "ammo_5_8_dbp191",
+      "name": "5.8 DBP191",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.8",
+      "quantity": 1,
+      "penetration": 32,
+      "durabilityBurn": 1,
+      "description": "DBP191 32 Pen"
+    },
+    {
+      "id": "ammo_7_62x51_m993",
+      "name": "7.62x51 M993",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 70,
+      "durabilityBurn": 3,
+      "description": "M993 70 Pen 3x durability burn"
+    },
+    {
+      "id": "ammo_7_62x51_m61",
+      "name": "7.62x51 M61",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 64,
+      "durabilityBurn": 2,
+      "description": "M61 64 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_7_62x51_m62",
+      "name": "7.62x51 M62",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 52,
+      "durabilityBurn": 2,
+      "description": "M62 52 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_7_62x51_m80",
+      "name": "7.62x51 M80",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 41,
+      "durabilityBurn": 1,
+      "description": "M80 41 Pen"
+    },
+    {
+      "id": "ammo_7_62x51_bcp_fmj",
+      "name": "7.62x51 BCP FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "BCP FMJ 35 Pen"
+    },
+    {
+      "id": "ammo_7_62x51_ultra_nosler",
+      "name": "7.62x51 Ultra Nosler",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x51",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "Ultra Nosler 10 pen"
+    },
+    {
+      "id": "ammo_7_62x54r_bs_gzh",
+      "name": "7.62x54R BS GZH",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x54R",
+      "quantity": 1,
+      "penetration": 70,
+      "durabilityBurn": 3,
+      "description": "BS GZH 70 pen 3x Durability Burn"
+    },
+    {
+      "id": "ammo_7_62x54r_snb_gzh",
+      "name": "7.62x54R SNB gzh",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x54R",
+      "quantity": 1,
+      "penetration": 62,
+      "durabilityBurn": 2,
+      "description": "SNB gzh 62 pen 2x Durability Burn"
+    },
+    {
+      "id": "ammo_7_62x54r_ps",
+      "name": "7.62x54R PS",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x54R",
+      "quantity": 1,
+      "penetration": 42,
+      "durabilityBurn": 1,
+      "description": "PS 42 Pen"
+    },
+    {
+      "id": "ammo_7_62x54r_t45m",
+      "name": "7.62x54R T45M",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x54R",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "T45M 35 Pen"
+    },
+    {
+      "id": "ammo_5_56x45_ssa_ap",
+      "name": "5.56x45 SSA AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.56x45",
+      "quantity": 1,
+      "penetration": 56,
+      "durabilityBurn": 3,
+      "description": "SSA AP 56 Pen 3x Durability Burn"
+    },
+    {
+      "id": "ammo_5_56x45_m995",
+      "name": "5.56x45 M995",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.56x45",
+      "quantity": 1,
+      "penetration": 52,
+      "durabilityBurn": 2,
+      "description": "M995 52 Pen 2X Durability Burn"
+    },
+    {
+      "id": "ammo_5_56x45_m855a1",
+      "name": "5.56x45 M855A1",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.56x45",
+      "quantity": 1,
+      "penetration": 42,
+      "durabilityBurn": 2,
+      "description": "M855A1 42 Pen 2x Durability Burn"
+    },
+    {
+      "id": "ammo_5_56x45_m855",
+      "name": "5.56x45 M855",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.56x45",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "M855 35 Pen"
+    },
+    {
+      "id": "ammo_5_56x45_hp",
+      "name": "5.56x45 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.56x45",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "HP 10 Pen"
+    },
+    {
+      "id": "ammo_7_62x39_mai_ap",
+      "name": "7.62x39 MAI AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x39",
+      "quantity": 1,
+      "penetration": 58,
+      "durabilityBurn": 3,
+      "description": "MAI AP 58 Pen 3x Durability burn"
+    },
+    {
+      "id": "ammo_7_62x39_pp_gzh",
+      "name": "7.62x39 PP gzh",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x39",
+      "quantity": 1,
+      "penetration": 42,
+      "durabilityBurn": 2,
+      "description": "PP gzh 42 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_7_62x39_ps_gzh",
+      "name": "7.62x39 Ps gzh",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x39",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "Ps gzh 35  pen"
+    },
+    {
+      "id": "ammo_7_62x39_hp",
+      "name": "7.62x39 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x39",
+      "quantity": 1,
+      "penetration": 25,
+      "durabilityBurn": 1,
+      "description": "HP 25 Pen"
+    },
+    {
+      "id": "ammo_5_45x39_ppbs_igolnik",
+      "name": "5.45x39 PPBS Igolnik",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.45x39",
+      "quantity": 1,
+      "penetration": 62,
+      "durabilityBurn": 3,
+      "description": "PPBS Igolnik 62 Pen 3x durability burn"
+    },
+    {
+      "id": "ammo_5_45x39_bs",
+      "name": "5.45x39 BS",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.45x39",
+      "quantity": 1,
+      "penetration": 51,
+      "durabilityBurn": 2,
+      "description": "BS 51 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_5_45x39_bt",
+      "name": "5.45x39 BT",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.45x39",
+      "quantity": 1,
+      "penetration": 42,
+      "durabilityBurn": 2,
+      "description": "BT 42 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_5_45x39_ps",
+      "name": "5.45x39 PS",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.45x39",
+      "quantity": 1,
+      "penetration": 32,
+      "durabilityBurn": 1,
+      "description": "PS 32 Pen"
+    },
+    {
+      "id": "ammo_5_45x39_hp",
+      "name": "5.45x39 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.45x39",
+      "quantity": 1,
+      "penetration": 15,
+      "durabilityBurn": 1,
+      "description": "HP 15 Pen"
+    },
+    {
+      "id": "ammo_9x39_bp",
+      "name": "9x39 BP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x39",
+      "quantity": 1,
+      "penetration": 55,
+      "durabilityBurn": 2,
+      "description": "BP 55 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_9x39_sp6",
+      "name": "9x39 SP6",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x39",
+      "quantity": 1,
+      "penetration": 48,
+      "durabilityBurn": 2,
+      "description": "SP6 48 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_9x39_spp",
+      "name": "9x39 SPP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x39",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "SPP 40 Pen"
+    },
+    {
+      "id": "ammo_9x39_sp5",
+      "name": "9x39 Sp5",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x39",
+      "quantity": 1,
+      "penetration": 25,
+      "durabilityBurn": 1,
+      "description": "Sp5 25 Pen"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_ap",
+      "name": ".338 Lapua Magnum AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 110,
+      "durabilityBurn": 4,
+      "description": "AP 110 Pen 4x durability burn"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_fmj",
+      "name": ".338 Lapua Magnum FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 47,
+      "durabilityBurn": 2,
+      "description": "FMJ 47 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_tac_x_hp",
+      "name": ".338 Lapua Magnum TAC X (HP)",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "TAC X (HP) 35 pen"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_apsx",
+      "name": ".338 Lapua Magnum APSX",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 55,
+      "durabilityBurn": 2,
+      "description": "APSX 55 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_fmj_2",
+      "name": ".338 Lapua Magnum FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "FMJ 40 Pen"
+    },
+    {
+      "id": "ammo_338_lapua_magnum_jsp",
+      "name": ".338 Lapua Magnum JSP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".338 Lapua Magnum",
+      "quantity": 1,
+      "penetration": 37,
+      "durabilityBurn": 1,
+      "description": "JSP 37 Pen"
+    },
+    {
+      "id": "ammo_5_7x28_ss190",
+      "name": "5.7x28 Ss190",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.7x28",
+      "quantity": 1,
+      "penetration": 37,
+      "durabilityBurn": 1,
+      "description": "Ss190 37 pen"
+    },
+    {
+      "id": "ammo_5_7x28_sb193",
+      "name": "5.7x28 SB193",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.7x28",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "SB193 35 pen"
+    },
+    {
+      "id": "ammo_5_7x28_hp",
+      "name": "5.7x28 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "5.7x28",
+      "quantity": 1,
+      "penetration": 5,
+      "durabilityBurn": 1,
+      "description": "HP 5 pen"
+    },
+    {
+      "id": "ammo_9x19_pbp",
+      "name": "9x19 PBP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x19",
+      "quantity": 1,
+      "penetration": 39,
+      "durabilityBurn": 1,
+      "description": "PBP 39 pen"
+    },
+    {
+      "id": "ammo_9x19_ap6_3",
+      "name": "9x19 AP6.3",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x19",
+      "quantity": 1,
+      "penetration": 30,
+      "durabilityBurn": 1,
+      "description": "AP6.3 30 Pen"
+    },
+    {
+      "id": "ammo_9x19_pst",
+      "name": "9x19 Pst",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x19",
+      "quantity": 1,
+      "penetration": 18,
+      "durabilityBurn": 1,
+      "description": "Pst 18 Pen"
+    },
+    {
+      "id": "ammo_9x19_luger_cci",
+      "name": "9x19 Luger Cci",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x19",
+      "quantity": 1,
+      "penetration": 12,
+      "durabilityBurn": 1,
+      "description": "Luger Cci 12 pen"
+    },
+    {
+      "id": "ammo_45_acp_ap",
+      "name": ".45 ACP AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".45 ACP",
+      "quantity": 1,
+      "penetration": 39,
+      "durabilityBurn": 1,
+      "description": "AP 39 Pen"
+    },
+    {
+      "id": "ammo_45_acp_fmj",
+      "name": ".45 ACP FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".45 ACP",
+      "quantity": 1,
+      "penetration": 20,
+      "durabilityBurn": 1,
+      "description": "FMJ 20 Pen"
+    },
+    {
+      "id": "ammo_45_acp_hp",
+      "name": ".45 ACP HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".45 ACP",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "HP 10 Pen"
+    },
+    {
+      "id": "ammo_9x21_7u4",
+      "name": "9x21 7u4",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x21",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "7u4 40 Pen"
+    },
+    {
+      "id": "ammo_9x21_bt",
+      "name": "9x21 BT",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x21",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "BT 35 Pen"
+    },
+    {
+      "id": "ammo_9x21_ps",
+      "name": "9x21 PS",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x21",
+      "quantity": 1,
+      "penetration": 20,
+      "durabilityBurn": 1,
+      "description": "PS 20 Pen"
+    },
+    {
+      "id": "ammo_9x21_hp",
+      "name": "9x21 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x21",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "HP 10 Pen"
+    },
+    {
+      "id": "ammo_9x18_pstm",
+      "name": "9x18 Pstm",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x18",
+      "quantity": 1,
+      "penetration": 28,
+      "durabilityBurn": 1,
+      "description": "Pstm 28 pen"
+    },
+    {
+      "id": "ammo_9x18_bzht",
+      "name": "9x18 Bzht",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x18",
+      "quantity": 1,
+      "penetration": 15,
+      "durabilityBurn": 1,
+      "description": "Bzht 15 pen"
+    },
+    {
+      "id": "ammo_9x18_hp",
+      "name": "9x18 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9x18",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "HP 10 pen"
+    },
+    {
+      "id": "ammo_9_3x64mm_7n33",
+      "name": "9.3x64mm 7n33",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9.3x64mm",
+      "quantity": 1,
+      "penetration": 56,
+      "durabilityBurn": 2,
+      "description": "7n33 56 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_9_3x64mm_fmj",
+      "name": "9.3x64mm FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "9.3x64mm",
+      "quantity": 1,
+      "penetration": 45,
+      "durabilityBurn": 2,
+      "description": "FMJ 45 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_7_62x25_m995",
+      "name": "7.62x25 M995",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x25",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "M995 40 pen"
+    },
+    {
+      "id": "ammo_7_62x25_pst",
+      "name": "7.62x25 PST",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x25",
+      "quantity": 1,
+      "penetration": 20,
+      "durabilityBurn": 1,
+      "description": "PST 20 pen"
+    },
+    {
+      "id": "ammo_7_62x25_hp",
+      "name": "7.62x25 HP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "7.62x25",
+      "quantity": 1,
+      "penetration": 5,
+      "durabilityBurn": 1,
+      "description": "HP 5 Pen"
+    },
+    {
+      "id": "ammo_6_8x51_hybrid",
+      "name": "6.8x51 Hybrid",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "6.8x51",
+      "quantity": 1,
+      "penetration": 50,
+      "durabilityBurn": 2,
+      "description": "Hybrid 50 pen 2x durability burn"
+    },
+    {
+      "id": "ammo_6_8x51_fmj",
+      "name": "6.8x51 FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "6.8x51",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "FMJ 40 Pen"
+    },
+    {
+      "id": "ammo_23x75_barrikada_slug",
+      "name": "23x75 Barrikada Slug",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "23x75",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "Barrikada Slug 40 Pen"
+    },
+    {
+      "id": "ammo_23x75_shrapnel_25",
+      "name": "23x75 Shrapnel-25",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "23x75",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "Shrapnel-25 10 Pen"
+    },
+    {
+      "id": "ammo_23x75_shrapnel_10",
+      "name": "23x75 Shrapnel-10",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "23x75",
+      "quantity": 1,
+      "penetration": 11,
+      "durabilityBurn": 1,
+      "description": "Shrapnel-10 11 pen"
+    },
+    {
+      "id": "ammo_20ga_tss_slug",
+      "name": "20GA TSS Slug",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "20GA",
+      "quantity": 1,
+      "penetration": 30,
+      "durabilityBurn": 1,
+      "description": "TSS Slug 30 Pen"
+    },
+    {
+      "id": "ammo_20ga_dangerous_game_slug",
+      "name": "20GA Dangerous Game Slug",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "20GA",
+      "quantity": 1,
+      "penetration": 20,
+      "durabilityBurn": 1,
+      "description": "Dangerous Game Slug 20 pen"
+    },
+    {
+      "id": "ammo_20ga_7_5mm_birdshot",
+      "name": "20GA 7.5mm birdshot",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "20GA",
+      "quantity": 1,
+      "penetration": 1,
+      "durabilityBurn": 1,
+      "description": "7.5mm birdshot 1 pen"
+    },
+    {
+      "id": "ammo_20ga_flechette",
+      "name": "20GA Flechette",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "20GA",
+      "quantity": 1,
+      "penetration": 20,
+      "durabilityBurn": 1,
+      "description": "Flechette 20 Pen"
+    },
+    {
+      "id": "ammo_12_7x108_ps12b",
+      "name": "12.7x108 Ps12b",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12.7x108",
+      "quantity": 1,
+      "penetration": 46,
+      "durabilityBurn": 2,
+      "description": "Ps12b 46 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_12_7x108_ps12a_hp",
+      "name": "12.7x108 Ps12a(hp)",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12.7x108",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "Ps12a(hp) 10 pen"
+    },
+    {
+      "id": "ammo_12_7x108_ps12",
+      "name": "12.7x108 PS12",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12.7x108",
+      "quantity": 1,
+      "penetration": 30,
+      "durabilityBurn": 1,
+      "description": "PS12 30 pen"
+    },
+    {
+      "id": "ammo_12ga_slugs",
+      "name": "12Ga slugs",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12Ga",
+      "quantity": 1,
+      "penetration": 26,
+      "durabilityBurn": 1,
+      "description": "slugs 26 pen"
+    },
+    {
+      "id": "ammo_12ga_buckshot",
+      "name": "12Ga Buckshot",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12Ga",
+      "quantity": 1,
+      "penetration": 1,
+      "durabilityBurn": 1,
+      "description": "Buckshot 1 pen"
+    },
+    {
+      "id": "ammo_12ga_ap_20_slugs",
+      "name": "12Ga AP 20 Slugs",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12Ga",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "AP 20 Slugs 40 pen"
+    },
+    {
+      "id": "ammo_12ga_flechette_hp",
+      "name": "12Ga Flechette(hp)",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "12Ga",
+      "quantity": 1,
+      "penetration": 30,
+      "durabilityBurn": 1,
+      "description": "Flechette(hp) 30 pen"
+    },
+    {
+      "id": "ammo_50bmg_hp",
+      "name": "50BMG Hp",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "50BMG",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "Hp 35 Pen"
+    },
+    {
+      "id": "ammo_50bmg_m33",
+      "name": "50BMG M33",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "50BMG",
+      "quantity": 1,
+      "penetration": 55,
+      "durabilityBurn": 2,
+      "description": "M33 55 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_50bmg_slap",
+      "name": "50BMG Slap",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": "50BMG",
+      "quantity": 1,
+      "penetration": 115,
+      "durabilityBurn": 4,
+      "description": "Slap 115 Pen 4x durability burn"
+    },
+    {
+      "id": "ammo_50_ae_fmj_bull",
+      "name": ".50 AE FMJ Bull",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".50 AE",
+      "quantity": 1,
+      "penetration": 57,
+      "durabilityBurn": 2,
+      "description": "FMJ Bull 57 Pen 2x durability burn"
+    },
+    {
+      "id": "ammo_50_ae_fmj",
+      "name": ".50 AE FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".50 AE",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "FMJ 40 Pen"
+    },
+    {
+      "id": "ammo_50_ae_copper_solid",
+      "name": ".50 AE Copper Solid",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".50 AE",
+      "quantity": 1,
+      "penetration": 32,
+      "durabilityBurn": 1,
+      "description": "Copper Solid 32 Pen"
+    },
+    {
+      "id": "ammo_50_ae_hawk_jsp",
+      "name": ".50 AE Hawk JSP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".50 AE",
+      "quantity": 1,
+      "penetration": 25,
+      "durabilityBurn": 1,
+      "description": "Hawk JSP 25 Pen"
+    },
+    {
+      "id": "ammo_50_ae_jhp",
+      "name": ".50 AE JHP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".50 AE",
+      "quantity": 1,
+      "penetration": 15,
+      "durabilityBurn": 1,
+      "description": "JHP 15 pen"
+    },
+    {
+      "id": "ammo_366_ap",
+      "name": ".366 AP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".366",
+      "quantity": 1,
+      "penetration": 40,
+      "durabilityBurn": 1,
+      "description": "AP 40 pen"
+    },
+    {
+      "id": "ammo_366_eko",
+      "name": ".366 EKO",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".366",
+      "quantity": 1,
+      "penetration": 30,
+      "durabilityBurn": 1,
+      "description": "EKO 30 pen"
+    },
+    {
+      "id": "ammo_366_geksa",
+      "name": ".366 Geksa",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".366",
+      "quantity": 1,
+      "penetration": 10,
+      "durabilityBurn": 1,
+      "description": "Geksa 10 pen"
+    },
+    {
+      "id": "ammo_357_magnum_sp",
+      "name": ".357 Magnum Sp",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".357 Magnum",
+      "quantity": 1,
+      "penetration": 12,
+      "durabilityBurn": 1,
+      "description": "Sp 12 pen"
+    },
+    {
+      "id": "ammo_357_magnum_jhp",
+      "name": ".357 Magnum JHP",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".357 Magnum",
+      "quantity": 1,
+      "penetration": 25,
+      "durabilityBurn": 1,
+      "description": "JHP 25 pen"
+    },
+    {
+      "id": "ammo_357_magnum_fmj",
+      "name": ".357 Magnum FMJ",
+      "kind": "ammo",
+      "category": "ammo",
+      "ammoType": ".357 Magnum",
+      "quantity": 1,
+      "penetration": 35,
+      "durabilityBurn": 1,
+      "description": "FMJ 35 pen"
+    }
+  ],
+  "ammunitionByCaliber": [
+    {
+      "name": "5.8",
+      "caliber": "5.8",
+      "standardMagazine": 30
+    },
+    {
+      "name": "7.62x51",
+      "caliber": "7.62x51",
+      "standardMagazine": 20
+    },
+    {
+      "name": "7.62x54R",
+      "caliber": "7.62x54R",
+      "standardMagazine": 10
+    },
+    {
+      "name": "5.56x45",
+      "caliber": "5.56x45",
+      "standardMagazine": 30
+    },
+    {
+      "name": "7.62x39",
+      "caliber": "7.62x39",
+      "standardMagazine": 30
+    },
+    {
+      "name": "5.45x39",
+      "caliber": "5.45x39",
+      "standardMagazine": 30
+    },
+    {
+      "name": "9x39",
+      "caliber": "9x39",
+      "standardMagazine": 20
+    },
+    {
+      "name": ".338 Lapua Magnum",
+      "caliber": ".338 Lapua Magnum",
+      "standardMagazine": 5
+    },
+    {
+      "name": "5.7x28",
+      "caliber": "5.7x28",
+      "standardMagazine": 20
+    },
+    {
+      "name": "9x19",
+      "caliber": "9x19",
+      "standardMagazine": 20
+    },
+    {
+      "name": ".45 ACP",
+      "caliber": ".45 ACP",
+      "standardMagazine": 10
+    },
+    {
+      "name": "9x21",
+      "caliber": "9x21",
+      "standardMagazine": 30
+    },
+    {
+      "name": "9x18",
+      "caliber": "9x18",
+      "standardMagazine": 8
+    },
+    {
+      "name": "9.3x64mm",
+      "caliber": "9.3x64mm",
+      "standardMagazine": 8
+    },
+    {
+      "name": "7.62x25",
+      "caliber": "7.62x25",
+      "standardMagazine": 8
+    },
+    {
+      "name": "6.8x51",
+      "caliber": "6.8x51",
+      "standardMagazine": 25
+    },
+    {
+      "name": "23x75",
+      "caliber": "23x75",
+      "standardMagazine": 4
+    },
+    {
+      "name": "20GA",
+      "caliber": "20GA",
+      "standardMagazine": 4
+    },
+    {
+      "name": "12.7x108",
+      "caliber": "12.7x108",
+      "standardMagazine": 10
+    },
+    {
+      "name": "12Ga",
+      "caliber": "12Ga",
+      "standardMagazine": 6
+    },
+    {
+      "name": "50BMG",
+      "caliber": "50BMG",
+      "standardMagazine": 5
+    },
+    {
+      "name": ".50 AE",
+      "caliber": ".50 AE",
+      "standardMagazine": 8
+    },
+    {
+      "name": ".366",
+      "caliber": ".366",
+      "standardMagazine": 8
+    },
+    {
+      "name": ".357 Magnum",
+      "caliber": ".357 Magnum",
+      "standardMagazine": 6
+    }
+  ]
+}

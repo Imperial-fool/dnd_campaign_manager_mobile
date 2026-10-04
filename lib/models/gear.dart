@@ -20,6 +20,14 @@ class Weapon implements CatalogItem {
     this.ammo = 0,
     this.ammoMax = 0,
     this.roundsPerShot = 1,
+    this.burstRounds = 0,
+    List<String>? fireModes,
+    this.bulletDice = '',
+    this.burstDamage = '',
+    this.firingMode = 'semi',
+    this.damageAbility = '',
+    this.weightKg = 0,
+    this.weaponType = '',
     this.damage = '',
     this.attackAbility = Ability.dex,
     this.proficient = true,
@@ -29,7 +37,8 @@ class Weapon implements CatalogItem {
     this.properties = '',
     this.origin = '',
     List<Effect>? effects,
-  }) : effects = effects ?? [];
+  })  : effects = effects ?? [],
+        fireModes = fireModes ?? ['semi'];
 
   @override
   String id;
@@ -45,6 +54,14 @@ class Weapon implements CatalogItem {
   /// Magazine size. 0 = no magazine: firing draws straight from inventory ammo.
   int ammoMax;
   int roundsPerShot;
+  int burstRounds;
+  List<String> fireModes;
+  String bulletDice;
+  String burstDamage;
+  String firingMode;
+  String damageAbility;
+  double weightKg;
+  String weaponType;
 
   /// Dice expression, e.g. "2d6+2".
   String damage;
@@ -74,6 +91,18 @@ class Weapon implements CatalogItem {
       ammoMax: asInt(j['ammoMax']),
       roundsPerShot:
           asInt(j['roundsPerShot'], 1) < 1 ? 1 : asInt(j['roundsPerShot'], 1),
+      burstRounds: asInt(j['burstRounds']),
+      fireModes: j['fireModes'] is List
+          ? (j['fireModes'] as List).map((mode) => mode.toString()).toList()
+          : ['semi'],
+      bulletDice: asStr(j['bulletDice']),
+      burstDamage: asStr(j['burstDamage']),
+      firingMode: asStr(j['firingMode'], 'semi'),
+      damageAbility: asStr(j['damageAbility']),
+      weightKg: j['weightKg'] is num
+          ? (j['weightKg'] as num).toDouble()
+          : double.tryParse(asStr(j['weightKg'])) ?? 0,
+      weaponType: asStr(j['weaponType']),
       damage: asStr(j['damage']),
       attackAbility: Ability.fromKey(asStr(j['attackAbility'], 'dex')),
       proficient: asBool(j['proficient'], true),
@@ -94,7 +123,14 @@ class Weapon implements CatalogItem {
         'ammo': ammo,
         'ammoMax': ammoMax,
         'roundsPerShot': roundsPerShot,
-        'damage': damage,
+        if (burstRounds > 0) 'burstRounds': burstRounds,
+        'fireModes': fireModes,
+        'bulletDice': bulletDice,
+        'burstDamage': burstDamage,
+        'firingMode': firingMode,
+        if (damageAbility.isNotEmpty) 'damageAbility': damageAbility,
+        if (weightKg > 0) 'weightKg': weightKg,
+        if (weaponType.isNotEmpty) 'weaponType': weaponType,
         'attackAbility': attackAbility.key,
         'proficient': proficient,
         'attackBonus': attackBonus,
@@ -247,6 +283,13 @@ class InventoryItem implements CatalogItem {
     this.uses = 0,
     this.usesMax = 0,
     this.ammoType = '',
+    this.damage = '',
+    this.damageType = '',
+    this.areaRadius = 0,
+    this.saveDc = 0,
+    this.saveAbility = '',
+    this.penetration = 0,
+    this.durabilityBurn = 1,
     this.origin = '',
     this.active = false,
     List<Effect>? effects,
@@ -265,6 +308,13 @@ class InventoryItem implements CatalogItem {
   int uses; // remaining uses of the current unit
   int usesMax; // 0 = no per-unit uses
   String ammoType;
+  String damage;
+  String damageType;
+  int areaRadius;
+  int saveDc;
+  String saveAbility;
+  int penetration;
+  int durabilityBurn;
   String origin;
   bool active;
   List<Effect> effects;
@@ -296,6 +346,13 @@ class InventoryItem implements CatalogItem {
       uses: asInt(j['uses'], usesMax),
       usesMax: usesMax,
       ammoType: asStr(j['ammoType']),
+      damage: asStr(j['damage']),
+      damageType: asStr(j['damageType']),
+      areaRadius: asInt(j['areaRadius']),
+      saveDc: asInt(j['saveDc']),
+      saveAbility: asStr(j['saveAbility']),
+      penetration: asInt(j['penetration']),
+      durabilityBurn: asInt(j['durabilityBurn'], 1),
       origin: asStr(j['origin']),
       active: asBool(j['active']),
       effects: _effects(j['effects']),
@@ -313,6 +370,13 @@ class InventoryItem implements CatalogItem {
         'uses': uses,
         'usesMax': usesMax,
         'ammoType': ammoType,
+        'damage': damage,
+        'damageType': damageType,
+        'areaRadius': areaRadius,
+        'saveDc': saveDc,
+        'saveAbility': saveAbility,
+        if (penetration > 0) 'penetration': penetration,
+        if (durabilityBurn != 1) 'durabilityBurn': durabilityBurn,
         'origin': origin,
         'active': active,
         'effects': effects.map((e) => e.toJson()).toList(),

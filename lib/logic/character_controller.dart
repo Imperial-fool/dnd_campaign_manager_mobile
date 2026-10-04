@@ -169,7 +169,10 @@ class CharacterController extends ChangeNotifier {
     final firstClassLevel = selectingClass ? 1 : targetLevel;
     final choices = <Map<String, dynamic>>[];
     for (var level = firstClassLevel; level <= targetLevel; level++) {
-      choices.addAll(definition.choicesAtLevel(level));
+      choices.addAll(definition.choicesAtLevel(
+        level,
+        availableFeats: catalog.items('feats'),
+      ));
       if (selectedSubclass != null) {
         choices.addAll(
           selectedSubclass.choicesAtLevel(level, definition.id),
@@ -181,6 +184,9 @@ class CharacterController extends ChangeNotifier {
       final key = asStr(choice['selectionKey']);
       final selected = selections[key] ?? const <String>[];
       final count = asInt(choice['count'], 1);
+      if (asMapList(choice['options']).isEmpty) {
+        return 'Import at least one feat before advancing to level $targetLevel.';
+      }
       if (selected.length != count || selected.toSet().length != count) {
         return 'Choose exactly $count option(s): ${asStr(choice['prompt'])}.';
       }
@@ -196,6 +202,12 @@ class CharacterController extends ChangeNotifier {
           final itemId = asStr(option['itemId']);
           if (!catalog.items(catalogKey).any((item) => item.id == itemId)) {
             return 'The selected ${asStr(option['name'])} is missing from the $catalogKey catalog.';
+          }
+          if (asStr(option['grantType']) == 'feat' &&
+              !catalog
+                  .items('feats')
+                  .any((feat) => feat.id == asStr(option['featId']))) {
+            return 'The selected feat is missing from the feats catalog.';
           }
         }
         selectedOptions.add((asStr(choice['selectionOrigin']), option));
@@ -287,6 +299,17 @@ class CharacterController extends ChangeNotifier {
             skill.proficiencySources.add(origin);
           }
         }
+        break;
+      case 'feat':
+        final feat = catalog
+            .items('feats')
+            .firstWhere((item) => item.id == asStr(option['featId']));
+        character.traits.add(
+          Trait.fromJson(feat.toJson(), defaultCategory: 'feat')
+            ..id = '${slug(origin)}_${feat.id}'
+            ..category = 'feat'
+            ..origin = origin,
+        );
         break;
       case 'catalog':
         final catalogKey = asStr(option['catalogKey']);
@@ -410,7 +433,7 @@ class CharacterController extends ChangeNotifier {
           title: '${w.name} damage', lines: const ['No damage dice set.']));
     }
     try {
-      final d = dice.roll(w.damage, doubleDice: crit);
+      final d = dice.roll(_weaponDamage(w, w.damage), doubleDice: crit);
       return _log(RollEntry(
         title: '${w.name} damage',
         total: d.total,
@@ -430,9 +453,37 @@ class CharacterController extends ChangeNotifier {
   ///  - weapon.ammoMax == 0 -> rounds are removed from matching inventory ammo
   ///  - weapon.ammoType blank -> no ammo needed
   RollEntry fire(Weapon w) {
-    final need = max(1, w.roundsPerShot);
+    final mode = w.firingMode;
+    final modeDamage = _weaponDamage(
+      w,
+      mode == 'burst' ? w.burstDamage : w.damage,
+    );
+    final need = mode == 'fullAuto'
+        ? _maximumDiceResult(w.bulletDice)
+        : mode == 'burst'
+            ? (w.burstRounds > 0 ? w.burstRounds : max(1, w.roundsPerShot))
+            : max(1, w.roundsPerShot);
     final type = w.ammoType.trim();
     final lines = <String>[];
+
+    if (mode == 'fullAuto' && w.bulletDice.trim().isEmpty) {
+      return _log(RollEntry(
+        title: '${w.name}: full auto unavailable',
+        lines: const ['Set a bullet dice expression first.'],
+      ));
+    }
+    if (mode == 'burst' && w.burstDamage.trim().isEmpty) {
+      return _log(RollEntry(
+        title: '${w.name}: burst unavailable',
+        lines: const ['Set a burst damage expression first.'],
+      ));
+    }
+    if (!{'semi', 'burst', 'fullAuto'}.contains(mode)) {
+      return _log(RollEntry(
+        title: '${w.name}: invalid firing mode',
+        lines: ['Unsupported firing mode "$mode".'],
+      ));
+    }
 
     if (type.isNotEmpty) {
       if (w.ammoMax > 0) {
@@ -463,9 +514,38 @@ class CharacterController extends ChangeNotifier {
 
     if (a.fumble) {
       lines.add('Natural 1: miss');
-    } else if (w.damage.trim().isNotEmpty) {
+    } else if (mode == 'burst') {
       try {
-        final d = dice.roll(w.damage, doubleDice: a.crit);
+        final d = dice.roll(modeDamage, doubleDice: a.crit);
+        lines
+          ..add('Burst: all $need rounds hit')
+          ..add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total} (${d.parts})');
+      } on FormatException catch (e) {
+        lines.add('Burst damage not rolled: ${e.message}');
+      }
+    } else if (mode == 'fullAuto') {
+      try {
+        final hits = dice.roll(w.bulletDice).total.clamp(0, need).toInt();
+        lines.add('Full auto: $hits hits from $need rounds');
+        var damageTotal = 0;
+        for (var i = 0; i < hits; i++) {
+          final d = dice.roll(modeDamage, doubleDice: a.crit);
+          damageTotal += d.total;
+          lines.add('Hit ${i + 1}: ${d.total} (${d.parts})');
+        }
+        return _log(RollEntry(
+          title: '${w.name} full auto',
+          total: damageTotal,
+          lines: lines,
+          crit: a.crit,
+          fumble: a.fumble,
+        ));
+      } on FormatException catch (e) {
+        lines.add('Full-auto damage not rolled: ${e.message}');
+      }
+    } else if (modeDamage.trim().isNotEmpty) {
+      try {
+        final d = dice.roll(modeDamage, doubleDice: a.crit);
         lines.add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total}  (${d.parts})');
       } on FormatException catch (e) {
         lines.add('Damage not rolled: ${e.message}');
@@ -477,6 +557,22 @@ class CharacterController extends ChangeNotifier {
         lines: lines,
         crit: a.crit,
         fumble: a.fumble));
+  }
+
+  int _maximumDiceResult(String expression) {
+    final match = RegExp(r'(?:^|[+-])(\d*)d(\d+)').firstMatch(expression);
+    if (match == null) return 1;
+    final count = int.tryParse(match.group(1) ?? '') ?? 1;
+    final sides = int.tryParse(match.group(2) ?? '') ?? 1;
+    return max(1, count * sides);
+  }
+
+  String _weaponDamage(Weapon weapon, String expression) {
+    if (weapon.damageAbility.isEmpty || expression.trim().isEmpty) {
+      return expression;
+    }
+    final ability = Ability.fromKey(weapon.damageAbility);
+    return '$expression${Rules.signed(Rules.abilityMod(character, ability))}';
   }
 
   /// Magazine weapons only: move rounds from inventory ammo into the weapon.
@@ -515,7 +611,27 @@ class CharacterController extends ChangeNotifier {
     final left = it.usesMax > 0
         ? '${it.uses}/${it.usesMax} uses left, ${it.quantity} in stack'
         : '${it.quantity} left';
-    return _log(RollEntry(title: 'Used ${it.name}', lines: [left]));
+    final lines = <String>[left];
+    int? total;
+    if (it.damage.trim().isNotEmpty) {
+      try {
+        final result = dice.roll(it.damage);
+        total = result.total;
+        lines.add('Damage: ${result.total} (${result.parts})'
+            '${it.damageType.isEmpty ? '' : ' ${it.damageType}'}');
+      } on FormatException catch (e) {
+        lines.add('Damage not rolled: ${e.message}');
+      }
+    }
+    if (it.areaRadius > 0) lines.add('Area radius: ${it.areaRadius} ft');
+    if (it.saveDc > 0) {
+      lines.add(
+        'Saving throw: DC ${it.saveDc}'
+        '${it.saveAbility.isEmpty ? '' : ' ${it.saveAbility.toUpperCase()}'}',
+      );
+    }
+    return _log(
+        RollEntry(title: 'Used ${it.name}', total: total, lines: lines));
   }
 
   @override

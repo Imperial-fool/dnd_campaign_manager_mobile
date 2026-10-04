@@ -7,11 +7,15 @@ import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/logic/sample_content.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/ui/screens/character_list_screen.dart';
+import 'support/content_asset_bundle.dart';
 
 void main() {
   testWidgets('uses guided creation when class definitions are loaded',
       (tester) async {
-    final campaign = CampaignController(repository: _MemoryRepository());
+    final campaign = CampaignController(
+      repository: _MemoryRepository(),
+      assetBundle: ContentAssetBundle(),
+    );
     await campaign.load();
     await campaign.importContent(sampleContentPack);
 
@@ -38,7 +42,10 @@ void main() {
 
   testWidgets('keeps direct creation when no class definitions are loaded',
       (tester) async {
-    final campaign = CampaignController(repository: _MemoryRepository());
+    final campaign = CampaignController(
+      repository: _MemoryRepository(),
+      assetBundle: ContentAssetBundle(),
+    );
     await campaign.load();
 
     await tester.pumpWidget(_app(campaign));

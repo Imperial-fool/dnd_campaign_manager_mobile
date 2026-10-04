@@ -19,6 +19,30 @@ class ClassDefinition implements CatalogItem {
           '"savingThrows" entries must be ability keys.');
     }
     _validateLevels(data['levels'], 'levels');
+    final featLevels = data['featLevels'];
+    if (featLevels != null &&
+        (featLevels is! List ||
+            featLevels
+                .any((level) => level is! int || level < 1 || level > 20))) {
+      throw const FormatException('"featLevels" must contain levels 1-20.');
+    }
+    if (featLevels != null &&
+        ![4, 8, 12].every((level) => (featLevels as List).contains(level))) {
+      throw const FormatException(
+          'Standard feat progression must include levels 4, 8, and 12.');
+    }
+    final feats = data['feats'];
+    if (feats != null && feats is! List) {
+      throw const FormatException('"feats" must be a list.');
+    }
+    for (final feat in feats as List? ?? const []) {
+      if (feat is! Map ||
+          asStr(feat['id']).trim().isEmpty ||
+          asStr(feat['name']).trim().isEmpty) {
+        throw const FormatException(
+            'Each class feat needs an "id" and "name".');
+      }
+    }
     for (final level in asMapList(data['levels'])) {
       _validateChoices(level['choices']);
     }
@@ -59,18 +83,43 @@ class ClassDefinition implements CatalogItem {
           .expand((entry) => asMapList(entry['features']))
           .toList();
 
-  List<Map<String, dynamic>> choicesAtLevel(int level) =>
-      asMapList(data['levels'])
-          .where((entry) => asInt(entry['level']) == level)
-          .expand((entry) => asMapList(entry['choices']))
-          .map((choice) => {
-                ...choice,
-                'level': level,
-                'selectionKey': 'class:$id:level:$level:${asStr(choice['id'])}',
-                'selectionOrigin':
-                    'class:$id:level:$level:choice:${asStr(choice['id'])}',
-              })
-          .toList();
+  List<Map<String, dynamic>> choicesAtLevel(
+    int level, {
+    List<CatalogItem> availableFeats = const [],
+  }) {
+    final choices = asMapList(data['levels'])
+        .where((entry) => asInt(entry['level']) == level)
+        .expand((entry) => asMapList(entry['choices']))
+        .map((choice) => {
+              ...choice,
+              'level': level,
+              'selectionKey': 'class:$id:level:$level:${asStr(choice['id'])}',
+              'selectionOrigin':
+                  'class:$id:level:$level:choice:${asStr(choice['id'])}',
+            })
+        .toList();
+    if (_strings(data['featLevels']).contains('$level')) {
+      choices.add({
+        'id': 'feat',
+        'prompt': 'Choose a feat',
+        'count': 1,
+        'options': [
+          for (final feat in availableFeats)
+            {
+              ...feat.toJson(),
+              'id': feat.id,
+              'name': feat.name,
+              'grantType': 'feat',
+              'featId': feat.id,
+            }
+        ],
+        'level': level,
+        'selectionKey': 'class:$id:level:$level:feat',
+        'selectionOrigin': 'class:$id:level:$level:choice:feat',
+      });
+    }
+    return choices;
+  }
 
   static void _validateLevels(dynamic value, String label) {
     if (value == null) return;
@@ -148,7 +197,7 @@ class ClassDefinition implements CatalogItem {
               'Choice options need unique, non-empty "id" and "name" fields.');
         }
         final grantType = asStr(option['grantType'], 'feature');
-        if (!{'feature', 'skill', 'catalog'}.contains(grantType)) {
+        if (!{'feature', 'feat', 'skill', 'catalog'}.contains(grantType)) {
           throw FormatException('Unsupported choice grantType "$grantType".');
         }
         if (grantType == 'skill' &&

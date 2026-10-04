@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
@@ -93,15 +94,102 @@ class InventoryPanel extends StatelessWidget {
                                   value: it.quantity,
                                   onChanged: (v) => ctrl.edit(
                                       (_) => it.quantity = v < 0 ? 0 : v))),
-                          if (it.isAmmo)
+                          if (it.isAmmo) ...[
                             SizedBox(
                                 width: 180,
                                 child: TextBinding(
                                     label: 'Ammo type (match weapon)',
                                     value: it.ammoType,
                                     onChanged: (v) =>
-                                        ctrl.edit((_) => it.ammoType = v)))
-                          else ...[
+                                        ctrl.edit((_) => it.ammoType = v))),
+                            SizedBox(
+                              width: 90,
+                              child: IntBinding(
+                                label: 'Penetration',
+                                value: it.penetration,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => it.penetration = v),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: IntBinding(
+                                label: 'Durability burn',
+                                value: it.durabilityBurn,
+                                onChanged: (v) => ctrl.edit(
+                                  (_) => it.durabilityBurn = v < 1 ? 1 : v,
+                                ),
+                              ),
+                            ),
+                          ] else ...[
+                            SizedBox(
+                              width: 130,
+                              child: TextBinding(
+                                label: 'Damage dice',
+                                value: it.damage,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => it.damage = v),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 110,
+                              child: TextBinding(
+                                label: 'Damage type',
+                                value: it.damageType,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => it.damageType = v),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 95,
+                              child: IntBinding(
+                                label: 'Area (ft)',
+                                value: it.areaRadius,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => it.areaRadius = v),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 85,
+                              child: IntBinding(
+                                label: 'Save DC',
+                                value: it.saveDc,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => it.saveDc = v),
+                              ),
+                            ),
+                            DropdownButton<String>(
+                              value: {
+                                '',
+                                'str',
+                                'dex',
+                                'con',
+                                'int',
+                                'wis',
+                                'cha',
+                              }.contains(it.saveAbility)
+                                  ? it.saveAbility
+                                  : '',
+                              items: const [
+                                DropdownMenuItem(
+                                    value: '', child: Text('No save')),
+                                DropdownMenuItem(
+                                    value: 'str', child: Text('STR save')),
+                                DropdownMenuItem(
+                                    value: 'dex', child: Text('DEX save')),
+                                DropdownMenuItem(
+                                    value: 'con', child: Text('CON save')),
+                                DropdownMenuItem(
+                                    value: 'int', child: Text('INT save')),
+                                DropdownMenuItem(
+                                    value: 'wis', child: Text('WIS save')),
+                                DropdownMenuItem(
+                                    value: 'cha', child: Text('CHA save')),
+                              ],
+                              onChanged: (value) => ctrl.edit(
+                                (_) => it.saveAbility = value ?? '',
+                              ),
+                            ),
                             SizedBox(
                                 width: 90,
                                 child: IntBinding(
@@ -128,6 +216,18 @@ class InventoryPanel extends StatelessWidget {
                         maxLines: 4,
                         minLines: 1,
                         onChanged: (v) => ctrl.edit((_) => it.description = v)),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.inventory_2_outlined, size: 18),
+                        label: const Text('Move to player stash'),
+                        onPressed: c.player.trim().isEmpty
+                            ? null
+                            : () => context
+                                .read<CampaignController>()
+                                .moveToStash(c, 'items', it),
+                      ),
+                    ),
                     if (!it.isAmmo)
                       EffectsField(
                         effects: it.effects,

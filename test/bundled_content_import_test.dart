@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
@@ -9,12 +6,14 @@ import 'package:dnd_campaign_manager/logic/character_repository.dart';
 import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/ui/screens/catalog_screen.dart';
+import 'support/content_asset_bundle.dart';
 
 void main() {
   testWidgets('imports a bundled content pack without a file picker',
       (tester) async {
-    final assets = _ContentAssetBundle();
-    final campaign = CampaignController(repository: _MemoryRepository());
+    final assets = ContentAssetBundle();
+    final campaign = CampaignController(
+        repository: _MemoryRepository(), assetBundle: assets);
     await campaign.load();
     await tester.pumpWidget(
       MultiProvider(
@@ -37,7 +36,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
-    expect(assets.loaded, isTrue);
+    expect(
+      assets.loadedAssets,
+      contains('content/tarkov_character_options.json'),
+    );
 
     expect(
       find.text('Import complete'),
@@ -54,30 +56,6 @@ void main() {
     );
     expect(campaign.catalog.items('weapons'), isNotEmpty);
   });
-}
-
-class _ContentAssetBundle extends CachingAssetBundle {
-  bool loaded = false;
-
-  @override
-  Future<String> loadString(String key, {bool cache = true}) async {
-    if (key != 'content/tarkov_character_options.json') {
-      throw FlutterError('Unexpected asset: $key');
-    }
-    loaded = true;
-    return File(key).readAsStringSync();
-  }
-
-  @override
-  Future<ByteData> load(String key) async {
-    loaded = true;
-    if (key != 'content/tarkov_character_options.json') {
-      throw FlutterError('Unexpected asset: $key');
-    }
-    final bytes =
-        File('content/tarkov_character_options.json').readAsBytesSync();
-    return ByteData.sublistView(Uint8List.fromList(bytes));
-  }
 }
 
 class _MemoryRepository implements CampaignRepository {

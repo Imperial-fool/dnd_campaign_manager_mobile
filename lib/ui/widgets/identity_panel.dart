@@ -114,7 +114,10 @@ class _LevelTracker extends StatelessWidget {
           final choices = <Map<String, dynamic>>[];
           if (chosenClass != null) {
             for (var level = firstClassLevel; level <= targetLevel; level++) {
-              choices.addAll(chosenClass.choicesAtLevel(level));
+              choices.addAll(chosenClass.choicesAtLevel(
+                level,
+                availableFeats: campaign.catalog.items('feats'),
+              ));
               if (selectedSubclassId.isNotEmpty &&
                   level >= chosenClass.subclassLevel) {
                 final subclass = subclassById(chosenClass, selectedSubclassId);
@@ -232,6 +235,10 @@ class _LevelTracker extends StatelessWidget {
                             asStr(choice['prompt']),
                             style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
+                          if (asMapList(choice['options']).isEmpty)
+                            const Text(
+                              'Import feats from the Catalog before advancing.',
+                            ),
                           const SizedBox(height: 6),
                           if (asInt(choice['count'], 1) == 1)
                             DropdownButtonFormField<String>(

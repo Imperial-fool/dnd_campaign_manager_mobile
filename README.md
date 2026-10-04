@@ -11,16 +11,28 @@ and JSON-defined content.
 - Import a character from JSON.
 - Import standalone JSON content packs at runtime from the Catalog screen.
 - Define classes, subclasses, level progression, and level-up choices in JSON.
+- Define campaign skills and class feat progression in JSON.
+- Manage equipment in a player-owned stash shared across that player's characters.
 - Optionally require enough XP before a character can level up.
 - Optionally connect Google Drive to back up character JSON and import JSON
   content packs.
 
-The bundled Tarkov content pack can be imported directly from the Catalog
-screen without selecting a file. Additional packs can be imported from a JSON
-file or pasted into the app. See
+The bundled Tarkov character options pack can be imported from the Catalog
+screen. The armory, ammunition, skill definitions, and class-neutral action
+lookup are loaded from structured JSON at startup. Weapon profiles support
+semi, burst, and full-auto modes; inventory items can define damage, area, and
+saving-throw data. See
 [`content/tarkov_character_options.json`](content/tarkov_character_options.json)
-for the bundled pack and [`CONTENT_GUIDE.md`](CONTENT_GUIDE.md) for the JSON
-schema and authoring instructions.
+for classes and choices, [`content/tarkov_armory.json`](content/tarkov_armory.json)
+for 105 parsed weapon profiles and 88 ammunition entries,
+[`content/skills.json`](content/skills.json) for data-defined skills,
+[`content/tarkov_mechanics.json`](content/tarkov_mechanics.json) for action and
+ballistics rules, and [`CONTENT_GUIDE.md`](CONTENT_GUIDE.md) for JSON schemas
+and authoring instructions.
+
+The player stash is keyed to the character's **Player** field rather than its
+character ID. Assign the same player name to multiple characters to share
+weapons, armor, ammunition, and other items between them.
 
 ## Run the app
 

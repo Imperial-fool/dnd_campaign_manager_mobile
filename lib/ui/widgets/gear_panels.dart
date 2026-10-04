@@ -148,10 +148,21 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                               width: 90,
                               child: IntBinding(
-                                  label: 'Rounds/shot',
+                                  label: 'Semi rounds/shot',
                                   value: w.roundsPerShot,
                                   onChanged: (v) => ctrl.edit(
                                       (_) => w.roundsPerShot = v < 1 ? 1 : v))),
+                          if (w.fireModes.contains('burst'))
+                            SizedBox(
+                              width: 90,
+                              child: IntBinding(
+                                label: 'Burst bullets',
+                                value: w.burstRounds,
+                                onChanged: (value) => ctrl.edit(
+                                  (_) => w.burstRounds = value < 1 ? 1 : value,
+                                ),
+                              ),
+                            ),
                           SizedBox(
                               width: 130,
                               child: TextBinding(
@@ -159,6 +170,104 @@ class WeaponsPanel extends StatelessWidget {
                                   value: w.damage,
                                   onChanged: (v) =>
                                       ctrl.edit((_) => w.damage = v))),
+                          if (w.fireModes.contains('burst'))
+                            SizedBox(
+                              width: 130,
+                              child: TextBinding(
+                                label: 'Burst damage',
+                                value: w.burstDamage,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => w.burstDamage = v),
+                              ),
+                            ),
+                          if (w.fireModes.contains('fullAuto'))
+                            SizedBox(
+                              width: 100,
+                              child: TextBinding(
+                                label: 'Bullet dice',
+                                value: w.bulletDice,
+                                onChanged: (v) =>
+                                    ctrl.edit((_) => w.bulletDice = v),
+                              ),
+                            ),
+                          DropdownButton<String>(
+                            value: {
+                              '',
+                              ...Ability.values.map((ability) => ability.key),
+                            }.contains(w.damageAbility)
+                                ? w.damageAbility
+                                : '',
+                            items: [
+                              const DropdownMenuItem(
+                                  value: '', child: Text('No damage mod')),
+                              for (final ability in Ability.values)
+                                DropdownMenuItem(
+                                  value: ability.key,
+                                  child: Text(
+                                      '${ability.key.toUpperCase()} damage'),
+                                ),
+                            ],
+                            onChanged: (ability) => ctrl.edit(
+                              (_) => w.damageAbility = ability ?? '',
+                            ),
+                          ),
+                          SizedBox(
+                            width: 95,
+                            child: IntBinding(
+                              label: 'Weight (g)',
+                              value: (w.weightKg * 1000).round(),
+                              onChanged: (value) => ctrl.edit(
+                                (_) => w.weightKg = value / 1000,
+                              ),
+                            ),
+                          ),
+                          if (w.fireModes.length > 1)
+                            DropdownButton<String>(
+                              value: w.fireModes.contains(w.firingMode)
+                                  ? w.firingMode
+                                  : w.fireModes.first,
+                              items: [
+                                for (final mode in w.fireModes)
+                                  DropdownMenuItem(
+                                    value: mode,
+                                    child: Text(switch (mode) {
+                                      'fullAuto' => 'Full auto',
+                                      'burst' => 'Burst',
+                                      _ => 'Semi',
+                                    }),
+                                  ),
+                              ],
+                              onChanged: (mode) {
+                                if (mode != null) {
+                                  ctrl.edit((_) => w.firingMode = mode);
+                                }
+                              },
+                            ),
+                          SizedBox(
+                            width: 190,
+                            child: TextBinding(
+                              label: 'Fire modes (comma separated)',
+                              value: w.fireModes.join(','),
+                              onChanged: (v) => ctrl.edit((_) {
+                                w.fireModes = v
+                                    .split(',')
+                                    .map((mode) => mode.trim())
+                                    .where((mode) => {
+                                          'semi',
+                                          'burst',
+                                          'fullAuto',
+                                        }.contains(mode))
+                                    .toSet()
+                                    .toList();
+                                if (w.fireModes.isEmpty) {
+                                  w.fireModes = ['semi'];
+                                }
+                                if (!w.fireModes.contains(w.firingMode)) {
+                                  w.firingMode = w.fireModes.first;
+                                }
+                              }),
+                            ),
+                          ),
                           DropdownButton<Ability>(
                             value: w.attackAbility,
                             items: [
@@ -210,6 +319,15 @@ class WeaponsPanel extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Wrap(spacing: 8, runSpacing: 8, children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.inventory_2_outlined, size: 18),
+                        label: const Text('Move to player stash'),
+                        onPressed: c.player.trim().isEmpty
+                            ? null
+                            : () => context
+                                .read<CampaignController>()
+                                .moveToStash(c, 'weapons', w),
+                      ),
                       FilledButton.icon(
                         icon: const Icon(Icons.gps_fixed, size: 18),
                         label: const Text('Fire'),
@@ -322,6 +440,16 @@ class ArmorPanel extends StatelessWidget {
                                     ctrl.edit((_) => a.equipped = v)),
                             const Text('Equipped'),
                           ]),
+                          OutlinedButton.icon(
+                            icon: const Icon(Icons.inventory_2_outlined,
+                                size: 18),
+                            label: const Text('Move to player stash'),
+                            onPressed: c.player.trim().isEmpty
+                                ? null
+                                : () => context
+                                    .read<CampaignController>()
+                                    .moveToStash(c, 'armor', a),
+                          ),
                         ]),
                     TextBinding(
                         label: 'Properties',

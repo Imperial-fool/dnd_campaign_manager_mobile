@@ -10,12 +10,14 @@ import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/ui/screens/catalog_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/ability_panel.dart';
+import 'package:dnd_campaign_manager/ui/widgets/actions_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/identity_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/inventory_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/skills_panel.dart';
+import 'package:dnd_campaign_manager/ui/widgets/stash_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/text_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/traits_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/vitals_panel.dart';
@@ -141,10 +143,16 @@ class _SheetView extends StatelessWidget {
     final campaign = context.read<CampaignController>();
 
     final left = _stack(const [AbilityPanel(), SkillsPanel()]);
-    final middle = _stack(
-        const [VitalsPanel(), WeaponsPanel(), ArmorPanel(), InventoryPanel()]);
+    final middle = _stack(const [
+      VitalsPanel(),
+      WeaponsPanel(),
+      ArmorPanel(),
+      InventoryPanel(),
+      StashPanel(),
+    ]);
     final right = _stack(const [
       RollPanel(),
+      ActionsPanel(),
       TraitsPanel(),
       FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
       FreeTextPanel(

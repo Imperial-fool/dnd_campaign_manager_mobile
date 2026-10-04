@@ -82,6 +82,12 @@ class ContentRegistry {
       apply: (c, i) => c.traits.add(i as Trait),
     ));
     r.register(ContentBinding(
+      key: 'feats',
+      label: 'Feats',
+      parse: (j) => Trait.fromJson(j, defaultCategory: 'feat'),
+      apply: (c, i) => c.traits.add(i as Trait),
+    ));
+    r.register(ContentBinding(
       key: 'backgrounds',
       label: 'Backgrounds',
       parse: BackgroundDefinition.fromJson,
@@ -95,6 +101,9 @@ class ContentRegistry {
         'Classes must be selected through the character level-up flow.',
       ),
     ));
+    r.registerGeneric('skills', 'Skills');
+    r.registerGeneric('actions', 'Actions');
+    r.registerGeneric('ammunitionByCaliber', 'Ammunition by caliber');
     return r;
   }
 }

@@ -1,0 +1,179 @@
+{
+  "pack": "Tarkov Class-Neutral Mechanics",
+  "description": "Structured class-neutral actions and combat rules transcribed from the supplied mechanics documents.",
+  "actions": [
+    {
+      "id": "reload_weapon",
+      "name": "Reload Weapons",
+      "actionType": "bonus",
+      "description": "Reload a weapon, including an under-barrel weapon."
+    },
+    {
+      "id": "clear_malfunction",
+      "name": "Clear Malfunction",
+      "actionType": "bonus",
+      "description": "Clear a weapon malfunction."
+    },
+    {
+      "id": "use_injector",
+      "name": "Use an Injector",
+      "actionType": "bonus",
+      "description": "Use an injector."
+    },
+    {
+      "id": "eat_painkillers",
+      "name": "Eat Painkillers",
+      "actionType": "bonus",
+      "description": "Use painkillers."
+    },
+    {
+      "id": "use_field_treatment",
+      "name": "Use Splint, Tourniquet, or Bandage",
+      "actionType": "bonus",
+      "description": "Use a splint, tourniquet, or bandage."
+    },
+    {
+      "id": "fire_secondary",
+      "name": "Fire Secondary",
+      "actionType": "bonus",
+      "description": "Fire a secondary weapon."
+    },
+    {
+      "id": "use_medical_kit",
+      "name": "Use Medical Kit",
+      "actionType": "action",
+      "description": "Use a medical kit on yourself or a teammate."
+    },
+    {
+      "id": "use_surgical_kit",
+      "name": "Use Surgical Kit",
+      "actionType": "action",
+      "description": "Use a surgical kit."
+    },
+    {
+      "id": "plant_tripwire",
+      "name": "Plant Tripwire",
+      "actionType": "action",
+      "description": "Plant a tripwire."
+    },
+    {
+      "id": "toss_grenade",
+      "name": "Toss Grenade",
+      "actionType": "action",
+      "description": "Throw a grenade. Item damage, radius, and saving-throw fields can describe its effect."
+    },
+    {
+      "id": "underbarrel_weapon",
+      "name": "Use Under-Barrel Weapon",
+      "actionType": "action",
+      "description": "Fire an under-barrel weapon."
+    },
+    {
+      "id": "hold_angle",
+      "name": "Hold Angle",
+      "actionType": "action",
+      "description": "Hold an angle."
+    },
+    {
+      "id": "opportunity_attack_cover",
+      "name": "Opportunity Attack Around Cover",
+      "actionType": "reaction",
+      "description": "An opportunity attack can be provoked when an enemy or player moves around cover."
+    },
+    {
+      "id": "switch_slung_primary",
+      "name": "Switch to Slung Primary",
+      "actionType": "reaction",
+      "description": "Switching to an alternate primary weapon costs a reaction if it is on a sling."
+    }
+  ],
+  "weaponRules": {
+    "firingModeChosenByUser": true,
+    "modes": ["semi", "burst", "fullAuto"],
+    "fullAuto": {
+      "bulletDiceField": "bulletDice",
+      "roundsConsumed": "The maximum result of bulletDice.",
+      "hits": "Roll bulletDice; the result is the number of rounds that hit."
+    },
+    "burst": {
+      "damageField": "burstDamage",
+      "roundsField": "burstRounds",
+      "attackRoll": true,
+      "bulletDiceRoll": false,
+      "description": "Spend burstRounds ammunition and roll one d20 attack. On a hit, every round in the burst hits and deals the configured burst damage."
+    },
+    "example": {
+      "fireModes": ["semi", "burst", "fullAuto"],
+      "roundsPerShot": 1,
+      "burstRounds": 3,
+      "bulletDice": "1d6",
+      "damage": "1d6",
+      "burstDamage": "3d6"
+    }
+  },
+  "ballistics": {
+    "armorRating": { "minimum": 1, "maximum": 6 },
+    "ammunitionPenetration": { "minimum": 1, "maximum": 60 },
+    "outcomes": [
+      {
+        "condition": "penetrationAtLeastFiveAboveArmor",
+        "targetDamage": "full",
+        "armorDamage": "full",
+        "description": "Penetration at least five above the armor rating passes through without slowing the round."
+      },
+      {
+        "condition": "penetrationMatchesArmor",
+        "targetDamage": "half",
+        "armorDamage": "full",
+        "description": "The round penetrates but is slowed."
+      },
+      {
+        "condition": "penetrationAtLeastFiveBelowArmor",
+        "targetDamage": "none",
+        "armorDamage": "full",
+        "description": "Only the armor takes damage."
+      }
+    ],
+    "armorAtZeroDurabilityIsUseless": true,
+    "weaponDurability": {
+      "baseLossPerStandardMagazine": 1,
+      "highPenetrationAmmunitionUsesDurabilityBurnMultiplier": true
+    },
+    "ammunitionWeightPerRound": 0.1,
+    "hollowPointEffects": [
+      {
+        "calibers": ["rifle_5_45_to_7_62"],
+        "bonusDamage": 10,
+        "saveAbility": "con",
+        "saveDc": 20,
+        "failure": "2 heavy bleeds",
+        "success": "1 heavy bleed and 1 light bleed"
+      },
+      {
+        "calibers": ["pistol_9mm_to_50ae"],
+        "bonusDamage": 5,
+        "saveAbility": "con",
+        "saveDc": 15,
+        "failure": "1 heavy bleed",
+        "success": "1 light bleed"
+      },
+      {
+        "calibers": ["12_gauge"],
+        "bonusDamage": 20,
+        "saveAbility": "con",
+        "saveDc": 20,
+        "failure": "5 heavy bleeds and loss of a limb (or head on a headshot)",
+        "success": "5 heavy bleeds"
+      },
+      {
+        "calibers": ["308_to_338_lapua"],
+        "bonusDamage": 50,
+        "saveAbility": "con",
+        "saveDc": 30,
+        "failure": "Loss of a limb (or head on a headshot) and 5 heavy bleeds",
+        "success": "No 5-heavy-bleed effect"
+      }
+    ],
+    "alwaysDismemberingCalibers": ["50BMG", "12.7x108mm", "23x75mm"]
+  }
+}

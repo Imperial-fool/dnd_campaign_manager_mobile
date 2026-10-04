@@ -133,11 +133,43 @@ class Rules {
   /// Proficiency counts once; expertise counts twice.
   static int skillBonus(Character c, Skill s) =>
       abilityMod(c, s.ability) +
-      (s.hasExpertise
+      (_hasDescribedExpertise(c, s)
           ? 2 * proficiency(c)
-          : (s.isProficient ? proficiency(c) : 0)) +
+          : (s.isProficient || _hasDescribedProficiency(c, s)
+              ? proficiency(c)
+              : 0)) +
       s.misc +
       effectTotal(c, 'skill.${s.key}');
+
+  static bool _hasDescribedExpertise(Character c, Skill skill) =>
+      skill.hasExpertise ||
+      _traitGrantsSkillRank(c, skill, r'\bexpertise\s+(?:in|with)\s+');
+
+  static bool _hasDescribedProficiency(Character c, Skill skill) =>
+      _traitGrantsSkillRank(
+        c,
+        skill,
+        r'\bproficien(?:t|cy)\s+(?:in|with)\s+',
+      );
+
+  static bool _traitGrantsSkillRank(Character c, Skill skill, String trigger) {
+    final skillName = skill.key == 'armaments' ? 'armament' : skill.key;
+    final skillWords = skillName.replaceAll('_', ' ');
+    for (final trait in c.traits) {
+      final description = trait.description.toLowerCase();
+      for (final match in RegExp(trigger).allMatches(description)) {
+        final remainder = description.substring(match.end);
+        final clause = remainder.split(RegExp(r'[.;\n]')).first;
+        final normalized = clause.replaceAll(RegExp(r'[^a-z0-9]+'), ' ');
+        if (RegExp(
+          r'(^| )' '${RegExp.escape(skillWords)}' r'( |$)',
+        ).hasMatch(normalized)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   static int passivePerception(Character c) {
     final p = c.skills.where((s) => s.key == 'perception');

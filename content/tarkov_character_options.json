@@ -8,6 +8,7 @@
       "name": "Operator",
       "description": "Usually acting as team leaders, these soldiers tend to possess a superior tactical mindset and weapon handling. ",
       "hitDie": 10,
+      "featLevels": [4, 8, 12],
       "levels": [
         {
           "level": 1,
@@ -441,6 +442,7 @@
       "name": "CQB",
       "description": "1d10 hit dice ",
       "hitDie": 10,
+      "featLevels": [4, 8, 12],
       "levels": [
         {
           "level": 1,
@@ -1143,6 +1145,7 @@
       "name": "Juggernaut",
       "description": "Support Gunners usually wear heavy armor and carry belt fed LMGs to provide suppressive fire and area denial for their squad. ",
       "hitDie": 12,
+      "featLevels": [4, 8, 12],
       "levels": [
         {
           "level": 1,
@@ -1525,6 +1528,7 @@
       "name": "Scout",
       "description": "1d8 Hit Dice ",
       "hitDie": 8,
+      "featLevels": [4, 8, 12],
       "levels": [
         {
           "level": 1,
