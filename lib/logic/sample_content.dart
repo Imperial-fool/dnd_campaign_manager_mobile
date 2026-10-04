@@ -41,6 +41,7 @@ const String sampleContentPack = r'''{
   "items": [
     {
       "id": "ammo_9x18_fmj",
+      "category": "ammo",
       "name": "9x18mm FMJ",
       "kind": "ammo",
       "ammoType": "9x18mm",
@@ -48,6 +49,7 @@ const String sampleContentPack = r'''{
     },
     {
       "id": "afak",
+      "category": "medical",
       "name": "AFAK Medical Kit",
       "kind": "item",
       "description": "Heals 2d4+2 HP per use.",

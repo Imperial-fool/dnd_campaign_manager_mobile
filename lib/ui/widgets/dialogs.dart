@@ -96,6 +96,8 @@ void showImportResult(BuildContext context, ImportResult r) {
 Future<CatalogItem?> pickCatalogItem(
     BuildContext context, ContentBinding binding) {
   final items = context.read<CampaignController>().catalog.items(binding.key);
+  final groupedItems =
+      binding.key == 'items' ? _groupInventoryItems(items) : null;
   return showDialog<CatalogItem>(
     context: context,
     builder: (ctx) => SimpleDialog(
@@ -108,19 +110,68 @@ Future<CatalogItem?> pickCatalogItem(
                     'Nothing here yet. Import a content pack from the catalog screen.'),
               )
             ]
-          : [
-              for (final item in items)
-                SimpleDialogOption(
-                  onPressed: () => Navigator.pop(ctx, item),
-                  child: ListTile(
-                    title: Text(item.name),
-                    subtitle: Text(item.summary,
-                        maxLines: 2, overflow: TextOverflow.ellipsis),
-                  ),
-                ),
-            ],
+          : groupedItems != null
+              ? [
+                  for (final entry in groupedItems.entries) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 4),
+                      child: Text(
+                        entry.key,
+                        style: Theme.of(ctx).textTheme.titleSmall,
+                      ),
+                    ),
+                    for (final item in entry.value)
+                      SimpleDialogOption(
+                        onPressed: () => Navigator.pop(ctx, item),
+                        child: ListTile(
+                          title: Text(item.name),
+                          subtitle: Text(
+                            item.summary,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                  ],
+                ]
+              : [
+                  for (final item in items)
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(ctx, item),
+                      child: ListTile(
+                        title: Text(item.name),
+                        subtitle: Text(item.summary,
+                            maxLines: 2, overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                ],
     ),
   );
+}
+
+Map<String, List<CatalogItem>> _groupInventoryItems(List<CatalogItem> items) {
+  const groups = ['Ammo', 'Medical equipment', 'Tools / misc'];
+  final grouped = {
+    for (final group in groups) group: <CatalogItem>[],
+  };
+  for (final item in items) {
+    final group = switch (item) {
+      InventoryItem(:final category) when category == 'ammo' => 'Ammo',
+      InventoryItem(:final category) when category == 'medical' =>
+        'Medical equipment',
+      _ => 'Tools / misc',
+    };
+    grouped[group]!.add(item);
+  }
+  for (final itemsInGroup in grouped.values) {
+    itemsInGroup.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
+  }
+  return {
+    for (final group in groups)
+      if (grouped[group]!.isNotEmpty) group: grouped[group]!,
+  };
 }
 
 Future<Skill?> promptNewSkill(BuildContext context) {
@@ -139,7 +190,7 @@ Future<Skill?> promptNewSkill(BuildContext context) {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<Ability>(
-            value: ability,
+            initialValue: ability,
             decoration: const InputDecoration(labelText: 'Ability'),
             items: [
               for (final a in Ability.values)

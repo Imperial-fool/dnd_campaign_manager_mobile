@@ -17,6 +17,8 @@ and JSON-defined content.
 
 Content packs are not bundled into the app. For an example pack, see
 [`content/tarkov_character_options.json`](content/tarkov_character_options.json).
+For the JSON schema and authoring instructions, see
+[`CONTENT_GUIDE.md`](CONTENT_GUIDE.md).
 
 ## Run the app
 

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dnd_campaign_manager/logic/content_importer.dart';
 import 'package:dnd_campaign_manager/models/catalog.dart';
 import 'package:dnd_campaign_manager/models/class_definition.dart';
+import 'package:dnd_campaign_manager/models/gear.dart';
 
 void main() {
   test('Tarkov pack imports from its standalone JSON file', () {
@@ -21,6 +22,19 @@ void main() {
     expect(catalog.items('weapons'), hasLength(34));
     expect(catalog.items('armor'), hasLength(9));
     expect(catalog.items('items'), hasLength(32));
+    final items = catalog.items('items').whereType<InventoryItem>();
+    expect(
+      items.singleWhere((item) => item.id == 'ammo_5_56_m855').category,
+      'ammo',
+    );
+    expect(
+      items.singleWhere((item) => item.id == 'ifak_medical_kit').category,
+      'medical',
+    );
+    expect(
+      items.singleWhere((item) => item.id == 'water_bottle').category,
+      'misc',
+    );
 
     final juggernaut =
         classes.singleWhere((definition) => definition.id == 'juggernaut');
@@ -80,5 +94,22 @@ void main() {
     expect(catalog.items('backgrounds'), hasLength(1));
     expect(catalog.toJson().containsKey('backgrounds'), isTrue);
     expect(catalog.toJson().containsKey('affiliations'), isFalse);
+  });
+
+  test('legacy item entries infer a category when category is omitted', () {
+    final medical = InventoryItem.fromJson({
+      'id': 'legacy_medkit',
+      'name': 'Field Medical Kit',
+      'kind': 'item',
+    });
+    final ammo = InventoryItem.fromJson({
+      'id': 'legacy_ammo',
+      'name': '9mm rounds',
+      'kind': 'ammo',
+    });
+
+    expect(medical.category, 'medical');
+    expect(ammo.category, 'ammo');
+    expect(InventoryItem.fromJson(medical.toJson()).category, 'medical');
   });
 }

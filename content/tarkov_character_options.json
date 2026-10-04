@@ -2090,6 +2090,7 @@
   "items": [
     {
       "id": "cat_tourniquet",
+      "category": "medical",
       "name": "CAT Tourniquet",
       "kind": "item",
       "quantity": 1,
@@ -2097,6 +2098,7 @@
     },
     {
       "id": "army_bandage_pack",
+      "category": "medical",
       "name": "Army Bandage Pack",
       "kind": "item",
       "quantity": 1,
@@ -2105,6 +2107,7 @@
     },
     {
       "id": "aluminum_splint",
+      "category": "medical",
       "name": "Aluminum Splint",
       "kind": "item",
       "quantity": 1,
@@ -2113,6 +2116,7 @@
     },
     {
       "id": "ifak_medical_kit",
+      "category": "medical",
       "name": "IFAK Medical Kit",
       "kind": "item",
       "quantity": 1,
@@ -2120,6 +2124,7 @@
     },
     {
       "id": "water_bottle",
+      "category": "misc",
       "name": "Bottle of Water",
       "kind": "item",
       "quantity": 1,
@@ -2127,6 +2132,7 @@
     },
     {
       "id": "ration",
+      "category": "misc",
       "name": "Ration",
       "kind": "item",
       "quantity": 1,
@@ -2134,36 +2140,42 @@
     },
     {
       "id": "leatherman_multitool",
+      "category": "misc",
       "name": "Leatherman Multitool",
       "kind": "item",
       "quantity": 1
     },
     {
       "id": "entrenching_tool",
+      "category": "misc",
       "name": "Entrenching Tool",
       "kind": "item",
       "quantity": 1
     },
     {
       "id": "survival_lighter",
+      "category": "misc",
       "name": "Survival Lighter",
       "kind": "item",
       "quantity": 1
     },
     {
       "id": "lockpick_set",
+      "category": "misc",
       "name": "Lockpick Set",
       "kind": "item",
       "quantity": 1
     },
     {
       "id": "flash_bang",
+      "category": "misc",
       "name": "Flash Bang",
       "kind": "item",
       "quantity": 2
     },
     {
       "id": "slaap_plate",
+      "category": "misc",
       "name": "SLAAP Plate",
       "kind": "item",
       "quantity": 1,
@@ -2171,6 +2183,7 @@
     },
     {
       "id": "tw25b_synthetic_grease",
+      "category": "misc",
       "name": "TW25B Synthetic Grease",
       "kind": "item",
       "quantity": 1,
@@ -2178,6 +2191,7 @@
     },
     {
       "id": "breaching_kit",
+      "category": "misc",
       "name": "Ruhl Tech Compact Breaching Kit",
       "kind": "item",
       "quantity": 1,
@@ -2185,6 +2199,7 @@
     },
     {
       "id": "radioman_radio_backpack",
+      "category": "misc",
       "name": "Sharpshooter Radioman Radio Backpack",
       "kind": "item",
       "quantity": 1,
@@ -2192,6 +2207,7 @@
     },
     {
       "id": "cms_kit",
+      "category": "medical",
       "name": "Sanitar?s CMS Kit",
       "kind": "item",
       "quantity": 1,
@@ -2199,6 +2215,7 @@
     },
     {
       "id": "armored_gas_mask_3",
+      "category": "misc",
       "name": "Level 3 Armored Gas Mask",
       "kind": "item",
       "quantity": 1,
@@ -2206,6 +2223,7 @@
     },
     {
       "id": "armored_gas_mask_4",
+      "category": "misc",
       "name": "Level 4 Armored Gas Mask",
       "kind": "item",
       "quantity": 1,
@@ -2213,6 +2231,7 @@
     },
     {
       "id": "armored_gas_mask_5",
+      "category": "misc",
       "name": "Level 5 Armored Gas Mask",
       "kind": "item",
       "quantity": 1,
@@ -2220,6 +2239,7 @@
     },
     {
       "id": "ammo_5_56_m855",
+      "category": "ammo",
       "name": "5.56 - M855 ammunition",
       "kind": "ammo",
       "ammoType": "5.56 - M855",
@@ -2228,6 +2248,7 @@
     },
     {
       "id": "ammo_4_6_jacketed_soft_points",
+      "category": "ammo",
       "name": "4.6 Jacketed Soft Points ammunition",
       "kind": "ammo",
       "ammoType": "4.6 Jacketed Soft Points",
@@ -2236,6 +2257,7 @@
     },
     {
       "id": "ammo_9x19_pst",
+      "category": "ammo",
       "name": "9x19 PST ammunition",
       "kind": "ammo",
       "ammoType": "9x19 PST",
@@ -2244,6 +2266,7 @@
     },
     {
       "id": "ammo_9x19",
+      "category": "ammo",
       "name": "9x19 ammunition",
       "kind": "ammo",
       "ammoType": "9x19",
@@ -2252,6 +2275,7 @@
     },
     {
       "id": "ammo_45_acp_fmj",
+      "category": "ammo",
       "name": ".45 ACP - FMJ ammunition",
       "kind": "ammo",
       "ammoType": ".45 ACP - FMJ",
@@ -2260,6 +2284,7 @@
     },
     {
       "id": "ammo_4_6_fmj_sx",
+      "category": "ammo",
       "name": "4.6 FMJ SX ammunition",
       "kind": "ammo",
       "ammoType": "4.6 FMJ SX",
@@ -2268,6 +2293,7 @@
     },
     {
       "id": "ammo_9x19_ap_6_3",
+      "category": "ammo",
       "name": "9x19 AP 6.3 ammunition",
       "kind": "ammo",
       "ammoType": "9x19 AP 6.3",
@@ -2276,6 +2302,7 @@
     },
     {
       "id": "ammo_12_ga_00_buckshot",
+      "category": "ammo",
       "name": "12 Ga 00 Buckshot ammunition",
       "kind": "ammo",
       "ammoType": "12 Ga 00 Buckshot",
@@ -2284,6 +2311,7 @@
     },
     {
       "id": "ammo_12_gauge_00_buckshot",
+      "category": "ammo",
       "name": "12 Gauge 00 Buckshot ammunition",
       "kind": "ammo",
       "ammoType": "12 Gauge 00 Buckshot",
@@ -2292,6 +2320,7 @@
     },
     {
       "id": "ammo_45_acp_ap",
+      "category": "ammo",
       "name": ".45 ACP AP ammunition",
       "kind": "ammo",
       "ammoType": ".45 ACP AP",
@@ -2300,6 +2329,7 @@
     },
     {
       "id": "ammo_7_62x51_m80",
+      "category": "ammo",
       "name": "7.62x51 M80 ammunition",
       "kind": "ammo",
       "ammoType": "7.62x51 M80",
@@ -2308,6 +2338,7 @@
     },
     {
       "id": "ammo_5_56_m855a1",
+      "category": "ammo",
       "name": "5.56 M855A1 ammunition",
       "kind": "ammo",
       "ammoType": "5.56 M855A1",
@@ -2316,6 +2347,7 @@
     },
     {
       "id": "blackrock_tactical_rig",
+      "category": "misc",
       "name": "Blackrock Tactical Rig",
       "kind": "item",
       "quantity": 1,

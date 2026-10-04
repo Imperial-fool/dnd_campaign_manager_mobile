@@ -240,7 +240,8 @@ class InventoryItem implements CatalogItem {
   InventoryItem({
     this.id = '',
     this.name = '',
-    this.kind = 'item',
+    String kind = 'item',
+    String? category,
     this.description = '',
     this.quantity = 1,
     this.uses = 0,
@@ -249,13 +250,16 @@ class InventoryItem implements CatalogItem {
     this.origin = '',
     this.active = false,
     List<Effect>? effects,
-  }) : effects = effects ?? [];
+  })  : kind = kind,
+        category = category ?? (kind == 'ammo' ? 'ammo' : 'misc'),
+        effects = effects ?? [];
 
   @override
   String id;
   @override
   String name;
   String kind; // 'item' | 'ammo'
+  String category; // 'ammo' | 'medical' | 'misc'
   String description;
   int quantity;
   int uses; // remaining uses of the current unit
@@ -278,11 +282,16 @@ class InventoryItem implements CatalogItem {
   factory InventoryItem.fromJson(Map<String, dynamic> j) {
     final name = asStr(j['name']);
     final usesMax = asInt(j['usesMax']);
+    final kind = asStr(j['kind']) == 'ammo' ? 'ammo' : 'item';
+    final description = asStr(j['description']);
     return InventoryItem(
       id: idFor(j, name),
       name: name,
-      kind: asStr(j['kind']) == 'ammo' ? 'ammo' : 'item',
-      description: asStr(j['description']),
+      kind: kind,
+      category: j.containsKey('category')
+          ? asStr(j['category'])
+          : _legacyInventoryCategory(name, description, kind),
+      description: description,
       quantity: asInt(j['quantity'], 1),
       uses: asInt(j['uses'], usesMax),
       usesMax: usesMax,
@@ -298,6 +307,7 @@ class InventoryItem implements CatalogItem {
         'id': id,
         'name': name,
         'kind': kind,
+        'category': category,
         'description': description,
         'quantity': quantity,
         'uses': uses,
@@ -307,6 +317,25 @@ class InventoryItem implements CatalogItem {
         'active': active,
         'effects': effects.map((e) => e.toJson()).toList(),
       };
+}
+
+String _legacyInventoryCategory(String name, String description, String kind) {
+  if (kind == 'ammo') return 'ammo';
+  final searchable = '${name.toLowerCase()} ${description.toLowerCase()}';
+  const medicalTerms = [
+    'medical',
+    'med kit',
+    'medkit',
+    'bandage',
+    'tourniquet',
+    'splint',
+    'ifak',
+    'cms kit',
+    'salewa',
+    'hemostatic',
+    'surgical',
+  ];
+  return medicalTerms.any(searchable.contains) ? 'medical' : 'misc';
 }
 
 /// A character background. Applying it grants its features and proficiencies.
