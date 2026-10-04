@@ -129,8 +129,10 @@ To enable Drive access:
 
 4. Open **Campaign Settings → Google Drive → Connect** and choose the Google
    account whose Drive should hold the character files. Each user connects their
-   own account. Disconnecting removes the app's in-memory account connection;
-   it does not delete files already saved in Drive.
+   own account. On web, use Google's rendered sign-in button, then select
+   **Allow Drive access** to authorize file operations. Disconnecting removes
+   the app's in-memory account connection; it does not delete files already
+   saved in Drive.
 
 Drive sign-in is supported on web, Android, iOS, and macOS. Windows desktop
 continues to support local storage and file import/export, but not Google Drive

@@ -24,7 +24,9 @@ class GoogleDriveService extends ChangeNotifier {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   GoogleSignInAccount? _account;
+  bool _driveAuthorized = false;
   bool _initialized = false;
+  String? authenticationError;
 
   bool get isPlatformSupported =>
       kIsWeb ||
@@ -34,6 +36,7 @@ class GoogleDriveService extends ChangeNotifier {
 
   bool get isConfigured => _oauthClientId.isNotEmpty;
   bool get isSignedIn => _account != null;
+  bool get isDriveAuthorized => _driveAuthorized;
   String? get accountEmail => _account?.email;
 
   Future<void> initialize() async {
@@ -49,14 +52,51 @@ class GoogleDriveService extends ChangeNotifier {
           : null,
     );
     _initialized = true;
+    _googleSignIn.authenticationEvents.listen(
+      (event) {
+        switch (event) {
+          case GoogleSignInAuthenticationEventSignIn(:final user):
+            _account = user;
+            _driveAuthorized = false;
+            authenticationError = null;
+          case GoogleSignInAuthenticationEventSignOut():
+            _account = null;
+            _driveAuthorized = false;
+        }
+        notifyListeners();
+      },
+      onError: (Object error) {
+        authenticationError = error.toString();
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> signIn() async {
     _ensureAvailable();
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'Use the Google-rendered sign-in button on web.',
+      );
+    }
     final account =
         _account ?? await _googleSignIn.authenticate(scopeHint: _scopes);
     await account.authorizationClient.authorizeScopes(_scopes);
     _account = account;
+    _driveAuthorized = true;
+    authenticationError = null;
+    notifyListeners();
+  }
+
+  Future<void> authorizeDriveAccess() async {
+    _ensureAvailable();
+    final account = _account;
+    if (account == null) {
+      throw StateError('Sign in with Google before authorizing Drive access.');
+    }
+    await account.authorizationClient.authorizeScopes(_scopes);
+    _driveAuthorized = true;
+    authenticationError = null;
     notifyListeners();
   }
 
@@ -64,6 +104,7 @@ class GoogleDriveService extends ChangeNotifier {
     _ensureAvailable();
     await _googleSignIn.signOut();
     _account = null;
+    _driveAuthorized = false;
     notifyListeners();
   }
 
@@ -170,6 +211,7 @@ class GoogleDriveService extends ChangeNotifier {
     final authorization =
         await account.authorizationClient.authorizationForScopes(_scopes) ??
             await account.authorizationClient.authorizeScopes(_scopes);
+    _driveAuthorized = true;
     final client = _BearerClient(authorization.accessToken);
     try {
       return await action(drive.DriveApi(client));
