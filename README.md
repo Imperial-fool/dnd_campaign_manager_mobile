@@ -15,10 +15,12 @@ and JSON-defined content.
 - Optionally connect Google Drive to back up character JSON and import JSON
   content packs.
 
-Content packs are not bundled into the app. For an example pack, see
-[`content/tarkov_character_options.json`](content/tarkov_character_options.json).
-For the JSON schema and authoring instructions, see
-[`CONTENT_GUIDE.md`](CONTENT_GUIDE.md).
+The bundled Tarkov content pack can be imported directly from the Catalog
+screen without selecting a file. Additional packs can be imported from a JSON
+file or pasted into the app. See
+[`content/tarkov_character_options.json`](content/tarkov_character_options.json)
+for the bundled pack and [`CONTENT_GUIDE.md`](CONTENT_GUIDE.md) for the JSON
+schema and authoring instructions.
 
 ## Run the app
 

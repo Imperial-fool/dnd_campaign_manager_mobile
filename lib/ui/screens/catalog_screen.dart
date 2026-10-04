@@ -11,7 +11,15 @@ import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 
 /// Browse the campaign catalog and import content packs (JSON).
 class CatalogScreen extends StatelessWidget {
-  const CatalogScreen({super.key});
+  const CatalogScreen({super.key, this.assetBundle});
+
+  final AssetBundle? assetBundle;
+  static const _bundledPacks = [
+    (
+      name: 'Tarkov Character Options',
+      assetPath: 'content/tarkov_character_options.json',
+    ),
+  ];
 
   Future<void> _import(BuildContext context) async {
     final campaign = context.read<CampaignController>();
@@ -63,6 +71,41 @@ class CatalogScreen extends StatelessWidget {
 
     final result = await campaign.importContent(jsonText);
     if (context.mounted) showImportResult(context, result);
+  }
+
+  Future<void> _importBundledPack(BuildContext context) async {
+    final campaign = context.read<CampaignController>();
+    final selected = await showDialog<({String name, String assetPath})>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        title: const Text('Import built-in content pack'),
+        children: [
+          for (final pack in _bundledPacks)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(dialogContext, pack),
+              child: ListTile(
+                leading: const Icon(Icons.inventory_2_outlined),
+                title: Text(pack.name),
+                subtitle: const Text('Included with the app'),
+              ),
+            ),
+        ],
+      ),
+    );
+    if (selected == null || !context.mounted) return;
+
+    try {
+      final jsonText =
+          await (assetBundle ?? rootBundle).loadString(selected.assetPath);
+      final result = await campaign.importContent(jsonText);
+      if (context.mounted) showImportResult(context, result);
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not import ${selected.name}: $error')),
+        );
+      }
+    }
   }
 
   Future<void> _importFromDrive(BuildContext context) async {
@@ -152,6 +195,11 @@ class CatalogScreen extends StatelessWidget {
               tooltip: 'Import JSON text',
               icon: const Icon(Icons.content_paste),
               onPressed: () => _import(context),
+            ),
+            IconButton(
+              tooltip: 'Import built-in content pack',
+              icon: const Icon(Icons.inventory_2_outlined),
+              onPressed: () => _importBundledPack(context),
             ),
             IconButton(
               tooltip: 'Import JSON from Google Drive',
