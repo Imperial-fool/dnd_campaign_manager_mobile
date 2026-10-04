@@ -90,16 +90,21 @@ content stay in each user's browser unless they connect Google Drive.
 Google Drive is optional. Local character storage and JSON import/export remain
 available without connecting an account. When connected, **Save to Google
 Drive** creates or updates that character's JSON file in the signed-in user's
-Drive. The Catalog screen can also list Drive JSON files and import a selected
-content pack, including classes, features, traits, and items. Imports use the
-same validation and merge behavior as local JSON imports.
+Drive. The character roster can import those saved character sheets from that
+same account. Imports create a separate local character with a fresh ID, so they
+do not overwrite an existing local character. The Catalog screen can also list
+Drive JSON files and import a selected content pack, including classes,
+features, traits, and items. Imports use the same validation and merge behavior
+as local JSON imports.
 
 To enable Drive access:
 
 1. In a Google Cloud project, enable the **Google Drive API** and configure the
-   OAuth consent screen.
-2. Create OAuth client IDs for the platforms you will build. Web clients need
-   the app's authorized JavaScript origins. Android clients need the app's
+   OAuth consent screen. Create a **Web application** OAuth client ID. Add the
+   exact deployed site origin (for example, `https://owner.github.io`) to its
+   authorized JavaScript origins.
+2. Create any additional OAuth client IDs needed for the platforms you will
+   build. Android clients need the app's
    package name and signing-certificate SHA-1; also create a web OAuth client
    and use its ID as the Android server client ID. iOS/macOS clients need the
    platform client ID and the reversed client ID URL scheme configured in the
@@ -116,9 +121,16 @@ To enable Drive access:
    app. Configure the consent screen and any verification required by Google's
    Drive read-only scope before distributing the app publicly.
 
-4. Open **Campaign Settings → Google Drive → Connect**. Disconnecting removes
-   the app's in-memory account connection; it does not delete files already
-   saved in Drive.
+   To enable Google Drive in the GitHub Pages deployment, add a repository
+   **Actions variable** named `GOOGLE_OAUTH_CLIENT_ID` under **Settings →
+   Secrets and variables → Actions → Variables**, with the Web application
+   client ID as its value. The Pages workflow passes this variable to the web
+   build. It is a public client identifier, not a secret or an access token.
+
+4. Open **Campaign Settings → Google Drive → Connect** and choose the Google
+   account whose Drive should hold the character files. Each user connects their
+   own account. Disconnecting removes the app's in-memory account connection;
+   it does not delete files already saved in Drive.
 
 Drive sign-in is supported on web, Android, iOS, and macOS. Windows desktop
 continues to support local storage and file import/export, but not Google Drive

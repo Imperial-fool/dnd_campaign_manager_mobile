@@ -126,6 +126,30 @@ class GoogleDriveService extends ChangeNotifier {
         return files;
       });
 
+  Future<List<DriveJsonFile>> listCharacterFiles() => _withDrive((api) async {
+        final files = <DriveJsonFile>[];
+        String? pageToken;
+        do {
+          final page = await api.files.list(
+            q: "trashed = false and appProperties has { key='$_characterIdProperty' }",
+            pageSize: 100,
+            orderBy: 'name',
+            pageToken: pageToken,
+            spaces: 'drive',
+            $fields: 'nextPageToken,files(id,name,appProperties)',
+          );
+          for (final file in page.files ?? <drive.File>[]) {
+            if (file.id != null &&
+                file.name != null &&
+                file.appProperties?.containsKey(_characterIdProperty) == true) {
+              files.add(DriveJsonFile(id: file.id!, name: file.name!));
+            }
+          }
+          pageToken = page.nextPageToken;
+        } while (pageToken != null);
+        return files;
+      });
+
   Future<String> readJsonFile(String fileId) => _withDrive((api) async {
         final content = await api.files.get(
           fileId,

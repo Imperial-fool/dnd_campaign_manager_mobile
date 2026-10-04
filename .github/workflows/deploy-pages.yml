@@ -39,6 +39,8 @@ jobs:
 
       - name: Build web app
         shell: bash
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
         run: |
           repository_name="${GITHUB_REPOSITORY#*/}"
           if [[ "$repository_name" == *.github.io ]]; then
@@ -46,7 +48,8 @@ jobs:
           else
             base_href="/${repository_name}/"
           fi
-          flutter build web --release --base-href "$base_href"
+          flutter build web --release --base-href "$base_href" \
+            --dart-define=GOOGLE_OAUTH_CLIENT_ID="$GOOGLE_OAUTH_CLIENT_ID"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
