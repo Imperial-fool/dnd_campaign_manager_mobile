@@ -79,11 +79,9 @@ class AbilityPanel extends StatelessWidget {
               Checkbox(
                 visualDensity: VisualDensity.compact,
                 value: c.saveProficiencies.contains(a),
-                onChanged: ctrl.isPlayerMode
-                    ? null
-                    : (on) => ctrl.edit((ch) => on == true
-                        ? ch.saveProficiencies.add(a)
-                        : ch.saveProficiencies.remove(a)),
+                onChanged: (on) => ctrl.edit((ch) => on == true
+                    ? ch.saveProficiencies.add(a)
+                    : ch.saveProficiencies.remove(a)),
               ),
               SizedBox(width: 26, child: Text(signed(Rules.saveBonus(c, a)))),
               IconButton(

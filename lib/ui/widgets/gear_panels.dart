@@ -380,18 +380,21 @@ class PlayerWeaponActions extends StatelessWidget {
       child: Column(
         children: [
           for (final weapon in weapons)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: kTan,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: Text(
-                      weapon.name,
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                  ),
+                  Text(weapon.name,
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
                   Wrap(
                     spacing: 6,
+                    runSpacing: 4,
                     children: [
                       FilledButton(
                         onPressed: () => showRoll(context, ctrl.fire(weapon)),
@@ -400,6 +403,15 @@ class PlayerWeaponActions extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () => showRoll(context, ctrl.attack(weapon)),
                         child: const Text('Attack'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () => showRoll(context, ctrl.damage(weapon)),
+                        child: const Text('Damage'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () =>
+                            showRoll(context, ctrl.damage(weapon, crit: true)),
+                        child: const Text('Crit damage'),
                       ),
                       if (weapon.ammoMax > 0)
                         OutlinedButton(
@@ -410,6 +422,36 @@ class PlayerWeaponActions extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class PlayerArmorStatePanel extends StatelessWidget {
+  const PlayerArmorStatePanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = context.watch<CharacterController>();
+    final armor = ctrl.character.armor;
+    if (armor.isEmpty) return const SizedBox.shrink();
+    return SheetCard(
+      title: 'Armor',
+      child: Column(
+        children: [
+          for (final item in armor)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(item.name),
+              subtitle: Text(
+                'Rating ${item.rating} · HP ${item.hp}/${item.hpMax}',
+              ),
+              trailing: Switch(
+                value: item.equipped,
+                onChanged: (value) => ctrl.edit((_) => item.equipped = value),
               ),
             ),
         ],

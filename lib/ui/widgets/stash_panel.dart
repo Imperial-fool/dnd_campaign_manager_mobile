@@ -5,7 +5,9 @@ import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 
 class StashPanel extends StatelessWidget {
-  const StashPanel({super.key});
+  const StashPanel({super.key, this.isPlayerMode = false});
+
+  final bool isPlayerMode;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +41,15 @@ class StashPanel extends StatelessWidget {
                 'armor' => 'Armor',
                 _ => 'Item',
               }),
-              trailing: IconButton(
-                tooltip: 'Transfer to this character',
-                icon: const Icon(Icons.move_to_inbox_outlined),
-                onPressed: character.player.trim().isEmpty
-                    ? null
-                    : () => campaign.moveFromStash(character, index),
-              ),
+              trailing: isPlayerMode
+                  ? null
+                  : IconButton(
+                      tooltip: 'Transfer to this character',
+                      icon: const Icon(Icons.move_to_inbox_outlined),
+                      onPressed: character.player.trim().isEmpty
+                          ? null
+                          : () => campaign.moveFromStash(character, index),
+                    ),
             ),
         ],
       ),

@@ -66,6 +66,15 @@ class CampaignController extends ChangeNotifier {
         await assetBundle.loadString('content/character_creation.json'),
       ) as Map,
     );
+    final bundledCharacterOptions = Map<String, dynamic>.from(
+      jsonDecode(
+        await assetBundle.loadString('content/tarkov_character_options.json'),
+      ) as Map,
+    );
+    importer.loadInto(
+      {'backgrounds': bundledCharacterOptions['backgrounds'] ?? const []},
+      catalog,
+    );
     importer.loadInto({'actions': bundledMechanics['actions']}, catalog);
     importer.loadInto(
       Map<String, dynamic>.from(
@@ -112,7 +121,8 @@ class CampaignController extends ChangeNotifier {
         ..armor.clear()
         ..items.clear()
         ..weaponHp = 0
-        ..armorHp = 0;
+        ..armorHp = 0
+        ..extras.clear();
     }
     final definitions = catalog.items('skills').whereType<GenericItem>();
     if (definitions.isNotEmpty) {
@@ -127,6 +137,22 @@ class CampaignController extends ChangeNotifier {
       }
     }
     if (isPlayer) {
+      c
+        ..xp = 0
+        ..level = 1
+        ..hpMax = c.hpMax.clamp(1, 100)
+        ..hpCurrent = c.hpCurrent.clamp(0, c.hpMax)
+        ..hitDiceTotal = c.hitDiceTotal.clamp(0, 1)
+        ..weapons.clear()
+        ..armor.clear()
+        ..items.clear()
+        ..weaponHp = 0
+        ..armorHp = 0;
+      if (c.traits.length > 100) {
+        throw StateError(
+          'Player-created characters may have at most 100 features and traits.',
+        );
+      }
       await sharedCampaign!.createPlayerCharacter(c);
     }
     characters.add(c);
@@ -453,6 +479,22 @@ class CampaignController extends ChangeNotifier {
     _publishCharacter(c);
     notifyListeners();
     return c;
+  }
+
+  Future<Character> importPlayerCharacter(String jsonText) async {
+    if (sharedCampaign?.isConnected != true ||
+        sharedCampaign?.isOwner != false) {
+      throw StateError('Join a shared campaign as a player to import a sheet.');
+    }
+    if (!allowPlayerCharacterCreation) {
+      throw StateError('The DM has not enabled player character creation.');
+    }
+    final data = jsonDecode(jsonText);
+    if (data is! Map) throw const FormatException('Expected a JSON object.');
+    final character = Character.fromJson(
+      {...Map<String, dynamic>.from(data), 'id': newId()},
+    );
+    return createCharacterFromSheet(character);
   }
 
   // ---- catalog / content packs ------------------------------------------------

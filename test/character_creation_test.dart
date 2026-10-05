@@ -24,7 +24,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Character details'), findsOneWidget);
-    final classDropdown = find.byType(DropdownButtonFormField<String>).first;
+    final backgroundDropdown =
+        find.byType(DropdownButtonFormField<String>).first;
+    await tester.ensureVisible(backgroundDropdown);
+    await tester.pumpAndSettle();
+    await tester.tap(backgroundDropdown);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zaslon').last);
+    await tester.pumpAndSettle();
+
+    final classDropdown = find.byType(DropdownButtonFormField<String>).last;
     await tester.ensureVisible(classDropdown);
     await tester.pumpAndSettle();
     await tester.tap(classDropdown);
@@ -41,6 +50,11 @@ void main() {
     expect(campaign.characters.single.className, 'Vanguard');
     expect(campaign.characters.single.level, 1);
     expect(campaign.characters.single.hitDiceTotal, 1);
+    expect(campaign.characters.single.background, 'Zaslon');
+    expect(
+      campaign.characters.single.traits.map((trait) => trait.name),
+      contains('Zaslon Operative'),
+    );
   });
 
   testWidgets('shows character creation when no class definitions are loaded',
@@ -56,6 +70,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Character details'), findsOneWidget);
+    final backgroundDropdown =
+        find.byType(DropdownButtonFormField<String>).first;
+    await tester.ensureVisible(backgroundDropdown);
+    await tester.pumpAndSettle();
+    await tester.tap(backgroundDropdown);
+    await tester.pumpAndSettle();
+    expect(find.text('Zaslon'), findsOneWidget);
+    await tester.tap(find.text('Zaslon').last);
+    await tester.pumpAndSettle();
+
     expect(find.textContaining('No class definitions are loaded.'),
         findsOneWidget);
     await tester.drag(find.byType(ListView), const Offset(0, -1200));
@@ -67,6 +91,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(campaign.characters, hasLength(1));
     expect(campaign.characters.single.classId, isEmpty);
+    expect(campaign.characters.single.background, 'Zaslon');
     expect(find.text('New Character').last, findsOneWidget);
   });
 

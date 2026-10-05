@@ -76,10 +76,12 @@ generated.
    to their assigned character and the DM's catalog/rules. The DM can enable
    **Allow players to create characters** in Campaign Settings. When enabled,
    players can use the guided character creator; their new level-1 character is
-   assigned to them automatically. New player-created characters start without
-   weapons, armor, or inventory; level progression and gear definitions remain
-   DM-controlled. Players can edit their assigned sheet, use items, and roll
-   dice. The creator's ability-score rule is defined in
+   assigned to them automatically, or import a character JSON sheet from the
+   character list. Imported player sheets are assigned to that player, reset
+   to level 1 and 0 XP, and stripped of weapons, armor, and inventory. Level
+   progression and gear definitions remain DM-controlled. Players can edit
+   their assigned sheet, use items, and roll dice. The creator's ability-score
+   rule is defined in
    [`content/character_creation.json`](content/character_creation.json) and
    defaults to six rolls of 4d6, dropping the lowest die from each roll; it
    displays all individual dice and lets players assign scores to abilities.

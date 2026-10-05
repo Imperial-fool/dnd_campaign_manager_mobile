@@ -421,12 +421,23 @@ class FirebaseCampaignService extends ChangeNotifier {
       throw StateError('Your campaign player name could not be loaded.');
     }
     character.player = playerName;
-    await _campaignCollection('characters').doc(character.id).set({
-      'assignedUid': uid,
-      'createdByUid': uid,
-      'character': character.toJson(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+    try {
+      await _campaignCollection('characters').doc(character.id).set({
+        'assignedUid': uid,
+        'createdByUid': uid,
+        'character': character.toJson(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (error) {
+      if (error.code == 'permission-denied') {
+        throw StateError(
+          'Firebase denied character creation. Ask the DM to enable '
+          '“Allow players to create characters” and deploy the latest '
+          'firestore.rules. Details: ${error.message ?? error.code}',
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<void> syncStashForPlayer(
@@ -517,6 +528,7 @@ class FirebaseCampaignService extends ChangeNotifier {
         'abilityScores',
         'saveProficiencies',
         'skills',
+        'traits',
         'initiativeBonus',
         'speed',
         'armorClass',
@@ -562,6 +574,7 @@ class FirebaseCampaignService extends ChangeNotifier {
       'abilityScores',
       'saveProficiencies',
       'skills',
+      'traits',
       'initiativeBonus',
       'speed',
       'armorClass',

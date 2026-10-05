@@ -31,6 +31,9 @@ void main() {
 
     await tester.tap(find.byTooltip('Import built-in content pack'));
     await tester.pumpAndSettle();
+    expect(find.text('Campaign Skills'), findsOneWidget);
+    expect(find.text('Tarkov Mechanics'), findsOneWidget);
+    expect(find.text('Tarkov Armory'), findsOneWidget);
     expect(find.text('Tarkov Character Options'), findsOneWidget);
     await tester.tap(find.text('Tarkov Character Options'));
     await tester.pumpAndSettle();

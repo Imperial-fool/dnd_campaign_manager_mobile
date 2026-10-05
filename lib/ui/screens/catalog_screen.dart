@@ -16,6 +16,18 @@ class CatalogScreen extends StatelessWidget {
   final AssetBundle? assetBundle;
   static const _bundledPacks = [
     (
+      name: 'Campaign Skills',
+      assetPath: 'content/skills.json',
+    ),
+    (
+      name: 'Tarkov Mechanics',
+      assetPath: 'content/tarkov_mechanics.json',
+    ),
+    (
+      name: 'Tarkov Armory',
+      assetPath: 'content/tarkov_armory.json',
+    ),
+    (
       name: 'Tarkov Character Options',
       assetPath: 'content/tarkov_character_options.json',
     ),

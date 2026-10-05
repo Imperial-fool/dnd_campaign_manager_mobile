@@ -174,34 +174,42 @@ class _SheetView extends StatelessWidget {
         absorbing: ctrl.isReadOnly,
         child: const VitalsPanel(),
       ),
-      AbsorbPointer(
-        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
-        child: const WeaponsPanel(),
-      ),
-      AbsorbPointer(
-        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
-        child: const ArmorPanel(),
-      ),
+      if (ctrl.isPlayerMode)
+        AbsorbPointer(
+          absorbing: ctrl.isReadOnly,
+          child: const PlayerWeaponActions(),
+        )
+      else
+        AbsorbPointer(
+          absorbing: ctrl.isReadOnly,
+          child: const WeaponsPanel(),
+        ),
+      if (ctrl.isPlayerMode)
+        AbsorbPointer(
+          absorbing: ctrl.isReadOnly,
+          child: const PlayerArmorStatePanel(),
+        )
+      else
+        AbsorbPointer(
+          absorbing: ctrl.isReadOnly,
+          child: const ArmorPanel(),
+        ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const InventoryPanel(),
       ),
       AbsorbPointer(
-        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
-        child: const StashPanel(),
+        absorbing: ctrl.isReadOnly,
+        child: StashPanel(isPlayerMode: ctrl.isPlayerMode),
       ),
     ]);
     final right = _stack([
-      if (ctrl.isPlayerMode) const PlayerWeaponActions(),
       const RollPanel(),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: _stack([
           const ActionsPanel(),
-          AbsorbPointer(
-            absorbing: ctrl.isPlayerMode,
-            child: const TraitsPanel(),
-          ),
+          const TraitsPanel(),
           const FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
           const FreeTextPanel(
               title: 'Proficiencies & Languages',
@@ -237,7 +245,7 @@ class _SheetView extends StatelessWidget {
                 ctrl.character,
               ),
             ),
-          if (!ctrl.isReadOnly)
+          if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
             IconButton(
               tooltip: 'Catalog',
               icon: const Icon(Icons.inventory_2_outlined),

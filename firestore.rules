@@ -103,6 +103,7 @@ service cloud.firestore {
             && request.resource.data.playerState.keys().hasOnly([
               'name', 'race', 'affiliation', 'alignment', 'background',
               'backgroundId', 'abilityScores', 'saveProficiencies', 'skills',
+              'traits',
               'initiativeBonus', 'speed', 'armorClass', 'hpCurrent',
               'inspiration', 'hitDiceUsed', 'deathSuccesses', 'deathFailures',
               'exhaustion', 'equipment', 'proficiencies', 'notes', 'weaponHp',
@@ -113,6 +114,8 @@ service cloud.firestore {
             && request.resource.data.playerState.hpCurrent is int
             && request.resource.data.playerState.abilityScores is map
             && request.resource.data.playerState.skills is list
+            && request.resource.data.playerState.traits is list
+            && request.resource.data.playerState.traits.size() <= 100
             && request.resource.data.playerState.weaponState is map
             && request.resource.data.playerState.weaponState.size() <= 100
             && request.resource.data.playerState.armorState is map

@@ -40,18 +40,29 @@ class CharacterListScreen extends StatelessWidget {
     if (character != null) _open(context, character);
   }
 
-  Future<void> _importCharacter(BuildContext context) async {
+  Future<void> _importCharacter(
+    BuildContext context, {
+    required bool asPlayer,
+  }) async {
     final campaign = context.read<CampaignController>();
     final text =
         await showJsonInputDialog(context, title: 'Import character JSON');
     if (text == null || text.trim().isEmpty) return;
     try {
-      final c = await campaign.importCharacter(text);
+      final c = asPlayer
+          ? await campaign.importPlayerCharacter(text)
+          : await campaign.importCharacter(text);
       if (context.mounted) _open(context, c);
     } on FormatException catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Invalid JSON: ${e.message}')));
+      }
+    } catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not import character: $error')),
+        );
       }
     }
   }
@@ -185,12 +196,18 @@ class CharacterListScreen extends StatelessWidget {
             IconButton(
               tooltip: 'Import character JSON',
               icon: const Icon(Icons.file_download_outlined),
-              onPressed: () => _importCharacter(context),
+              onPressed: () => _importCharacter(context, asPlayer: false),
             ),
             IconButton(
               tooltip: 'Import character from Google Drive',
               icon: const Icon(Icons.cloud_download_outlined),
               onPressed: () => _importCharacterFromDrive(context),
+            ),
+          ] else if (campaign.allowPlayerCharacterCreation) ...[
+            IconButton(
+              tooltip: 'Import character JSON',
+              icon: const Icon(Icons.file_download_outlined),
+              onPressed: () => _importCharacter(context, asPlayer: true),
             ),
           ],
         ],

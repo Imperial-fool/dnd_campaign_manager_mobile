@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dnd_campaign_manager/logic/backgrounds.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_repository.dart';
@@ -7,6 +8,7 @@ import 'package:dnd_campaign_manager/logic/dice.dart';
 import 'package:dnd_campaign_manager/models/ability.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/class_definition.dart';
+import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
 
 class CharacterCreationScreen extends StatefulWidget {
@@ -41,6 +43,8 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   List<_AbilityScoreRoll> _rolledScores = [];
   ClassDefinition? _selectedClass;
   String _selectedSubclassId = '';
+  String _selectedBackgroundId = '';
+  bool _customBackgroundSelected = false;
   bool _saving = false;
 
   @override
@@ -83,8 +87,17 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
             : _nameController.text.trim()
         ..player = _playerController.text.trim()
         ..race = _raceController.text.trim()
-        ..background = _backgroundController.text.trim()
         ..alignment = _alignmentController.text.trim();
+      final background = campaign.catalog
+          .items('backgrounds')
+          .whereType<BackgroundDefinition>()
+          .where((entry) => entry.id == _selectedBackgroundId)
+          .firstOrNull;
+      if (background != null) {
+        applyBackground(character, background);
+      } else {
+        character.background = _backgroundController.text.trim();
+      }
       for (final entry in _assignedScores.entries) {
         character.abilityScores[entry.key] = _rolledScores[entry.value].score;
       }
@@ -168,6 +181,13 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
         : const <String, dynamic>{};
     final classes =
         campaign.catalog.items('classes').whereType<ClassDefinition>().toList();
+    final backgrounds = campaign.catalog
+        .items('backgrounds')
+        .whereType<BackgroundDefinition>()
+        .toList();
+    final selectedBackground = backgrounds
+        .where((entry) => entry.id == _selectedBackgroundId)
+        .firstOrNull;
     final definition = _selectedClass;
     final subclasses = definition?.subclasses.map(ClassSubclass.new).toList() ??
         <ClassSubclass>[];
@@ -217,11 +237,62 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 8),
-              TextField(
-                controller: _backgroundController,
-                decoration: const InputDecoration(labelText: 'Background'),
-                textCapitalization: TextCapitalization.words,
-              ),
+              if (backgrounds.isEmpty || _customBackgroundSelected)
+                TextField(
+                  controller: _backgroundController,
+                  decoration: const InputDecoration(labelText: 'Background'),
+                  textCapitalization: TextCapitalization.words,
+                )
+              else
+                DropdownButtonFormField<String>(
+                  key: ValueKey(_selectedBackgroundId),
+                  initialValue: _selectedBackgroundId,
+                  decoration: const InputDecoration(labelText: 'Background'),
+                  items: [
+                    const DropdownMenuItem(
+                      value: '',
+                      child: Text('Choose a background'),
+                    ),
+                    for (final background in backgrounds)
+                      DropdownMenuItem(
+                        value: background.id,
+                        child: Text(background.name),
+                      ),
+                    const DropdownMenuItem(
+                      value: '__custom_background__',
+                      child: Text('Custom background'),
+                    ),
+                  ],
+                  onChanged: _saving
+                      ? null
+                      : (value) => setState(() {
+                            _customBackgroundSelected =
+                                value == '__custom_background__';
+                            _selectedBackgroundId =
+                                _customBackgroundSelected ? '' : value ?? '';
+                          }),
+                ),
+              if (selectedBackground != null &&
+                  !_customBackgroundSelected &&
+                  selectedBackground.description.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  selectedBackground.description,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+              if (_customBackgroundSelected) ...[
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _saving
+                      ? null
+                      : () => setState(() {
+                            _customBackgroundSelected = false;
+                            _backgroundController.clear();
+                          }),
+                  child: const Text('Choose a listed background instead'),
+                ),
+              ],
               const SizedBox(height: 8),
               TextField(
                 controller: _alignmentController,
