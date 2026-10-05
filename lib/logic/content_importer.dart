@@ -5,6 +5,7 @@ import 'package:dnd_campaign_manager/models/catalog.dart';
 import 'package:dnd_campaign_manager/models/class_definition.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
+import 'package:dnd_campaign_manager/models/sheet_template.dart';
 
 /// Binds a top-level JSON key (e.g. "weapons") to:
 ///  - [parse]: how to turn one JSON object into a catalog item
@@ -100,6 +101,12 @@ class ContentRegistry {
       apply: (_, __) => throw UnsupportedError(
         'Classes must be selected through the character level-up flow.',
       ),
+    ));
+    r.register(ContentBinding(
+      key: 'sheetTemplates',
+      label: 'Sheet components',
+      parse: SheetTemplate.fromJson,
+      apply: (c, i) => SheetEvaluator.addComponent(c, i.id),
     ));
     r.registerGeneric('skills', 'Skills');
     r.registerGeneric('actions', 'Actions');

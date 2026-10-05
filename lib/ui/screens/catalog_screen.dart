@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
 import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/logic/sample_content.dart';
+import 'package:dnd_campaign_manager/ui/screens/pack_builder_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 
 /// Browse the campaign catalog and import content packs (JSON).
@@ -203,6 +204,14 @@ class CatalogScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Campaign Catalog'),
           actions: [
+            IconButton(
+              tooltip: 'Build content pack / design sheet',
+              icon: const Icon(Icons.construction),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PackBuilderScreen()),
+              ),
+            ),
             IconButton(
               tooltip: 'Import JSON text',
               icon: const Icon(Icons.content_paste),

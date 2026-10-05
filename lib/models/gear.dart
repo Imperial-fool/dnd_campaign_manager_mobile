@@ -126,6 +126,7 @@ class Weapon implements CatalogItem {
         if (burstRounds > 0) 'burstRounds': burstRounds,
         'fireModes': fireModes,
         'bulletDice': bulletDice,
+        'damage': damage,
         'burstDamage': burstDamage,
         'firingMode': firingMode,
         if (damageAbility.isNotEmpty) 'damageAbility': damageAbility,

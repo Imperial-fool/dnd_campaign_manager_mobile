@@ -263,8 +263,11 @@ class _InitiativeCard extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final token = order[index];
                   final isCurrent = token.id == currentTurnId;
+                  final isMine = token.ownerUid == controller.userId;
                   return ListTile(
                     dense: true,
+                    selected: isCurrent,
+                    selectedTileColor: Colors.amber.withValues(alpha: 0.18),
                     contentPadding: EdgeInsets.zero,
                     leading: CircleAvatar(
                       backgroundColor: Color(token.color),
@@ -277,7 +280,11 @@ class _InitiativeCard extends StatelessWidget {
                       ),
                     ),
                     title: Text(token.name),
-                    subtitle: Text(token.kind.toUpperCase()),
+                    subtitle: Text(
+                      isCurrent && isMine && !controller.isDm
+                          ? 'YOUR TURN'
+                          : token.kind.toUpperCase(),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -285,6 +292,17 @@ class _InitiativeCard extends StatelessWidget {
                           const Icon(
                             Icons.play_circle_fill,
                             color: Colors.amber,
+                          ),
+                        if (controller.isDm)
+                          IconButton(
+                            tooltip: 'Roll initiative',
+                            icon: const Icon(Icons.casino_outlined),
+                            onPressed: () => _rollInitiative(
+                              context,
+                              controller,
+                              token,
+                              _initiativeBonusFor(token, characters),
+                            ),
                           ),
                         if (controller.isDm)
                           IconButton(
@@ -304,11 +322,153 @@ class _InitiativeCard extends StatelessWidget {
     );
   }
 
-  int _initiativeBonusFor(VttToken token, List<Character> characters) {
-    for (final character in characters) {
-      if (character.id == token.characterId) return character.initiativeBonus;
+  int _initiativeBonusFor(VttToken token, List<Character> characters) =>
+      _initiativeBonus(token, characters);
+}
+
+int _initiativeBonus(VttToken token, List<Character> characters) {
+  for (final character in characters) {
+    if (character.id == token.characterId) return character.initiativeBonus;
+  }
+  return 0;
+}
+
+/// Compact, always-visible turn summary shown above the board.
+class VttTurnBar extends StatelessWidget {
+  const VttTurnBar({super.key, this.characters = const []});
+
+  final List<Character> characters;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<VttController>();
+    final combat = controller.combat;
+    final order = controller.initiativeOrder;
+    final current = controller.currentTurnToken;
+    final scheme = Theme.of(context).colorScheme;
+    final isMyTurn = combat.active &&
+        !controller.isDm &&
+        current != null &&
+        current.ownerUid == controller.userId;
+    final unrolled = controller.tokens
+        .where((t) =>
+            t.initiative == null &&
+            (controller.isDm || t.ownerUid == controller.userId))
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+
+    if (!combat.active && order.isEmpty && unrolled.isEmpty) {
+      return const SizedBox.shrink();
     }
-    return 0;
+
+    final background =
+        isMyTurn ? Colors.amber.shade700 : scheme.surfaceContainerHighest;
+    final foreground = isMyTurn ? Colors.black : scheme.onSurface;
+
+    String status;
+    if (!combat.active) {
+      status = 'Combat not started';
+    } else if (isMyTurn) {
+      status = "YOUR TURN — ${current.name}";
+    } else if (current != null) {
+      status = "${current.name}'s turn";
+    } else {
+      status = 'Waiting for first turn';
+    }
+
+    return Material(
+      color: background,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        child: DefaultTextStyle.merge(
+          style: TextStyle(color: foreground),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    isMyTurn ? Icons.notifications_active : Icons.flag_outlined,
+                    size: 18,
+                    color: foreground,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      status,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  if (combat.active) Text('Rd ${combat.round}'),
+                  if (unrolled.isNotEmpty)
+                    PopupMenuButton<VttToken>(
+                      tooltip: 'Roll initiative',
+                      icon: Icon(Icons.casino_outlined, color: foreground),
+                      onSelected: (token) => _rollInitiative(
+                        context,
+                        controller,
+                        token,
+                        _initiativeBonus(token, characters),
+                      ),
+                      itemBuilder: (_) => [
+                        for (final token in unrolled)
+                          PopupMenuItem<VttToken>(
+                            value: token,
+                            child: Text('Roll: ${token.name}'),
+                          ),
+                      ],
+                    ),
+                  if (controller.isDm && combat.active)
+                    IconButton(
+                      tooltip: 'Next turn',
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(Icons.skip_next, color: foreground),
+                      onPressed: () => _runAction(
+                        context,
+                        controller.nextTurn,
+                        prefix: 'Could not advance turn',
+                      ),
+                    ),
+                ],
+              ),
+              if (order.isNotEmpty)
+                SizedBox(
+                  height: 30,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: order.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 6),
+                    itemBuilder: (context, index) {
+                      final token = order[index];
+                      final isCurrent = token.id == current?.id;
+                      return Chip(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        backgroundColor: Color(token.color),
+                        side: isCurrent
+                            ? const BorderSide(color: Colors.amber, width: 2)
+                            : BorderSide.none,
+                        label: Text(
+                          '${token.initiative} ${token.name}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight:
+                                isCurrent ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

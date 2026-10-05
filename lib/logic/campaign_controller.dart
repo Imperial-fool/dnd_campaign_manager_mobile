@@ -261,6 +261,43 @@ class CampaignController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> signInWithGoogleAccount() async {
+    final service = _requireSharedService();
+    final wasConnected = service.isConnected;
+    await service.signInWithGoogle();
+    if (wasConnected && !service.isConnected) await _detachShared();
+    notifyListeners();
+  }
+
+  Future<void> signOutGoogleAccount() async {
+    await _requireSharedService().signOutAccount();
+    await _detachShared();
+  }
+
+  Future<void> _detachShared() async {
+    await _sharedCharactersSubscription?.cancel();
+    await _sharedConfigurationSubscription?.cancel();
+    await _sharedStashesSubscription?.cancel();
+    _sharedCharactersSubscription = null;
+    _sharedConfigurationSubscription = null;
+    _sharedStashesSubscription = null;
+    characters = _localCharactersBeforeSharing ?? characters;
+    _localCharactersBeforeSharing = null;
+    await load();
+  }
+
+  Future<List<SavedCampaign>> savedCampaigns() =>
+      _requireSharedService().savedCampaigns();
+
+  /// Re-enters a campaign tied to the signed-in account, no join code needed.
+  Future<void> resumeSavedCampaign(SavedCampaign saved) async {
+    final service = _requireSharedService();
+    await service.resumeCampaign(saved);
+    await _restoreSharedCampaign();
+    if (service.lastError != null) throw StateError(service.lastError!);
+    notifyListeners();
+  }
+
   Future<void> assignCharacterToPlayer(
       String characterId, String? playerUid) async {
     final service = _requireSharedService();

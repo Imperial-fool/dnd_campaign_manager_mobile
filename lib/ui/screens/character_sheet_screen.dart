@@ -11,6 +11,7 @@ import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/ui/screens/catalog_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/ability_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/actions_panel.dart';
+import 'package:dnd_campaign_manager/ui/widgets/custom_sheet_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/identity_panel.dart';
@@ -173,6 +174,10 @@ class _SheetView extends StatelessWidget {
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const VitalsPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const CustomSheetPanel(),
       ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,

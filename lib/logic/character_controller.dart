@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:dnd_campaign_manager/logic/character_repository.dart';
 import 'package:dnd_campaign_manager/logic/content_importer.dart';
 import 'package:dnd_campaign_manager/logic/dice.dart';
+import 'package:dnd_campaign_manager/logic/formula.dart';
 import 'package:dnd_campaign_manager/logic/inventory.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/models/ability.dart';
@@ -13,6 +14,7 @@ import 'package:dnd_campaign_manager/models/class_definition.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
+import 'package:dnd_campaign_manager/models/sheet_template.dart';
 
 /// Edits ONE character and runs its dice rolls. UI calls [edit] with a
 /// mutation; this notifies listeners and debounces a save to the repository.
@@ -319,10 +321,9 @@ class CharacterController extends ChangeNotifier {
   bool _hasOrigin(String value, String levelOrigin) =>
       value == levelOrigin || value.startsWith('$levelOrigin:');
 
-  bool _hasCatalogItem(Catalog catalog, Map<String, dynamic> grant) =>
-      catalog
-          .items(asStr(grant['catalogKey']))
-          .any((item) => item.id == asStr(grant['itemId']));
+  bool _hasCatalogItem(Catalog catalog, Map<String, dynamic> grant) => catalog
+      .items(asStr(grant['catalogKey']))
+      .any((item) => item.id == asStr(grant['itemId']));
 
   void _grantCatalogItem(
     Character character,
@@ -340,12 +341,10 @@ class CharacterController extends ChangeNotifier {
             .add(Weapon.fromJson(template.toJson())..origin = origin);
         break;
       case 'armor':
-        character.armor
-            .add(Armor.fromJson(template.toJson())..origin = origin);
+        character.armor.add(Armor.fromJson(template.toJson())..origin = origin);
         break;
       case 'items':
-        final item = InventoryItem.fromJson(template.toJson())
-          ..origin = origin;
+        final item = InventoryItem.fromJson(template.toJson())..origin = origin;
         if (grant['quantity'] is int) {
           item.quantity = grant['quantity'] as int;
         }
@@ -506,7 +505,7 @@ class CharacterController extends ChangeNotifier {
           title: '${w.name} damage', lines: const ['No damage dice set.']));
     }
     try {
-      final d = dice.roll(_weaponDamage(w, w.damage), doubleDice: crit);
+      final d = _rollTemplate(_weaponDamage(w, w.damage), crit: crit);
       return _log(RollEntry(
         title: '${w.name} damage',
         total: d.total,
@@ -589,7 +588,7 @@ class CharacterController extends ChangeNotifier {
       lines.add('Natural 1: miss');
     } else if (mode == 'burst') {
       try {
-        final d = dice.roll(modeDamage, doubleDice: a.crit);
+        final d = _rollTemplate(modeDamage, crit: a.crit);
         lines
           ..add('Burst: all $need rounds hit')
           ..add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total} (${d.parts})');
@@ -602,7 +601,7 @@ class CharacterController extends ChangeNotifier {
         lines.add('Full auto: $hits hits from $need rounds');
         var damageTotal = 0;
         for (var i = 0; i < hits; i++) {
-          final d = dice.roll(modeDamage, doubleDice: a.crit);
+          final d = _rollTemplate(modeDamage, crit: a.crit);
           damageTotal += d.total;
           lines.add('Hit ${i + 1}: ${d.total} (${d.parts})');
         }
@@ -618,7 +617,7 @@ class CharacterController extends ChangeNotifier {
       }
     } else if (modeDamage.trim().isNotEmpty) {
       try {
-        final d = dice.roll(modeDamage, doubleDice: a.crit);
+        final d = _rollTemplate(modeDamage, crit: a.crit);
         lines.add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total}  (${d.parts})');
       } on FormatException catch (e) {
         lines.add('Damage not rolled: ${e.message}');
@@ -630,6 +629,31 @@ class CharacterController extends ChangeNotifier {
         lines: lines,
         crit: a.crit,
         fumble: a.fumble));
+  }
+
+  /// Resolves {formula} segments (e.g. {1d6}d8+{str_mod}) then rolls.
+  DiceResult _rollTemplate(String expression, {bool crit = false}) {
+    final engine = FormulaEngine(
+      resolve: (name) => FormulaEngine.characterVariable(character, name),
+      rollDie: dice.die,
+    );
+    final resolved = engine.resolveTemplate(expression);
+    final result = dice.roll(resolved, doubleDice: crit);
+    return DiceResult(expression, result.total,
+        resolved == expression ? result.parts : '$resolved: ${result.parts}');
+  }
+
+  /// Rolls a [SheetFieldType.roll] field of a DM-designed sheet.
+  RollEntry rollSheetField(SheetTemplate template, SheetField field) {
+    final evaluator = SheetEvaluator(character, template, rollDie: dice.die);
+    try {
+      final resolved = evaluator.engine.resolveTemplate(field.formula);
+      final d = dice.roll(resolved);
+      return _log(RollEntry(
+          title: field.label, total: d.total, lines: [resolved, d.parts]));
+    } on FormatException catch (e) {
+      return _log(RollEntry(title: field.label, lines: [e.message]));
+    }
   }
 
   int _maximumDiceResult(String expression) {

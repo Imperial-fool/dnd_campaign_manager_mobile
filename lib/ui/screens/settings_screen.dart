@@ -309,6 +309,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+            if (shared.isConfigured) _accountSection(context, campaign, shared),
             if (shared.lastError != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -320,6 +321,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _accountSection(
+    BuildContext context,
+    CampaignController campaign,
+    FirebaseCampaignService shared,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          if (!shared.isGoogleLinked) ...[
+            const Text(
+              'Sign in with Google to keep access to your campaigns on any '
+              'device, even if you lose the join code.',
+            ),
+            TextButton.icon(
+              onPressed: _working
+                  ? null
+                  : () => _runAccountAction(
+                        context,
+                        'Could not sign in',
+                        campaign.signInWithGoogleAccount,
+                      ),
+              icon: const Icon(Icons.account_circle_outlined),
+              label: const Text('Sign in with Google'),
+            ),
+          ] else ...[
+            Text('Signed in as ${shared.accountEmail ?? 'Google account'}'),
+            Wrap(
+              spacing: 8,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: _working
+                      ? null
+                      : () => _showSavedCampaigns(context, campaign),
+                  icon: const Icon(Icons.history),
+                  label: const Text('My campaigns'),
+                ),
+                TextButton(
+                  onPressed: _working
+                      ? null
+                      : () => _runAccountAction(
+                            context,
+                            'Could not sign out',
+                            campaign.signOutGoogleAccount,
+                          ),
+                  child: const Text('Sign out'),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _runAccountAction(
+    BuildContext context,
+    String failure,
+    Future<void> Function() action,
+  ) async {
+    setState(() => _working = true);
+    try {
+      await action();
+    } catch (error) {
+      if (context.mounted) _showError(context, '$failure: $error');
+    } finally {
+      if (mounted) setState(() => _working = false);
+    }
+  }
+
+  Future<void> _showSavedCampaigns(
+    BuildContext context,
+    CampaignController campaign,
+  ) async {
+    final List<SavedCampaign> saved;
+    try {
+      saved = await campaign.savedCampaigns();
+    } catch (error) {
+      if (!context.mounted) return;
+      _showError(context, 'Could not load your campaigns: $error');
+      return;
+    }
+    if (!context.mounted) return;
+    final choice = await showDialog<SavedCampaign>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('My campaigns'),
+        content: SizedBox(
+          width: 400,
+          child: saved.isEmpty
+              ? const Text('No campaigns are linked to this account yet.')
+              : ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final s in saved)
+                      ListTile(
+                        leading: Icon(s.owner
+                            ? Icons.shield_outlined
+                            : Icons.person_outline),
+                        title: Text(s.owner
+                            ? 'DM · ${s.code}'
+                            : 'Player · ${s.playerName ?? s.code}'),
+                        subtitle: Text(s.code),
+                        onTap: () => Navigator.pop(dialogContext, s),
+                      ),
+                  ],
+                ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+    if (choice == null || !context.mounted) return;
+    await _runAccountAction(
+      context,
+      'Could not open campaign',
+      () => campaign.resumeSavedCampaign(choice),
     );
   }
 

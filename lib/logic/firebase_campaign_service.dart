@@ -30,6 +30,20 @@ class CampaignAssignment {
   final String? playerUid;
 }
 
+/// A campaign this account has joined or owns, kept so access survives
+/// losing the original join code.
+class SavedCampaign {
+  const SavedCampaign({
+    required this.code,
+    required this.owner,
+    this.playerName,
+  });
+
+  final String code;
+  final bool owner;
+  final String? playerName;
+}
+
 /// Optional realtime campaign transport. Firebase Auth uses anonymous
 /// identities; the DM's unguessable campaign code acts as the invitation.
 class FirebaseCampaignService extends ChangeNotifier {
@@ -51,6 +65,91 @@ class FirebaseCampaignService extends ChangeNotifier {
   bool get isConfigured => _auth != null && _firestore != null;
   bool get isConnected => isConfigured && joinCode != null;
   String? get userId => _auth?.currentUser?.uid;
+  bool get isGoogleLinked =>
+      _auth?.currentUser?.providerData
+          .any((p) => p.providerId == 'google.com') ??
+      false;
+  String? get accountEmail => _auth?.currentUser?.providerData
+      .where((p) => p.providerId == 'google.com')
+      .map((p) => p.email)
+      .firstOrNull;
+
+  /// Upgrades the anonymous identity to a Google account (keeping the same
+  /// uid, so existing campaigns stay accessible). If the Google account is
+  /// already known, signs into it instead so its campaigns are restored.
+  Future<void> signInWithGoogle() async {
+    final auth = _auth;
+    if (auth == null) {
+      throw StateError(configurationError ?? 'Firebase is off.');
+    }
+    final provider = GoogleAuthProvider();
+    final current = auth.currentUser ?? (await auth.signInAnonymously()).user!;
+    try {
+      if (kIsWeb) {
+        await current.linkWithPopup(provider);
+      } else {
+        await current.linkWithProvider(provider);
+      }
+    } on FirebaseAuthException catch (error) {
+      if (error.code != 'credential-already-in-use' &&
+          error.code != 'email-already-in-use') {
+        rethrow;
+      }
+      // A different uid means the old anonymous campaign isn't ours here.
+      await leaveCampaign(removeMember: false);
+      if (kIsWeb) {
+        await auth.signInWithPopup(provider);
+      } else {
+        await auth.signInWithProvider(provider);
+      }
+    }
+    await auth.currentUser?.reload();
+    await _recordCurrentCampaign();
+    notifyListeners();
+  }
+
+  /// Signs out of the Google account on this device and disconnects.
+  Future<void> signOutAccount() async {
+    await leaveCampaign(removeMember: false);
+    await _auth?.signOut();
+    notifyListeners();
+  }
+
+  CollectionReference<Map<String, dynamic>> _savedCampaigns(String uid) =>
+      _requireFirestore().collection('users').doc(uid).collection('campaigns');
+
+  Future<List<SavedCampaign>> savedCampaigns() async {
+    final uid = userId;
+    if (uid == null) return const [];
+    final snapshot = await _savedCampaigns(uid).get();
+    return [
+      for (final doc in snapshot.docs)
+        SavedCampaign(
+          code: doc.id,
+          owner: doc.data()['owner'] == true,
+          playerName: doc.data()['playerName'] as String?,
+        ),
+    ];
+  }
+
+  Future<void> resumeCampaign(SavedCampaign saved) =>
+      _activate(saved.code, owner: saved.owner, name: saved.playerName);
+
+  Future<void> _recordCurrentCampaign() async {
+    final code = joinCode;
+    final uid = userId;
+    if (code == null || uid == null) return;
+    try {
+      await _savedCampaigns(uid).doc(code).set({
+        'owner': isOwner,
+        if (playerName != null) 'playerName': playerName,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException {
+      // Recovery metadata is best effort; the campaign itself still works.
+    }
+  }
+
   FirebaseFirestore? get firestore => _firestore;
 
   static const _codeKey = 'dnd.sharedCampaign.code';
@@ -588,6 +687,11 @@ class FirebaseCampaignService extends ChangeNotifier {
         key: json[key],
       'weaponHp': character.weaponHp,
       'armorHp': character.armorHp,
+      if (json['sheetTemplate'] is String)
+        'sheetTemplate': json['sheetTemplate'],
+      if (json['sheetComponents'] is List)
+        'sheetComponents': json['sheetComponents'],
+      if (json['sheetValues'] is Map) 'sheetValues': json['sheetValues'],
       'weaponState': {
         for (final weapon in character.weapons)
           weapon.id: {'ammo': weapon.ammo, 'hp': weapon.hp},
@@ -635,6 +739,9 @@ class FirebaseCampaignService extends ChangeNotifier {
       'equipment',
       'proficiencies',
       'notes',
+      'sheetTemplate',
+      'sheetComponents',
+      'sheetValues',
     ]) {
       if (state.containsKey(key)) merged[key] = state[key];
     }
@@ -760,6 +867,11 @@ class FirebaseCampaignService extends ChangeNotifier {
           .collection('members')
           .doc(uid)
           .delete();
+      try {
+        await _savedCampaigns(uid).doc(code).delete();
+      } on FirebaseException {
+        // Nothing to clean up if the record was never written.
+      }
     }
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_codeKey);
@@ -791,6 +903,7 @@ class FirebaseCampaignService extends ChangeNotifier {
     isOwner = owner;
     playerName = name;
     lastError = null;
+    await _recordCurrentCampaign();
     notifyListeners();
   }
 

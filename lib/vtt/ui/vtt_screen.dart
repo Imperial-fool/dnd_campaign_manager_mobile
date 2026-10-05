@@ -123,6 +123,8 @@ class _VttScreenState extends State<VttScreen> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
+                                    VttTurnBar(characters: widget.characters),
+                                    const SizedBox(height: 8),
                                     VttMeasureToolbar(state: _uiState),
                                     const SizedBox(height: 8),
                                     VttMapEditToolbar(state: _uiState),
@@ -173,6 +175,8 @@ class _VttScreenState extends State<VttScreen> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
+                                    VttTurnBar(characters: widget.characters),
+                                    const SizedBox(height: 8),
                                     VttMeasureToolbar(state: _uiState),
                                     const SizedBox(height: 8),
                                     VttMapEditToolbar(state: _uiState),
@@ -207,6 +211,8 @@ class _VttScreenState extends State<VttScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                VttTurnBar(characters: widget.characters),
+                                const SizedBox(height: 8),
                                 VttMeasureToolbar(state: _uiState),
                                 const SizedBox(height: 8),
                                 VttMapEditToolbar(state: _uiState),

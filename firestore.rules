@@ -110,6 +110,18 @@ service cloud.firestore {
         || get(/databases/$(database)/documents/campaigns/$(code)/vtt/combat).data.turnTokenId == tokenId;
     }
 
+    match /users/{uid}/campaigns/{code} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && code.matches('^[A-Z2-9]{16}$')
+        && request.resource.data.keys().hasOnly(['owner', 'playerName', 'updatedAt'])
+        && request.resource.data.owner is bool
+        && (!('playerName' in request.resource.data)
+          || (request.resource.data.playerName is string
+            && request.resource.data.playerName.size() <= 100));
+    }
+
     match /campaigns/{code} {
       allow create: if signedIn()
         && request.resource.data.ownerUid == request.auth.uid
@@ -200,8 +212,18 @@ service cloud.firestore {
               'hitDiceTotal',
               'inspiration', 'hitDiceUsed', 'deathSuccesses', 'deathFailures',
               'exhaustion', 'equipment', 'proficiencies', 'notes', 'weaponHp',
-              'armorHp', 'weaponState', 'armorState', 'itemState'
+              'armorHp', 'weaponState', 'armorState', 'itemState',
+              'sheetTemplate', 'sheetComponents', 'sheetValues'
             ])
+            && (!('sheetTemplate' in request.resource.data.playerState)
+              || (request.resource.data.playerState.sheetTemplate is string
+                && request.resource.data.playerState.sheetTemplate.size() <= 100))
+            && (!('sheetComponents' in request.resource.data.playerState)
+              || (request.resource.data.playerState.sheetComponents is list
+                && request.resource.data.playerState.sheetComponents.size() <= 30))
+            && (!('sheetValues' in request.resource.data.playerState)
+              || (request.resource.data.playerState.sheetValues is map
+                && request.resource.data.playerState.sheetValues.size() <= 30))
             && request.resource.data.playerState.name is string
             && request.resource.data.playerState.name.size() <= 100
             && request.resource.data.playerState.hpCurrent is int
