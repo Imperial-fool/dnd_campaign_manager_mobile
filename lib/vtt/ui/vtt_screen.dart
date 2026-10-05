@@ -31,6 +31,7 @@ class _VttScreenState extends State<VttScreen> {
   final VttBoardUiState _uiState = VttBoardUiState();
   bool _ownsController = false;
   bool _inlineFullscreen = false;
+  bool _panelCollapsed = false;
   String? _lastShownError;
 
   @override
@@ -196,6 +197,9 @@ class _VttScreenState extends State<VttScreen> {
                           ],
                         );
                       }
+                      final panelHeight = _panelCollapsed
+                          ? 0.0
+                          : (constraints.maxHeight * 0.38).clamp(160.0, 300.0);
                       return Column(
                         children: [
                           Padding(
@@ -215,16 +219,41 @@ class _VttScreenState extends State<VttScreen> {
                               child: VttBoard(uiState: _uiState),
                             ),
                           ),
-                          SizedBox(
-                            height: 300,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: VttCompactPanels(
-                                characters: widget.characters,
-                                uiState: _uiState,
+                          InkWell(
+                            key: const ValueKey('vtt-panel-toggle'),
+                            onTap: () => setState(
+                                () => _panelCollapsed = !_panelCollapsed),
+                            child: SizedBox(
+                              height: 32,
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      _panelCollapsed
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
+                                    ),
+                                    Text(_panelCollapsed
+                                        ? 'Show turn order & tokens'
+                                        : 'Hide panel'),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
+                          if (!_panelCollapsed)
+                            SizedBox(
+                              height: panelHeight,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                                child: VttCompactPanels(
+                                  characters: widget.characters,
+                                  uiState: _uiState,
+                                ),
+                              ),
+                            ),
                         ],
                       );
                     },
