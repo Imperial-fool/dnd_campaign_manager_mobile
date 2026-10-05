@@ -13,7 +13,7 @@ class VitalsPanel extends StatelessWidget {
     final c = ctrl.character;
 
     Widget num_(String label, int value, void Function(int) set,
-            {String? hint}) =>
+            {String? hint, bool enabled = true}) =>
         SizedBox(
           width: 110,
           child:
@@ -21,7 +21,8 @@ class VitalsPanel extends StatelessWidget {
             IntBinding(
                 label: label,
                 value: value,
-                onChanged: (v) => ctrl.edit((_) => set(v))),
+                onChanged: (v) => ctrl.edit((_) => set(v)),
+                enabled: enabled),
             if (hint != null)
               Padding(
                 padding: const EdgeInsets.only(top: 2, left: 4),
@@ -159,6 +160,7 @@ class VitalsPanel extends StatelessWidget {
                         label: 'Max',
                         value: c.hpMax,
                         onChanged: (value) => ctrl.edit((_) => c.hpMax = value),
+                        enabled: !ctrl.isPlayerMode,
                       ),
                     ),
                   ],
@@ -173,7 +175,8 @@ class VitalsPanel extends StatelessWidget {
               hint: 'Total ${signed(init)}'),
           num_('Speed', c.speed, (v) => c.speed = v,
               hint: spd != c.speed ? 'Total $spd ft' : 'ft'),
-          num_('Hit dice', c.hitDiceTotal, (v) => c.hitDiceTotal = v),
+          num_('Hit dice', c.hitDiceTotal, (v) => c.hitDiceTotal = v,
+              enabled: !ctrl.isPlayerMode),
           num_('Used', c.hitDiceUsed, (v) => c.hitDiceUsed = v),
           if (maxHp != c.hpMax)
             Padding(

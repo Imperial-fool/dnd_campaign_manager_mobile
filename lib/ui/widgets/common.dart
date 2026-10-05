@@ -52,6 +52,7 @@ class TextBinding extends StatefulWidget {
     required this.onChanged,
     this.maxLines = 1,
     this.minLines,
+    this.enabled = true,
   });
 
   final String label;
@@ -59,6 +60,7 @@ class TextBinding extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final int maxLines;
   final int? minLines;
+  final bool enabled;
 
   @override
   State<TextBinding> createState() => _TextBindingState();
@@ -92,6 +94,7 @@ class _TextBindingState extends State<TextBinding> {
             focusNode: _focus,
             maxLines: widget.maxLines,
             minLines: widget.minLines,
+            enabled: widget.enabled,
             onTapOutside: (_) => _focus.unfocus(),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -111,11 +114,13 @@ class IntBinding extends StatefulWidget {
       {super.key,
       required this.label,
       required this.value,
-      required this.onChanged});
+      required this.onChanged,
+      this.enabled = true});
 
   final String label;
   final int value;
   final ValueChanged<int> onChanged;
+  final bool enabled;
 
   @override
   State<IntBinding> createState() => _IntBindingState();
@@ -150,6 +155,7 @@ class _IntBindingState extends State<IntBinding> {
             controller: _c,
             focusNode: _focus,
             keyboardType: const TextInputType.numberWithOptions(signed: true),
+            enabled: widget.enabled,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^-?\d*'))
             ],

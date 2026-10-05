@@ -49,7 +49,7 @@ class SheetTile extends StatelessWidget {
       required this.children});
 
   final int index;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
   final List<Widget> children;
 
   @override
@@ -63,10 +63,11 @@ class SheetTile extends StatelessWidget {
           Row(children: [
             CircleAvatar(radius: 13, child: Text('${index + 1}')),
             const Spacer(),
-            IconButton(
-                tooltip: 'Remove',
-                icon: const Icon(Icons.delete_outline),
-                onPressed: onDelete),
+            if (onDelete != null)
+              IconButton(
+                  tooltip: 'Remove',
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: onDelete),
           ]),
           for (final c in children)
             Padding(padding: const EdgeInsets.only(top: 8), child: c),
@@ -362,6 +363,57 @@ class WeaponsPanel extends StatelessWidget {
                 );
               }),
       ]),
+    );
+  }
+}
+
+class PlayerWeaponActions extends StatelessWidget {
+  const PlayerWeaponActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = context.watch<CharacterController>();
+    final weapons = ctrl.character.weapons;
+    if (weapons.isEmpty) return const SizedBox.shrink();
+    return SheetCard(
+      title: 'Weapon actions',
+      child: Column(
+        children: [
+          for (final weapon in weapons)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      weapon.name,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  Wrap(
+                    spacing: 6,
+                    children: [
+                      FilledButton(
+                        onPressed: () => showRoll(context, ctrl.fire(weapon)),
+                        child: const Text('Fire'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () => showRoll(context, ctrl.attack(weapon)),
+                        child: const Text('Attack'),
+                      ),
+                      if (weapon.ammoMax > 0)
+                        OutlinedButton(
+                          onPressed: () =>
+                              showRoll(context, ctrl.reload(weapon)),
+                          child: const Text('Reload'),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

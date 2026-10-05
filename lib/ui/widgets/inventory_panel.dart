@@ -14,6 +14,7 @@ class InventoryPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = context.watch<CharacterController>();
     final c = ctrl.character;
+    final playerMode = ctrl.isPlayerMode;
 
     // "9x18mm: 90 · 5.45x39mm: 120"
     final ammoTotals = <String, int>{};
@@ -26,15 +27,17 @@ class InventoryPanel extends StatelessWidget {
     return SheetCard(
       title: 'Items',
       actions: [
-        IconButton(
-            tooltip: 'Add item',
-            icon: const Icon(Icons.add),
-            onPressed: () => ctrl.addBlankItem()),
-        IconButton(
-            tooltip: 'Add ammo',
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: () => ctrl.addBlankItem(ammo: true)),
-        catalogButton(context, 'items', tooltip: 'Add item from catalog'),
+        if (!playerMode) ...[
+          IconButton(
+              tooltip: 'Add item',
+              icon: const Icon(Icons.add),
+              onPressed: () => ctrl.addBlankItem()),
+          IconButton(
+              tooltip: 'Add ammo',
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () => ctrl.addBlankItem(ammo: true)),
+          catalogButton(context, 'items', tooltip: 'Add item from catalog'),
+        ],
       ],
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         if (ammoTotals.isNotEmpty)
@@ -51,14 +54,17 @@ class InventoryPanel extends StatelessWidget {
                 final it = c.items[i];
                 return SheetTile(
                   index: i,
-                  onDelete: () => ctrl.edit((ch) => ch.items.remove(it)),
+                  onDelete: playerMode
+                      ? null
+                      : () => ctrl.edit((ch) => ch.items.remove(it)),
                   children: [
                     Row(children: [
                       Expanded(
                           child: TextBinding(
                               label: 'Name',
                               value: it.name,
-                              onChanged: (v) => ctrl.edit((_) => it.name = v))),
+                              onChanged: (v) => ctrl.edit((_) => it.name = v),
+                              enabled: !playerMode)),
                       const SizedBox(width: 8),
                       DropdownButton<String>(
                         value: it.kind,
@@ -66,8 +72,9 @@ class InventoryPanel extends StatelessWidget {
                           DropdownMenuItem(value: 'item', child: Text('Item')),
                           DropdownMenuItem(value: 'ammo', child: Text('Ammo')),
                         ],
-                        onChanged: (v) =>
-                            ctrl.edit((_) => it.kind = v ?? 'item'),
+                        onChanged: playerMode
+                            ? null
+                            : (v) => ctrl.edit((_) => it.kind = v ?? 'item'),
                       ),
                     ]),
                     if (!it.isAmmo)
@@ -76,8 +83,10 @@ class InventoryPanel extends StatelessWidget {
                           const Text('Active'),
                           Switch(
                             value: it.active,
-                            onChanged: (value) =>
-                                ctrl.edit((_) => it.active = value),
+                            onChanged: playerMode
+                                ? null
+                                : (value) =>
+                                    ctrl.edit((_) => it.active = value),
                           ),
                           const Text('Apply this item’s effects'),
                         ],
@@ -101,7 +110,8 @@ class InventoryPanel extends StatelessWidget {
                                     label: 'Ammo type (match weapon)',
                                     value: it.ammoType,
                                     onChanged: (v) =>
-                                        ctrl.edit((_) => it.ammoType = v))),
+                                        ctrl.edit((_) => it.ammoType = v),
+                                    enabled: !playerMode)),
                             SizedBox(
                               width: 90,
                               child: IntBinding(
@@ -109,6 +119,7 @@ class InventoryPanel extends StatelessWidget {
                                 value: it.penetration,
                                 onChanged: (v) =>
                                     ctrl.edit((_) => it.penetration = v),
+                                enabled: !playerMode,
                               ),
                             ),
                             SizedBox(
@@ -119,6 +130,7 @@ class InventoryPanel extends StatelessWidget {
                                 onChanged: (v) => ctrl.edit(
                                   (_) => it.durabilityBurn = v < 1 ? 1 : v,
                                 ),
+                                enabled: !playerMode,
                               ),
                             ),
                           ] else ...[
@@ -129,6 +141,7 @@ class InventoryPanel extends StatelessWidget {
                                 value: it.damage,
                                 onChanged: (v) =>
                                     ctrl.edit((_) => it.damage = v),
+                                enabled: !playerMode,
                               ),
                             ),
                             SizedBox(
@@ -138,6 +151,7 @@ class InventoryPanel extends StatelessWidget {
                                 value: it.damageType,
                                 onChanged: (v) =>
                                     ctrl.edit((_) => it.damageType = v),
+                                enabled: !playerMode,
                               ),
                             ),
                             SizedBox(
@@ -147,6 +161,7 @@ class InventoryPanel extends StatelessWidget {
                                 value: it.areaRadius,
                                 onChanged: (v) =>
                                     ctrl.edit((_) => it.areaRadius = v),
+                                enabled: !playerMode,
                               ),
                             ),
                             SizedBox(
@@ -156,6 +171,7 @@ class InventoryPanel extends StatelessWidget {
                                 value: it.saveDc,
                                 onChanged: (v) =>
                                     ctrl.edit((_) => it.saveDc = v),
+                                enabled: !playerMode,
                               ),
                             ),
                             DropdownButton<String>(
@@ -186,9 +202,11 @@ class InventoryPanel extends StatelessWidget {
                                 DropdownMenuItem(
                                     value: 'cha', child: Text('CHA save')),
                               ],
-                              onChanged: (value) => ctrl.edit(
-                                (_) => it.saveAbility = value ?? '',
-                              ),
+                              onChanged: playerMode
+                                  ? null
+                                  : (value) => ctrl.edit(
+                                        (_) => it.saveAbility = value ?? '',
+                                      ),
                             ),
                             SizedBox(
                                 width: 90,
@@ -203,7 +221,8 @@ class InventoryPanel extends StatelessWidget {
                                     label: 'Uses/unit',
                                     value: it.usesMax,
                                     onChanged: (v) => ctrl.edit(
-                                        (_) => it.usesMax = v < 0 ? 0 : v))),
+                                        (_) => it.usesMax = v < 0 ? 0 : v),
+                                    enabled: !playerMode)),
                             FilledButton(
                                 onPressed: () =>
                                     showRoll(context, ctrl.useItem(it)),
@@ -215,26 +234,30 @@ class InventoryPanel extends StatelessWidget {
                         value: it.description,
                         maxLines: 4,
                         minLines: 1,
-                        onChanged: (v) => ctrl.edit((_) => it.description = v)),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.inventory_2_outlined, size: 18),
-                        label: const Text('Move to player stash'),
-                        onPressed: c.player.trim().isEmpty
-                            ? null
-                            : () => context
-                                .read<CampaignController>()
-                                .moveToStash(c, 'items', it),
+                        onChanged: (v) => ctrl.edit((_) => it.description = v),
+                        enabled: !playerMode),
+                    if (!playerMode) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: OutlinedButton.icon(
+                          icon:
+                              const Icon(Icons.inventory_2_outlined, size: 18),
+                          label: const Text('Move to player stash'),
+                          onPressed: c.player.trim().isEmpty
+                              ? null
+                              : () => context
+                                  .read<CampaignController>()
+                                  .moveToStash(c, 'items', it),
+                        ),
                       ),
-                    ),
-                    if (!it.isAmmo)
-                      EffectsField(
-                        effects: it.effects,
-                        skills: c.skills,
-                        onChanged: (effects) =>
-                            ctrl.edit((_) => it.effects = effects),
-                      ),
+                      if (!it.isAmmo)
+                        EffectsField(
+                          effects: it.effects,
+                          skills: c.skills,
+                          onChanged: (effects) =>
+                              ctrl.edit((_) => it.effects = effects),
+                        ),
+                    ],
                   ],
                 );
               }),

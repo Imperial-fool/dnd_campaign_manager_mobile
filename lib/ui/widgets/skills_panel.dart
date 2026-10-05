@@ -16,14 +16,15 @@ class SkillsPanel extends StatelessWidget {
     return SheetCard(
       title: 'Skills',
       actions: [
-        IconButton(
-          tooltip: 'Add custom skill',
-          icon: const Icon(Icons.add),
-          onPressed: () async {
-            final skill = await promptNewSkill(context);
-            if (skill != null) ctrl.addSkill(skill);
-          },
-        ),
+        if (!ctrl.isPlayerMode)
+          IconButton(
+            tooltip: 'Add custom skill',
+            icon: const Icon(Icons.add),
+            onPressed: () async {
+              final skill = await promptNewSkill(context);
+              if (skill != null) ctrl.addSkill(skill);
+            },
+          ),
       ],
       child: Column(children: [
         for (final s in c.skills)
@@ -43,16 +44,18 @@ class SkillsPanel extends StatelessWidget {
                         : Icons.radio_button_unchecked,
                 color: s.hasExpertise ? Colors.amber : null,
               ),
-              onPressed: () => ctrl.edit((_) {
-                if (!s.isProficient) {
-                  s.proficient = true;
-                } else if (!s.hasExpertise) {
-                  s.expertise = true;
-                } else {
-                  s.expertise = false;
-                  s.proficient = false;
-                }
-              }),
+              onPressed: ctrl.isPlayerMode
+                  ? null
+                  : () => ctrl.edit((_) {
+                        if (!s.isProficient) {
+                          s.proficient = true;
+                        } else if (!s.hasExpertise) {
+                          s.expertise = true;
+                        } else {
+                          s.expertise = false;
+                          s.proficient = false;
+                        }
+                      }),
             ),
             SizedBox(width: 34, child: Text(signed(Rules.skillBonus(c, s)))),
             Expanded(child: Text('${s.name}  (${s.ability.label})')),
@@ -69,7 +72,9 @@ class SkillsPanel extends StatelessWidget {
               visualDensity: VisualDensity.compact,
               iconSize: 18,
               icon: const Icon(Icons.close),
-              onPressed: () => ctrl.edit((ch) => ch.skills.remove(s)),
+              onPressed: ctrl.isPlayerMode
+                  ? null
+                  : () => ctrl.edit((ch) => ch.skills.remove(s)),
             ),
           ]),
         const Divider(),

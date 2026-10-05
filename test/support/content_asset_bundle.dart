@@ -9,6 +9,7 @@ class ContentAssetBundle extends CachingAssetBundle {
     'content/tarkov_mechanics.json',
     'content/tarkov_armory.json',
     'content/tarkov_character_options.json',
+    'content/character_creation.json',
   };
 
   final loadedAssets = <String>{};

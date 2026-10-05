@@ -1,0 +1,8 @@
+{
+  "abilityScoreGeneration": {
+    "diceCount": 4,
+    "dieSides": 6,
+    "dropLowest": 1,
+    "scoreCount": 6
+  }
+}

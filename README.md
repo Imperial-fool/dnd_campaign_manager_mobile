@@ -34,6 +34,80 @@ The player stash is keyed to the character's **Player** field rather than its
 character ID. Assign the same player name to multiple characters to share
 weapons, armor, ammunition, and other items between them.
 
+## Optional Firebase campaign sharing
+
+Campaign sharing is optional; without Firebase client configuration, the app
+continues to use its existing local storage. To configure the Firebase project:
+Firebase/Firestore being active in the console is not sufficient by itself:
+the running platform must also have non-empty client options in
+`lib/firebase_options.dart`. The supplied Android config only enables Android;
+Windows and web will continue in local mode until their own options are
+generated.
+
+1. Android is wired to the supplied `google-services.json` for package
+   `com.example.dnd_campaign_manager_mobile`; its Firebase client options are
+   in `lib/firebase_options.dart`. To configure the other platforms, install
+   Node.js/npm, the Firebase CLI, and FlutterFire CLI, then run these commands
+   from the project root:
+
+   ```powershell
+   npm install -g firebase-tools
+   firebase login
+   dart pub global activate flutterfire_cli
+   flutterfire configure --project=dnd-character-manager-80981 --platforms=android,web,windows,ios,macos
+   firebase deploy --only firestore:rules --project=dnd-character-manager-80981
+   ```
+
+   FlutterFire creates or selects the platform apps and generates
+   `lib/firebase_options.dart`; accept the existing Android app when prompted.
+   Register each target in the Firebase project (including its exact app or
+   bundle ID) if FlutterFire asks for one. Enable **Authentication → Sign-in
+   method → Anonymous** and create a **Cloud Firestore** database in the
+   Firebase console before using sharing. Commit the generated options file
+   and Android `google-services.json`; they contain public client
+   configuration, not credentials. Never commit user credentials or service
+   account files. For GitHub Pages, add the published site host to Firebase
+   Authentication's authorized domains.
+2. In **Campaign Settings → Shared campaign**, the DM creates a campaign and
+   shares its 16-character join code privately. Players enter that code and a
+   display name; Firebase anonymous authentication runs in the background, so
+   players do not create accounts or sign in.
+3. The DM assigns characters to joined players. Players receive live updates
+   to their assigned character and the DM's catalog/rules. The DM can enable
+   **Allow players to create characters** in Campaign Settings. When enabled,
+   players can use the guided character creator; their new level-1 character is
+   assigned to them automatically. New player-created characters start without
+   weapons, armor, or inventory; level progression and gear definitions remain
+   DM-controlled. Players can edit their assigned sheet, use items, and roll
+   dice. The creator's ability-score rule is defined in
+   [`content/character_creation.json`](content/character_creation.json) and
+   defaults to six rolls of 4d6, dropping the lowest die from each roll; it
+   displays all individual dice and lets players assign scores to abilities.
+   The DM dashboard shows HP separately for each character, alongside AC,
+   equipment counts, and recent player rolls. Opening a character shows the
+   live player view; the DM can select **Edit character** to make changes.
+
+Firestore access is restricted by [`firestore.rules`](firestore.rules): only
+the DM can change campaign rules, assignments, and stash contents. Players can
+read only characters assigned to their anonymous account, create a level-1
+character assigned to themselves when the DM enables that option, update only
+player-owned sheet state, and submit their own rolls. A join code is a bearer
+invitation—share it only with intended players. Redeploy these rules after
+updating the application.
+The anonymous DM identity is device/browser-installation bound; clearing app
+data or browser storage can permanently remove the DM's ownership identity.
+Keep a separate local/exported backup of important characters and campaign
+configuration.
+
+Firebase client options generated in `lib/firebase_options.dart` are public
+application identifiers, not credentials. No Firebase auth tokens, service
+account keys, or admin credentials belong in source, GitHub Actions variables,
+or `--dart-define` values. Firebase Auth manages short-lived user credentials
+at runtime, while Firestore rules enforce access; never deploy privileged
+service-account credentials in this client app.
+Until platform-specific options are generated, Android has Firebase client
+configuration and other targets remain local-only. Linux remains local-only.
+
 ## Run the app
 
 Run Flutter commands from the project root—the directory containing

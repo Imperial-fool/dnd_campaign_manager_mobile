@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "868969194065",
+    "project_id": "dnd-character-manager-80981",
+    "storage_bucket": "dnd-character-manager-80981.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868969194065:android:f5c1b645d71ab053564e70",
+        "android_client_info": {
+          "package_name": "com.example.dnd_campaign_manager_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq4_A52oafitmvPbN7q-g3FyDPEWjuuC4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

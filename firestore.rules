@@ -1,0 +1,166 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function campaign(code) {
+      return get(/databases/$(database)/documents/campaigns/$(code)).data;
+    }
+
+    function isDm(code) {
+      return signedIn() && campaign(code).ownerUid == request.auth.uid;
+    }
+
+    function isMember(code) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/campaigns/$(code)/members/$(request.auth.uid));
+    }
+
+    match /campaigns/{code} {
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.joinOpen == true;
+      allow get: if (signedIn()
+          && !exists(/databases/$(database)/documents/campaigns/$(code)))
+        || isDm(code)
+        || isMember(code);
+      allow list: if false;
+      allow update, delete: if isDm(code);
+
+      match /members/{uid} {
+        allow get, list: if isDm(code) || (signedIn() && uid == request.auth.uid);
+        allow create: if signedIn()
+          && uid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['uid', 'playerName', 'role', 'joinedAt'])
+          && request.resource.data.uid == uid
+          && request.resource.data.role == 'player'
+          && request.resource.data.playerName is string
+          && request.resource.data.playerName.size() > 0
+          && request.resource.data.playerName.size() <= 80
+          && campaign(code).joinOpen == true
+          && campaign(code).ownerUid != uid;
+        allow update: if isDm(code);
+        allow delete: if isDm(code) || (signedIn() && uid == request.auth.uid);
+      }
+
+      match /characters/{characterId} {
+        allow read: if isDm(code)
+          || (isMember(code) && resource.data.assignedUid == request.auth.uid);
+        allow create: if isDm(code)
+          || (isMember(code)
+            && campaign(code).rules.allowPlayerCharacterCreation == true
+            && request.resource.data.keys().hasOnly([
+              'assignedUid', 'createdByUid', 'character', 'updatedAt'
+            ])
+            && request.resource.data.assignedUid == request.auth.uid
+            && request.resource.data.createdByUid == request.auth.uid
+            && request.resource.data.character is map
+            && request.resource.data.character.keys().hasOnly([
+              'schemaVersion', 'id', 'name', 'player', 'race', 'affiliation',
+              'alignment', 'background', 'backgroundId', 'xp', 'level',
+              'classId', 'className', 'classHitDie', 'classHpLevels',
+              'subclassId', 'subclassName', 'items', 'initiativeBonus',
+              'speed', 'armorClass', 'inspiration', 'hpCurrent', 'hpMax',
+              'hitDiceTotal', 'hitDiceUsed', 'deathSuccesses',
+              'deathFailures', 'exhaustion', 'weaponHp', 'armorHp',
+              'abilityScores', 'saveProficiencies', 'skills', 'weapons',
+              'armor', 'traits', 'equipment', 'proficiencies', 'notes'
+            ])
+            && request.resource.data.character.id == characterId
+            && request.resource.data.character.player
+              == get(/databases/$(database)/documents/campaigns/$(code)/members/$(request.auth.uid)).data.playerName
+            && request.resource.data.character.name is string
+            && request.resource.data.character.name.size() > 0
+            && request.resource.data.character.name.size() <= 100
+            && request.resource.data.character.level == 1
+            && request.resource.data.character.xp == 0
+            && request.resource.data.character.hpCurrent is int
+            && request.resource.data.character.hpMax is int
+            && request.resource.data.character.hpCurrent >= 0
+            && request.resource.data.character.hpCurrent <= request.resource.data.character.hpMax
+            && request.resource.data.character.hpMax <= 100
+            && request.resource.data.character.hitDiceTotal >= 0
+            && request.resource.data.character.hitDiceTotal <= 1
+            && request.resource.data.character.abilityScores is map
+            && request.resource.data.character.skills is list
+            && request.resource.data.character.weapons is list
+            && request.resource.data.character.weapons.size() == 0
+            && request.resource.data.character.armor is list
+            && request.resource.data.character.armor.size() == 0
+            && request.resource.data.character.items is list
+            && request.resource.data.character.items.size() == 0
+            && request.resource.data.character.traits is list
+            && request.resource.data.character.traits.size() <= 100);
+        allow delete: if isDm(code);
+        allow update: if isDm(code)
+          || (isMember(code)
+            && resource.data.assignedUid == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['playerState', 'updatedAt'])
+            && request.resource.data.playerState is map
+            && request.resource.data.playerState.keys().hasOnly([
+              'name', 'race', 'affiliation', 'alignment', 'background',
+              'backgroundId', 'abilityScores', 'saveProficiencies', 'skills',
+              'initiativeBonus', 'speed', 'armorClass', 'hpCurrent',
+              'inspiration', 'hitDiceUsed', 'deathSuccesses', 'deathFailures',
+              'exhaustion', 'equipment', 'proficiencies', 'notes', 'weaponHp',
+              'armorHp', 'weaponState', 'armorState', 'itemState'
+            ])
+            && request.resource.data.playerState.name is string
+            && request.resource.data.playerState.name.size() <= 100
+            && request.resource.data.playerState.hpCurrent is int
+            && request.resource.data.playerState.abilityScores is map
+            && request.resource.data.playerState.skills is list
+            && request.resource.data.playerState.weaponState is map
+            && request.resource.data.playerState.weaponState.size() <= 100
+            && request.resource.data.playerState.armorState is map
+            && request.resource.data.playerState.armorState.size() <= 100
+            && request.resource.data.playerState.itemState is map
+            && request.resource.data.playerState.itemState.size() <= 500
+            && request.resource.data.playerState.notes is string
+            && request.resource.data.playerState.notes.size() <= 20000);
+      }
+
+      match /stashes/{uid} {
+        allow get: if isDm(code)
+          || (signedIn()
+            && uid == request.auth.uid
+            && isMember(code)
+            && (!exists(/databases/$(database)/documents/campaigns/$(code)/stashes/$(uid))
+              || get(/databases/$(database)/documents/campaigns/$(code)/members/$(uid)).data.stashKey == resource.data.playerKey));
+        allow list: if isDm(code);
+        allow create, update: if isDm(code)
+          && request.resource.data.keys().hasOnly(['playerName', 'playerKey', 'items', 'updatedAt'])
+          && request.resource.data.playerName is string
+          && request.resource.data.playerKey is string
+          && request.resource.data.items is list;
+        allow delete: if isDm(code);
+      }
+
+      match /rolls/{rollId} {
+        allow read: if isDm(code);
+        allow create: if isMember(code)
+          && request.resource.data.keys().hasOnly([
+            'playerUid', 'playerName', 'characterId', 'characterName',
+            'title', 'total', 'lines', 'crit', 'fumble', 'createdAt'
+          ])
+          && request.resource.data.playerUid == request.auth.uid
+          && request.resource.data.playerName is string
+          && get(/databases/$(database)/documents/campaigns/$(code)/members/$(request.auth.uid)).data.playerName == request.resource.data.playerName
+          && request.resource.data.characterId is string
+          && get(/databases/$(database)/documents/campaigns/$(code)/characters/$(request.resource.data.characterId)).data.assignedUid == request.auth.uid
+          && get(/databases/$(database)/documents/campaigns/$(code)/characters/$(request.resource.data.characterId)).data.character.name == request.resource.data.characterName
+          && request.resource.data.title is string
+          && request.resource.data.title.size() <= 200
+          && (request.resource.data.total == null || request.resource.data.total is int)
+          && request.resource.data.lines is list
+          && request.resource.data.lines.size() <= 30
+          && request.resource.data.crit is bool
+          && request.resource.data.fumble is bool;
+        allow update, delete: if isDm(code);
+      }
+    }
+  }
+}

@@ -40,6 +40,26 @@ void main() {
     expect(m855.durabilityBurn, 1);
   });
 
+  test('player edits save the current remote character instance', () async {
+    final initial = Character(id: 'player-sheet');
+    final remote = Character.fromJson(initial.toJson())..name = 'Remote sheet';
+    Character? saved;
+    final controller = CharacterController(
+      character: initial,
+      repository: _MemoryRepository(),
+      isPlayerMode: true,
+      onSaved: (character) => saved = character,
+    );
+
+    controller.refreshRemoteCharacter(remote);
+    controller.edit((character) => character.hpCurrent = 7);
+    await controller.flush();
+
+    expect(saved, same(remote));
+    expect(saved!.hpCurrent, 7);
+    controller.dispose();
+  });
+
   test('trait descriptions grant skill proficiency and expertise', () {
     final character = Character(id: 'described-skill-grants')
       ..level = 5
@@ -233,6 +253,29 @@ void main() {
           .map((skill) => skill.key),
       contains('technology'),
     );
+  });
+
+  test('shared player sheets are read-only until the DM enables editing',
+      () async {
+    final character = Character(id: 'shared-read-only');
+    final controller = CharacterController(
+      character: character,
+      repository: _MemoryRepository(),
+      isReadOnly: true,
+      allowReadOnlyEditToggle: true,
+      dice: DiceRoller(Random(1)),
+    );
+
+    controller.edit((c) => c.hpCurrent = 1);
+    expect(character.hpCurrent, 10);
+    controller.rollText('d20');
+    expect(controller.rollLog, hasLength(1));
+
+    controller.toggleReadOnly();
+    controller.edit((c) => c.hpCurrent = 7);
+    expect(character.hpCurrent, 7);
+    await controller.flush();
+    controller.dispose();
   });
 }
 

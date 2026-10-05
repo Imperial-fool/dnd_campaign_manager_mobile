@@ -22,12 +22,20 @@ class CharacterController extends ChangeNotifier {
     required this.character,
     required this.repository,
     this.onSaved,
+    this.onRoll,
+    this.isReadOnly = false,
+    this.isPlayerMode = false,
+    this.allowReadOnlyEditToggle = false,
     DiceRoller? dice,
   }) : dice = dice ?? DiceRoller();
 
-  final Character character;
+  Character character;
   final CampaignRepository repository;
-  final VoidCallback? onSaved;
+  final ValueChanged<Character>? onSaved;
+  final ValueChanged<RollEntry>? onRoll;
+  bool isReadOnly;
+  final bool isPlayerMode;
+  final bool allowReadOnlyEditToggle;
   final DiceRoller dice;
 
   /// Session-only (not saved).
@@ -37,7 +45,24 @@ class CharacterController extends ChangeNotifier {
   Timer? _debounce;
   bool _dirty = false;
 
+  void toggleReadOnly() {
+    if (!allowReadOnlyEditToggle) return;
+    isReadOnly = !isReadOnly;
+    notifyListeners();
+  }
+
+  void refreshRemoteCharacter(Character updated) {
+    if ((!isReadOnly && !isPlayerMode) ||
+        _dirty ||
+        updated.id != character.id) {
+      return;
+    }
+    character = updated;
+    notifyListeners();
+  }
+
   void edit(void Function(Character c) change) {
+    if (isReadOnly) return;
     change(character);
     _dirty = true;
     notifyListeners();
@@ -47,10 +72,10 @@ class CharacterController extends ChangeNotifier {
 
   Future<void> flush() async {
     _debounce?.cancel();
-    if (!_dirty) return;
+    if (!_dirty || isReadOnly) return;
     _dirty = false;
     await repository.saveCharacter(character);
-    onSaved?.call();
+    onSaved?.call(character);
   }
 
   // ---- list helpers -------------------------------------------------------
@@ -375,6 +400,7 @@ class CharacterController extends ChangeNotifier {
     rollLog.insert(0, e);
     if (rollLog.length > 40) rollLog.removeLast();
     notifyListeners();
+    onRoll?.call(e);
     return e;
   }
 

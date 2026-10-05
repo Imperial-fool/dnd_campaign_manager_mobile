@@ -24,10 +24,13 @@ class IdentityPanel extends StatelessWidget {
             label: 'Character name',
             value: c.name,
             onChanged: (v) => ctrl.edit((c) => c.name = v))),
-        box(TextBinding(
-            label: 'Player',
-            value: c.player,
-            onChanged: (v) => ctrl.edit((c) => c.player = v))),
+        if (ctrl.isPlayerMode)
+          box(Text('Player: ${c.player}'))
+        else
+          box(TextBinding(
+              label: 'Player',
+              value: c.player,
+              onChanged: (v) => ctrl.edit((c) => c.player = v))),
         box(TextBinding(
             label: 'Race',
             value: c.race,
@@ -48,19 +51,24 @@ class IdentityPanel extends StatelessWidget {
               onChanged: (v) => ctrl.edit((c) => c.background = v),
             ),
           ),
-          catalogButton(
-            context,
-            'backgrounds',
-            tooltip: 'Apply background from catalog (adds its features)',
-          ),
+          if (!ctrl.isPlayerMode)
+            catalogButton(
+              context,
+              'backgrounds',
+              tooltip: 'Apply background from catalog (adds its features)',
+            ),
         ])),
-        SizedBox(
-            width: 120,
-            child: IntBinding(
-                label: 'XP',
-                value: c.xp,
-                onChanged: (v) => ctrl.edit((c) => c.xp = v))),
-        _LevelTracker(),
+        if (ctrl.isPlayerMode)
+          Text('Level ${c.level} · ${c.xp} XP (DM controlled)')
+        else ...[
+          SizedBox(
+              width: 120,
+              child: IntBinding(
+                  label: 'XP',
+                  value: c.xp,
+                  onChanged: (v) => ctrl.edit((c) => c.xp = v))),
+          _LevelTracker(),
+        ],
       ]),
     );
   }

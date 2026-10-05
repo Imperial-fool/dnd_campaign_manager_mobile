@@ -23,9 +23,16 @@ import 'package:dnd_campaign_manager/ui/widgets/traits_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/vitals_panel.dart';
 
 class CharacterSheetScreen extends StatefulWidget {
-  const CharacterSheetScreen({super.key, required this.character});
+  const CharacterSheetScreen({
+    super.key,
+    required this.character,
+    this.readOnly = false,
+    this.allowEditing = false,
+  });
 
   final Character character;
+  final bool readOnly;
+  final bool allowEditing;
 
   @override
   State<CharacterSheetScreen> createState() => _CharacterSheetScreenState();
@@ -33,16 +40,32 @@ class CharacterSheetScreen extends StatefulWidget {
 
 class _CharacterSheetScreenState extends State<CharacterSheetScreen> {
   late final CharacterController _controller;
+  late final CampaignController _campaign;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        context.read<CampaignController>().editorFor(widget.character);
+    _campaign = context.read<CampaignController>();
+    _controller = _campaign.editorFor(
+      widget.character,
+      forceReadOnly: widget.readOnly,
+      allowReadOnlyEditToggle: widget.allowEditing,
+    );
+    _campaign.addListener(_refreshRemoteCharacter);
+  }
+
+  void _refreshRemoteCharacter() {
+    for (final character in _campaign.characters) {
+      if (character.id == _controller.character.id) {
+        _controller.refreshRemoteCharacter(character);
+        return;
+      }
+    }
   }
 
   @override
   void dispose() {
+    _campaign.removeListener(_refreshRemoteCharacter);
     _controller.dispose(); // flushes pending save
     super.dispose();
   }
@@ -142,49 +165,85 @@ class _SheetView extends StatelessWidget {
     final drive = context.watch<GoogleDriveService>();
     final campaign = context.read<CampaignController>();
 
-    final left = _stack(const [AbilityPanel(), SkillsPanel()]);
-    final middle = _stack(const [
-      VitalsPanel(),
-      WeaponsPanel(),
-      ArmorPanel(),
-      InventoryPanel(),
-      StashPanel(),
+    final left = AbsorbPointer(
+      absorbing: ctrl.isReadOnly,
+      child: _stack(const [AbilityPanel(), SkillsPanel()]),
+    );
+    final middle = _stack([
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const VitalsPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
+        child: const WeaponsPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
+        child: const ArmorPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const InventoryPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly || ctrl.isPlayerMode,
+        child: const StashPanel(),
+      ),
     ]);
-    final right = _stack(const [
-      RollPanel(),
-      ActionsPanel(),
-      TraitsPanel(),
-      FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
-      FreeTextPanel(
-          title: 'Proficiencies & Languages', field: SheetText.proficiencies),
-      FreeTextPanel(title: 'Notes', field: SheetText.notes),
+    final right = _stack([
+      if (ctrl.isPlayerMode) const PlayerWeaponActions(),
+      const RollPanel(),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: _stack([
+          const ActionsPanel(),
+          AbsorbPointer(
+            absorbing: ctrl.isPlayerMode,
+            child: const TraitsPanel(),
+          ),
+          const FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
+          const FreeTextPanel(
+              title: 'Proficiencies & Languages',
+              field: SheetText.proficiencies),
+          const FreeTextPanel(title: 'Notes', field: SheetText.notes),
+        ]),
+      ),
     ]);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(ctrl.character.name),
         actions: [
+          if (ctrl.allowReadOnlyEditToggle)
+            IconButton(
+              tooltip: ctrl.isReadOnly ? 'Edit character' : 'Finish editing',
+              icon: Icon(ctrl.isReadOnly ? Icons.edit_outlined : Icons.lock),
+              onPressed: ctrl.toggleReadOnly,
+            ),
           IconButton(
             tooltip: 'Save character JSON file',
             icon: const Icon(Icons.save_alt),
             onPressed: () => _saveCharacterJson(context, ctrl.character),
           ),
-          IconButton(
-            tooltip: 'Save character to Google Drive',
-            icon: const Icon(Icons.cloud_upload_outlined),
-            onPressed: () => _saveCharacterToDrive(
-              context,
-              drive,
-              campaign,
-              ctrl.character,
+          if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
+            IconButton(
+              tooltip: 'Save character to Google Drive',
+              icon: const Icon(Icons.cloud_upload_outlined),
+              onPressed: () => _saveCharacterToDrive(
+                context,
+                drive,
+                campaign,
+                ctrl.character,
+              ),
             ),
-          ),
-          IconButton(
-            tooltip: 'Catalog',
-            icon: const Icon(Icons.inventory_2_outlined),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const CatalogScreen())),
-          ),
+          if (!ctrl.isReadOnly)
+            IconButton(
+              tooltip: 'Catalog',
+              icon: const Icon(Icons.inventory_2_outlined),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const CatalogScreen())),
+            ),
           IconButton(
             tooltip: 'View / copy character JSON',
             icon: const Icon(Icons.data_object),
@@ -201,7 +260,10 @@ class _SheetView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const IdentityPanel(),
+              AbsorbPointer(
+                absorbing: ctrl.isReadOnly,
+                child: const IdentityPanel(),
+              ),
               const SizedBox(height: 12),
               if (wide)
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
