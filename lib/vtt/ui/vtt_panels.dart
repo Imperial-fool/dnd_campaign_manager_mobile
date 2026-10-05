@@ -514,247 +514,250 @@ Future<void> _showMapSettingsSheet(
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (sheetContext) => StatefulBuilder(
-      builder: (context, setState) => Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 16,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Map settings',
-                      style: Theme.of(context).textTheme.titleLarge,
+    builder: (sheetContext) => ChangeNotifierProvider<VttController>.value(
+      value: controller,
+      child: StatefulBuilder(
+        builder: (context, setState) => Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Map settings',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
-                  ),
-                  if (busy) const CircularProgressIndicator(),
-                ],
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: name,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
+                    if (busy) const CircularProgressIndicator(),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: cols,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Columns',
-                        border: OutlineInputBorder(),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: name,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: cols,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Columns',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: rows,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Rows',
-                        border: OutlineInputBorder(),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        controller: rows,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Rows',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: feetPerCell,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Feet per cell',
-                        border: OutlineInputBorder(),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: feetPerCell,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Feet per cell',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: DropdownButtonFormField<VttDiagonalRule>(
-                      initialValue: diagonalRule,
-                      decoration: const InputDecoration(
-                        labelText: 'Diagonal rule',
-                        border: OutlineInputBorder(),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<VttDiagonalRule>(
+                        initialValue: diagonalRule,
+                        decoration: const InputDecoration(
+                          labelText: 'Diagonal rule',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: VttDiagonalRule.values
+                            .map(
+                              (rule) => DropdownMenuItem<VttDiagonalRule>(
+                                value: rule,
+                                child: Text(rule.name),
+                              ),
+                            )
+                            .toList(growable: false),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => diagonalRule = value);
+                          }
+                        },
                       ),
-                      items: VttDiagonalRule.values
-                          .map(
-                            (rule) => DropdownMenuItem<VttDiagonalRule>(
-                              value: rule,
-                              child: Text(rule.name),
-                            ),
-                          )
-                          .toList(growable: false),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => diagonalRule = value);
-                        }
-                      },
                     ),
-                  ),
-                ],
-              ),
-              SwitchListTile(
-                value: showGrid,
-                title: const Text('Show grid'),
-                contentPadding: EdgeInsets.zero,
-                onChanged:
-                    busy ? null : (value) => setState(() => showGrid = value),
-              ),
-              SwitchListTile(
-                value: isOverworld,
-                title: const Text('Overworld map'),
-                contentPadding: EdgeInsets.zero,
-                onChanged: busy
-                    ? null
-                    : (value) => setState(() => isOverworld = value),
-              ),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  OutlinedButton.icon(
+                  ],
+                ),
+                SwitchListTile(
+                  value: showGrid,
+                  title: const Text('Show grid'),
+                  contentPadding: EdgeInsets.zero,
+                  onChanged:
+                      busy ? null : (value) => setState(() => showGrid = value),
+                ),
+                SwitchListTile(
+                  value: isOverworld,
+                  title: const Text('Overworld map'),
+                  contentPadding: EdgeInsets.zero,
+                  onChanged: busy
+                      ? null
+                      : (value) => setState(() => isOverworld = value),
+                ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: busy
+                          ? null
+                          : () => withBusy(
+                                setState,
+                                () => _pickAndSetBackgroundImage(
+                                  context,
+                                  controller,
+                                  map,
+                                ),
+                              ),
+                      icon: const Icon(Icons.image_outlined),
+                      label: Text(map.hasImage ? 'Replace image' : 'Set image'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: busy || !map.hasImage
+                          ? null
+                          : () => withBusy(
+                                setState,
+                                () => _runAction(
+                                  context,
+                                  () => controller.clearMapImage(map.id),
+                                  prefix: 'Could not remove image',
+                                ),
+                              ),
+                      icon: const Icon(Icons.hide_image_outlined),
+                      label: const Text('Remove image'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: busy
+                          ? null
+                          : () => withBusy(
+                                setState,
+                                () async {
+                                  final duplicated =
+                                      await controller.duplicateMap(map.id);
+                                  controller.selectMap(duplicated.id);
+                                },
+                              ),
+                      icon: const Icon(Icons.copy_outlined),
+                      label: const Text('Duplicate map'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: busy
+                          ? null
+                          : () => withBusy(
+                                setState,
+                                () async {
+                                  final confirmed = await showDialog<bool>(
+                                        context: context,
+                                        builder: (dialogContext) => AlertDialog(
+                                          title: Text('Delete ${map.name}?'),
+                                          content: const Text(
+                                            'This also removes tokens on that map.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  dialogContext, false),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => Navigator.pop(
+                                                  dialogContext, true),
+                                              child: const Text('Delete'),
+                                            ),
+                                          ],
+                                        ),
+                                      ) ??
+                                      false;
+                                  if (!confirmed) return;
+                                  await controller.deleteMap(map.id);
+                                  if (context.mounted) {
+                                    Navigator.pop(sheetContext);
+                                  }
+                                },
+                              ),
+                      icon: const Icon(Icons.delete_outline),
+                      label: const Text('Delete map'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton(
                     onPressed: busy
                         ? null
-                        : () => withBusy(
-                              setState,
-                              () => _pickAndSetBackgroundImage(
-                                context,
-                                controller,
-                                map,
-                              ),
-                            ),
-                    icon: const Icon(Icons.image_outlined),
-                    label: Text(map.hasImage ? 'Replace image' : 'Set image'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: busy || !map.hasImage
-                        ? null
-                        : () => withBusy(
+                        : () async {
+                            final parsedCols = int.tryParse(cols.text.trim());
+                            final parsedRows = int.tryParse(rows.text.trim());
+                            final parsedFeet =
+                                int.tryParse(feetPerCell.text.trim());
+                            if (parsedCols == null ||
+                                parsedRows == null ||
+                                parsedFeet == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Enter valid map settings.'),
+                                ),
+                              );
+                              return;
+                            }
+                            await withBusy(
                               setState,
                               () => _runAction(
                                 context,
-                                () => controller.clearMapImage(map.id),
-                                prefix: 'Could not remove image',
-                              ),
-                            ),
-                    icon: const Icon(Icons.hide_image_outlined),
-                    label: const Text('Remove image'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: busy
-                        ? null
-                        : () => withBusy(
-                              setState,
-                              () async {
-                                final duplicated =
-                                    await controller.duplicateMap(map.id);
-                                controller.selectMap(duplicated.id);
-                              },
-                            ),
-                    icon: const Icon(Icons.copy_outlined),
-                    label: const Text('Duplicate map'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: busy
-                        ? null
-                        : () => withBusy(
-                              setState,
-                              () async {
-                                final confirmed = await showDialog<bool>(
-                                      context: context,
-                                      builder: (dialogContext) => AlertDialog(
-                                        title: Text('Delete ${map.name}?'),
-                                        content: const Text(
-                                          'This also removes tokens on that map.',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                dialogContext, false),
-                                            child: const Text('Cancel'),
-                                          ),
-                                          FilledButton(
-                                            onPressed: () => Navigator.pop(
-                                                dialogContext, true),
-                                            child: const Text('Delete'),
-                                          ),
-                                        ],
-                                      ),
-                                    ) ??
-                                    false;
-                                if (!confirmed) return;
-                                await controller.deleteMap(map.id);
-                                if (context.mounted) {
-                                  Navigator.pop(sheetContext);
-                                }
-                              },
-                            ),
-                    icon: const Icon(Icons.delete_outline),
-                    label: const Text('Delete map'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: FilledButton(
-                  onPressed: busy
-                      ? null
-                      : () async {
-                          final parsedCols = int.tryParse(cols.text.trim());
-                          final parsedRows = int.tryParse(rows.text.trim());
-                          final parsedFeet =
-                              int.tryParse(feetPerCell.text.trim());
-                          if (parsedCols == null ||
-                              parsedRows == null ||
-                              parsedFeet == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Enter valid map settings.'),
+                                () => controller.setMapSettings(
+                                  map.id,
+                                  name: name.text.trim(),
+                                  cols: parsedCols,
+                                  rows: parsedRows,
+                                  feetPerCell: parsedFeet,
+                                  showGrid: showGrid,
+                                  diagonalRule: diagonalRule,
+                                  isOverworld: isOverworld,
+                                ),
+                                prefix: 'Could not save map settings',
                               ),
                             );
-                            return;
-                          }
-                          await withBusy(
-                            setState,
-                            () => _runAction(
-                              context,
-                              () => controller.setMapSettings(
-                                map.id,
-                                name: name.text.trim(),
-                                cols: parsedCols,
-                                rows: parsedRows,
-                                feetPerCell: parsedFeet,
-                                showGrid: showGrid,
-                                diagonalRule: diagonalRule,
-                                isOverworld: isOverworld,
-                              ),
-                              prefix: 'Could not save map settings',
-                            ),
-                          );
-                          if (context.mounted) Navigator.pop(sheetContext);
-                        },
-                  child: const Text('Save'),
+                            if (context.mounted) Navigator.pop(sheetContext);
+                          },
+                    child: const Text('Save'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
