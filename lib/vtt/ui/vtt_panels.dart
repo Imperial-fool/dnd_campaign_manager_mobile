@@ -514,259 +514,255 @@ Future<void> _showMapSettingsSheet(
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (sheetContext) => ChangeNotifierProvider<VttController>.value(
-      value: controller,
-      child: StatefulBuilder(
-        builder: (context, setState) => Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Map settings',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (context, setState) => Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Map settings',
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    if (busy) const CircularProgressIndicator(),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: name,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                    border: OutlineInputBorder(),
                   ),
+                  if (busy) const CircularProgressIndicator(),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: name,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
                 ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: cols,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Columns',
-                          border: OutlineInputBorder(),
-                        ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: cols,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Columns',
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextField(
-                        controller: rows,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Rows',
-                          border: OutlineInputBorder(),
-                        ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      controller: rows,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Rows',
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: feetPerCell,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Feet per cell',
-                          border: OutlineInputBorder(),
-                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: feetPerCell,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Feet per cell',
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: DropdownButtonFormField<VttDiagonalRule>(
-                        initialValue: diagonalRule,
-                        decoration: const InputDecoration(
-                          labelText: 'Diagonal rule',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: VttDiagonalRule.values
-                            .map(
-                              (rule) => DropdownMenuItem<VttDiagonalRule>(
-                                value: rule,
-                                child: Text(rule.name),
-                              ),
-                            )
-                            .toList(growable: false),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => diagonalRule = value);
-                          }
-                        },
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DropdownButtonFormField<VttDiagonalRule>(
+                      initialValue: diagonalRule,
+                      decoration: const InputDecoration(
+                        labelText: 'Diagonal rule',
+                        border: OutlineInputBorder(),
                       ),
+                      items: VttDiagonalRule.values
+                          .map(
+                            (rule) => DropdownMenuItem<VttDiagonalRule>(
+                              value: rule,
+                              child: Text(rule.name),
+                            ),
+                          )
+                          .toList(growable: false),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => diagonalRule = value);
+                        }
+                      },
                     ),
-                  ],
-                ),
-                SwitchListTile(
-                  value: showGrid,
-                  title: const Text('Show grid'),
-                  contentPadding: EdgeInsets.zero,
-                  onChanged:
-                      busy ? null : (value) => setState(() => showGrid = value),
-                ),
-                SwitchListTile(
-                  value: isOverworld,
-                  title: const Text('Overworld map'),
-                  contentPadding: EdgeInsets.zero,
-                  onChanged: busy
-                      ? null
-                      : (value) => setState(() => isOverworld = value),
-                ),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: busy
-                          ? null
-                          : () => withBusy(
-                                setState,
-                                () => _pickAndSetBackgroundImage(
-                                  context,
-                                  controller,
-                                  map,
-                                ),
-                              ),
-                      icon: const Icon(Icons.image_outlined),
-                      label: Text(map.hasImage ? 'Replace image' : 'Set image'),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: busy || !map.hasImage
-                          ? null
-                          : () => withBusy(
-                                setState,
-                                () => _runAction(
-                                  context,
-                                  () => controller.clearMapImage(map.id),
-                                  prefix: 'Could not remove image',
-                                ),
-                              ),
-                      icon: const Icon(Icons.hide_image_outlined),
-                      label: const Text('Remove image'),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: busy
-                          ? null
-                          : () => withBusy(
-                                setState,
-                                () async {
-                                  final duplicated =
-                                      await controller.duplicateMap(map.id);
-                                  controller.selectMap(duplicated.id);
-                                },
-                              ),
-                      icon: const Icon(Icons.copy_outlined),
-                      label: const Text('Duplicate map'),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: busy
-                          ? null
-                          : () => withBusy(
-                                setState,
-                                () async {
-                                  final confirmed = await showDialog<bool>(
-                                        context: context,
-                                        builder: (dialogContext) => AlertDialog(
-                                          title: Text('Delete ${map.name}?'),
-                                          content: const Text(
-                                            'This also removes tokens on that map.',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  dialogContext, false),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            FilledButton(
-                                              onPressed: () => Navigator.pop(
-                                                  dialogContext, true),
-                                              child: const Text('Delete'),
-                                            ),
-                                          ],
-                                        ),
-                                      ) ??
-                                      false;
-                                  if (!confirmed) return;
-                                  await controller.deleteMap(map.id);
-                                  if (context.mounted) {
-                                    Navigator.pop(sheetContext);
-                                  }
-                                },
-                              ),
-                      icon: const Icon(Icons.delete_outline),
-                      label: const Text('Delete map'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
+                  ),
+                ],
+              ),
+              SwitchListTile(
+                value: showGrid,
+                title: const Text('Show grid'),
+                contentPadding: EdgeInsets.zero,
+                onChanged:
+                    busy ? null : (value) => setState(() => showGrid = value),
+              ),
+              SwitchListTile(
+                value: isOverworld,
+                title: const Text('Overworld map'),
+                contentPadding: EdgeInsets.zero,
+                onChanged: busy
+                    ? null
+                    : (value) => setState(() => isOverworld = value),
+              ),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton.icon(
                     onPressed: busy
                         ? null
-                        : () async {
-                            final parsedCols = int.tryParse(cols.text.trim());
-                            final parsedRows = int.tryParse(rows.text.trim());
-                            final parsedFeet =
-                                int.tryParse(feetPerCell.text.trim());
-                            if (parsedCols == null ||
-                                parsedRows == null ||
-                                parsedFeet == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Enter valid map settings.'),
-                                ),
-                              );
-                              return;
-                            }
-                            await withBusy(
+                        : () => withBusy(
+                              setState,
+                              () => _pickAndSetBackgroundImage(
+                                context,
+                                controller,
+                                map,
+                              ),
+                            ),
+                    icon: const Icon(Icons.image_outlined),
+                    label: Text(map.hasImage ? 'Replace image' : 'Set image'),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: busy || !map.hasImage
+                        ? null
+                        : () => withBusy(
                               setState,
                               () => _runAction(
                                 context,
-                                () => controller.setMapSettings(
-                                  map.id,
-                                  name: name.text.trim(),
-                                  cols: parsedCols,
-                                  rows: parsedRows,
-                                  feetPerCell: parsedFeet,
-                                  showGrid: showGrid,
-                                  diagonalRule: diagonalRule,
-                                  isOverworld: isOverworld,
-                                ),
-                                prefix: 'Could not save map settings',
+                                () => controller.clearMapImage(map.id),
+                                prefix: 'Could not remove image',
+                                controller: controller,
+                              ),
+                            ),
+                    icon: const Icon(Icons.hide_image_outlined),
+                    label: const Text('Remove image'),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: busy
+                        ? null
+                        : () => withBusy(
+                              setState,
+                              () async {
+                                final duplicated =
+                                    await controller.duplicateMap(map.id);
+                                controller.selectMap(duplicated.id);
+                              },
+                            ),
+                    icon: const Icon(Icons.copy_outlined),
+                    label: const Text('Duplicate map'),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: busy
+                        ? null
+                        : () => withBusy(
+                              setState,
+                              () async {
+                                final confirmed = await showDialog<bool>(
+                                      context: context,
+                                      builder: (dialogContext) => AlertDialog(
+                                        title: Text('Delete ${map.name}?'),
+                                        content: const Text(
+                                          'This also removes tokens on that map.',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                dialogContext, false),
+                                            child: const Text('Cancel'),
+                                          ),
+                                          FilledButton(
+                                            onPressed: () => Navigator.pop(
+                                                dialogContext, true),
+                                            child: const Text('Delete'),
+                                          ),
+                                        ],
+                                      ),
+                                    ) ??
+                                    false;
+                                if (!confirmed) return;
+                                await controller.deleteMap(map.id);
+                                if (context.mounted) {
+                                  Navigator.pop(sheetContext);
+                                }
+                              },
+                            ),
+                    icon: const Icon(Icons.delete_outline),
+                    label: const Text('Delete map'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton(
+                  onPressed: busy
+                      ? null
+                      : () async {
+                          final parsedCols = int.tryParse(cols.text.trim());
+                          final parsedRows = int.tryParse(rows.text.trim());
+                          final parsedFeet =
+                              int.tryParse(feetPerCell.text.trim());
+                          if (parsedCols == null ||
+                              parsedRows == null ||
+                              parsedFeet == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Enter valid map settings.'),
                               ),
                             );
-                            if (context.mounted) Navigator.pop(sheetContext);
-                          },
-                    child: const Text('Save'),
-                  ),
+                            return;
+                          }
+                          await withBusy(
+                            setState,
+                            () => _runAction(
+                              context,
+                              () => controller.setMapSettings(
+                                map.id,
+                                name: name.text.trim(),
+                                cols: parsedCols,
+                                rows: parsedRows,
+                                feetPerCell: parsedFeet,
+                                showGrid: showGrid,
+                                diagonalRule: diagonalRule,
+                                isOverworld: isOverworld,
+                              ),
+                              prefix: 'Could not save map settings',
+                              controller: controller,
+                            ),
+                          );
+                          if (context.mounted) Navigator.pop(sheetContext);
+                        },
+                  child: const Text('Save'),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     ),
   );
-  name.dispose();
-  cols.dispose();
-  rows.dispose();
-  feetPerCell.dispose();
+  disposeAfterRouteExit([name, cols, rows, feetPerCell]);
 }
 
 Future<void> _pickAndSetBackgroundImage(
@@ -830,7 +826,7 @@ Future<void> _pickAndSetBackgroundImage(
       ) ??
       false;
   final parsedPpg = int.tryParse(pixelsPerGrid.text.trim()) ?? 70;
-  pixelsPerGrid.dispose();
+  disposeAfterRouteExit([pixelsPerGrid]);
   if (!context.mounted || !confirmed) return;
   await _runAction(
     context,
@@ -841,6 +837,7 @@ Future<void> _pickAndSetBackgroundImage(
       pixelsPerGrid: parsedPpg,
     ),
     prefix: 'Could not set background image',
+    controller: controller,
   );
 }
 
@@ -1193,7 +1190,7 @@ Future<void> _editInitiative(
       ],
     ),
   );
-  field.dispose();
+  disposeAfterRouteExit([field]);
   if (!context.mounted) return;
   await _runAction(
     context,
@@ -1206,12 +1203,13 @@ Future<void> _runAction(
   BuildContext context,
   FutureOr<void> Function() action, {
   required String prefix,
+  VttController? controller,
 }) async {
   final messenger = ScaffoldMessenger.of(context);
   try {
     await action();
     if (!context.mounted) return;
-    _showControllerError(context, context.read<VttController>());
+    _showControllerError(context, controller ?? context.read<VttController>());
   } catch (error) {
     if (!context.mounted) return;
     messenger.showSnackBar(SnackBar(content: Text('$prefix: $error')));
@@ -1344,9 +1342,7 @@ Future<_MapDialogValues?> _showMapDialog(
       ),
     ),
   ).whenComplete(() {
-    nameController.dispose();
-    colsController.dispose();
-    rowsController.dispose();
+    disposeAfterRouteExit([nameController, colsController, rowsController]);
   });
 }
 
@@ -1602,9 +1598,11 @@ Future<_TokenDialogValues?> _showTokenDialog(
       },
     ),
   ).whenComplete(() {
-    nameController.dispose();
-    colController.dispose();
-    rowController.dispose();
-    colorController.dispose();
+    disposeAfterRouteExit([
+      nameController,
+      colController,
+      rowController,
+      colorController,
+    ]);
   });
 }

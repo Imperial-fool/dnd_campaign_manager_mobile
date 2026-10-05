@@ -774,9 +774,7 @@ class _VttBoardState extends State<VttBoard> {
         ),
       ),
     );
-    targetCol.dispose();
-    targetRow.dispose();
-    label.dispose();
+    disposeAfterRouteExit([targetCol, targetRow, label]);
     if (!context.mounted || action == null) return;
     if (action == 'remove') {
       await _runBoardAction(
@@ -967,10 +965,12 @@ class _BoardPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()..color = const Color(0xFF1D2128),
-    );
+    if (!map.hasImage) {
+      canvas.drawRect(
+        Offset.zero & size,
+        Paint()..color = const Color(0xFF1D2128),
+      );
+    }
 
     _paintTerrain(canvas);
     if (measureOverlay != null) {

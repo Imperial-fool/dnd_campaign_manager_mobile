@@ -335,3 +335,12 @@ VttEdge _cloneEdge(VttEdge edge) => VttEdge(
       type: edge.type,
       locked: edge.locked,
     );
+
+/// Controllers must outlive the route's exit animation, which still rebuilds its fields.
+void disposeAfterRouteExit(List<ChangeNotifier> notifiers) {
+  Future<void>.delayed(const Duration(milliseconds: 500), () {
+    for (final notifier in notifiers) {
+      notifier.dispose();
+    }
+  });
+}
