@@ -21,10 +21,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
@@ -48,6 +45,14 @@ class DefaultFirebaseOptions {
         );
     }
   }
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCq4_A52oafitmvPbN7q-g3FyDPEWjuuC4',
+    appId: '1:868969194065:android:f5c1b645d71ab053564e70',
+    messagingSenderId: '868969194065',
+    projectId: 'dnd-character-manager-80981',
+    storageBucket: 'dnd-character-manager-80981.firebasestorage.app',
+  );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBHXjBBiS21MCwgG-H0wmF9j3gyiVM5YG4',

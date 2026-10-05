@@ -1,3 +1,4 @@
+import 'package:dnd_campaign_manager/app_host.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
@@ -7,6 +8,7 @@ import 'package:dnd_campaign_manager/logic/firebase_campaign_service.dart';
 import 'package:dnd_campaign_manager/logic/prefs_repository.dart';
 import 'package:dnd_campaign_manager/ui/screens/character_list_screen.dart';
 import 'package:dnd_campaign_manager/ui/theme.dart';
+import 'package:dnd_campaign_manager/vtt/ui/vtt_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,26 +29,38 @@ Future<void> main() async {
   );
   await campaign.load();
 
-  runApp(
-    MultiProvider(
+  final startOnBoard = Uri.base.queryParameters['vttBoard'] == '1';
+
+  launchCampaignApp(
+    app: CampaignApp(startOnBoard: startOnBoard),
+    globalScope: (child) => MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: campaign),
         ChangeNotifierProvider.value(value: googleDrive),
         ChangeNotifierProvider.value(value: sharedCampaign),
       ],
-      child: const CampaignApp(),
+      child: child,
     ),
   );
 }
 
 class CampaignApp extends StatelessWidget {
-  const CampaignApp({super.key});
+  const CampaignApp({
+    super.key,
+    required this.startOnBoard,
+  });
+
+  final bool startOnBoard;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'Campaign Sheets',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
-        home: const CharacterListScreen(),
+        home: startOnBoard
+            ? VttScreen(
+                characters: context.watch<CampaignController>().characters,
+              )
+            : const CharacterListScreen(),
       );
 }

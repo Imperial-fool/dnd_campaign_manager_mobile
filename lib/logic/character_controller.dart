@@ -51,6 +51,8 @@ class CharacterController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void notifyExternalMutation() => notifyListeners();
+
   void refreshRemoteCharacter(Character updated) {
     if ((!isReadOnly && !isPlayerMode) ||
         _dirty ||
@@ -191,6 +193,15 @@ class CharacterController extends ChangeNotifier {
       return 'Subclasses unlock at level ${definition.subclassLevel}.';
     }
 
+    if (selectingClass) {
+      for (final grant in definition.startingEquipment) {
+        if (!_hasCatalogItem(catalog, grant)) {
+          return 'Starting equipment ${asStr(grant['itemId'])} is missing '
+              'from the ${asStr(grant['catalogKey'])} catalog.';
+        }
+      }
+    }
+
     final firstClassLevel = selectingClass ? 1 : targetLevel;
     final choices = <Map<String, dynamic>>[];
     for (var level = firstClassLevel; level <= targetLevel; level++) {
@@ -223,16 +234,15 @@ class CharacterController extends ChangeNotifier {
         }
         final option = matches.single;
         if (asStr(option['grantType'], 'feature') == 'catalog') {
-          final catalogKey = asStr(option['catalogKey']);
-          final itemId = asStr(option['itemId']);
-          if (!catalog.items(catalogKey).any((item) => item.id == itemId)) {
-            return 'The selected ${asStr(option['name'])} is missing from the $catalogKey catalog.';
+          if (!_hasCatalogItem(catalog, option)) {
+            return 'The selected ${asStr(option['name'])} is missing from '
+                'the ${asStr(option['catalogKey'])} catalog.';
           }
-          if (asStr(option['grantType']) == 'feat' &&
-              !catalog
-                  .items('feats')
-                  .any((feat) => feat.id == asStr(option['featId']))) {
-            return 'The selected feat is missing from the feats catalog.';
+        }
+        for (final grant in asMapList(option['grants'])) {
+          if (!_hasCatalogItem(catalog, grant)) {
+            return 'Starting equipment ${asStr(grant['itemId'])} is missing '
+                'from the ${asStr(grant['catalogKey'])} catalog.';
           }
         }
         selectedOptions.add((asStr(choice['selectionOrigin']), option));
@@ -273,6 +283,16 @@ class CharacterController extends ChangeNotifier {
       }
 
       if (selectingClass) {
+        for (var index = 0;
+            index < definition.startingEquipment.length;
+            index++) {
+          _grantCatalogItem(
+            character,
+            catalog,
+            definition.startingEquipment[index],
+            'class:${definition.id}:starting:$index',
+          );
+        }
         character.hitDiceTotal = max(character.hitDiceTotal, targetLevel);
       } else {
         character.level = targetLevel;
@@ -298,6 +318,41 @@ class CharacterController extends ChangeNotifier {
 
   bool _hasOrigin(String value, String levelOrigin) =>
       value == levelOrigin || value.startsWith('$levelOrigin:');
+
+  bool _hasCatalogItem(Catalog catalog, Map<String, dynamic> grant) =>
+      catalog
+          .items(asStr(grant['catalogKey']))
+          .any((item) => item.id == asStr(grant['itemId']));
+
+  void _grantCatalogItem(
+    Character character,
+    Catalog catalog,
+    Map<String, dynamic> grant,
+    String origin,
+  ) {
+    final catalogKey = asStr(grant['catalogKey']);
+    final itemId = asStr(grant['itemId']);
+    final template =
+        catalog.items(catalogKey).firstWhere((item) => item.id == itemId);
+    switch (catalogKey) {
+      case 'weapons':
+        character.weapons
+            .add(Weapon.fromJson(template.toJson())..origin = origin);
+        break;
+      case 'armor':
+        character.armor
+            .add(Armor.fromJson(template.toJson())..origin = origin);
+        break;
+      case 'items':
+        final item = InventoryItem.fromJson(template.toJson())
+          ..origin = origin;
+        if (grant['quantity'] is int) {
+          item.quantity = grant['quantity'] as int;
+        }
+        character.items.add(item);
+        break;
+    }
+  }
 
   void _applyChoiceOption(
     Character character,
@@ -337,23 +392,15 @@ class CharacterController extends ChangeNotifier {
         );
         break;
       case 'catalog':
-        final catalogKey = asStr(option['catalogKey']);
-        final itemId = asStr(option['itemId']);
-        final template =
-            catalog.items(catalogKey).firstWhere((item) => item.id == itemId);
-        switch (catalogKey) {
-          case 'weapons':
-            character.weapons
-                .add(Weapon.fromJson(template.toJson())..origin = origin);
-            break;
-          case 'armor':
-            character.armor
-                .add(Armor.fromJson(template.toJson())..origin = origin);
-            break;
-          case 'items':
-            character.items.add(
-                InventoryItem.fromJson(template.toJson())..origin = origin);
-            break;
+        _grantCatalogItem(character, catalog, option, origin);
+        var grantIndex = 0;
+        for (final grant in asMapList(option['grants'])) {
+          _grantCatalogItem(
+            character,
+            catalog,
+            grant,
+            '$origin:starting:${grantIndex++}',
+          );
         }
         break;
       default:

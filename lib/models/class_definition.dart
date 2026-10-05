@@ -73,6 +73,8 @@ class ClassDefinition implements CatalogItem {
   int get subclassLevel => asInt(data['subclassLevel'], 3);
   List<String> get savingThrows => _strings(data['savingThrows']);
   List<Map<String, dynamic>> get subclasses => asMapList(data['subclasses']);
+  List<Map<String, dynamic>> get startingEquipment =>
+      asMapList(data['startingEquipment']);
 
   @override
   String get summary => 'd$hitDie hit die · ${subclasses.length} subclass(es)';

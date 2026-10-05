@@ -39,6 +39,9 @@ class Win32Window {
   // Show the current window. Returns true if the window was successfully shown.
   bool Show();
 
+  // Centers the window on the nearest monitor before the first frame.
+  void CenterOnScreen();
+
   // Release OS resources associated with window.
   void Destroy();
 

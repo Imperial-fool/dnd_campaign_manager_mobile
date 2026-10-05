@@ -18,6 +18,98 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/campaigns/$(code)/members/$(request.auth.uid));
     }
 
+    function validVttMap(data, mapId) {
+      return data.keys().hasOnly([
+          'id', 'name', 'cols', 'rows', 'isOverworld', 'portals', 'edges',
+          'terrain', 'feetPerCell', 'showGrid', 'hasImage', 'imageVersion',
+          'diagonalRule', 'updatedAt'
+        ])
+        && data.id == mapId
+        && data.name is string
+        && data.name.size() <= 100
+        && data.cols is int
+        && data.cols >= 1
+        && data.cols <= 100
+        && data.rows is int
+        && data.rows >= 1
+        && data.rows <= 100
+        && data.isOverworld is bool
+        && data.portals is list
+        && data.portals.size() <= 100
+        && data.edges is list
+        && data.edges.size() <= 5000
+        && data.terrain is list
+        && data.terrain.size() <= 100
+        && data.feetPerCell is int
+        && data.feetPerCell >= 1
+        && data.feetPerCell <= 100
+        && data.showGrid is bool
+        && data.hasImage is bool
+        && data.imageVersion is int
+        && data.imageVersion >= 0
+        && data.diagonalRule is int
+        && data.diagonalRule >= 0
+        && data.diagonalRule <= 2;
+    }
+
+    function validVttToken(data, tokenId) {
+      return data.keys().hasOnly([
+          'id', 'mapId', 'name', 'col', 'row', 'kind', 'color',
+          'characterId', 'ownerUid', 'hidden', 'initiative', 'updatedAt'
+        ])
+        && data.id == tokenId
+        && data.mapId is string
+        && data.name is string
+        && data.name.size() <= 100
+        && data.col is int
+        && data.col >= 0
+        && data.col <= 99
+        && data.row is int
+        && data.row >= 0
+        && data.row <= 99
+        && data.kind is string
+        && data.color is int
+        && (data.characterId == null || data.characterId is string)
+        && (data.ownerUid == null || data.ownerUid is string)
+        && data.hidden is bool
+        && (data.initiative == null
+          || (data.initiative is int
+            && data.initiative >= -20
+            && data.initiative <= 100));
+    }
+
+    function validVttCombat(data) {
+      return data.keys().hasOnly(['active', 'round', 'turnTokenId', 'updatedAt'])
+        && data.active is bool
+        && data.round is int
+        && data.round >= 1
+        && (data.turnTokenId == null || data.turnTokenId is string);
+    }
+
+    function vttMovementChanged() {
+      return request.resource.data.col != resource.data.col
+        || request.resource.data.row != resource.data.row
+        || request.resource.data.mapId != resource.data.mapId;
+    }
+
+    function validVttMoveDestination(code) {
+      return exists(/databases/$(database)/documents/campaigns/$(code)/vttMaps/$(request.resource.data.mapId))
+        && request.resource.data.col is int
+        && request.resource.data.col >= 0
+        && request.resource.data.col
+          < get(/databases/$(database)/documents/campaigns/$(code)/vttMaps/$(request.resource.data.mapId)).data.cols
+        && request.resource.data.row is int
+        && request.resource.data.row >= 0
+        && request.resource.data.row
+          < get(/databases/$(database)/documents/campaigns/$(code)/vttMaps/$(request.resource.data.mapId)).data.rows;
+    }
+
+    function validVttTurnForMove(code, tokenId) {
+      return !exists(/databases/$(database)/documents/campaigns/$(code)/vtt/combat)
+        || get(/databases/$(database)/documents/campaigns/$(code)/vtt/combat).data.active != true
+        || get(/databases/$(database)/documents/campaigns/$(code)/vtt/combat).data.turnTokenId == tokenId;
+    }
+
     match /campaigns/{code} {
       allow create: if signedIn()
         && request.resource.data.ownerUid == request.auth.uid
@@ -86,11 +178,11 @@ service cloud.firestore {
             && request.resource.data.character.abilityScores is map
             && request.resource.data.character.skills is list
             && request.resource.data.character.weapons is list
-            && request.resource.data.character.weapons.size() == 0
+            && request.resource.data.character.weapons.size() <= 100
             && request.resource.data.character.armor is list
-            && request.resource.data.character.armor.size() == 0
+            && request.resource.data.character.armor.size() <= 100
             && request.resource.data.character.items is list
-            && request.resource.data.character.items.size() == 0
+            && request.resource.data.character.items.size() <= 500
             && request.resource.data.character.traits is list
             && request.resource.data.character.traits.size() <= 100);
         allow delete: if isDm(code);
@@ -103,8 +195,9 @@ service cloud.firestore {
             && request.resource.data.playerState.keys().hasOnly([
               'name', 'race', 'affiliation', 'alignment', 'background',
               'backgroundId', 'abilityScores', 'saveProficiencies', 'skills',
-              'traits',
-              'initiativeBonus', 'speed', 'armorClass', 'hpCurrent',
+              'traits', 'weapons', 'armor', 'items',
+              'initiativeBonus', 'speed', 'armorClass', 'hpCurrent', 'hpMax',
+              'hitDiceTotal',
               'inspiration', 'hitDiceUsed', 'deathSuccesses', 'deathFailures',
               'exhaustion', 'equipment', 'proficiencies', 'notes', 'weaponHp',
               'armorHp', 'weaponState', 'armorState', 'itemState'
@@ -113,9 +206,23 @@ service cloud.firestore {
             && request.resource.data.playerState.name.size() <= 100
             && request.resource.data.playerState.hpCurrent is int
             && request.resource.data.playerState.abilityScores is map
+            && request.resource.data.playerState.hpMax is int
+            && request.resource.data.playerState.hpMax > 0
+            && request.resource.data.playerState.hpMax <= 10000
+            && request.resource.data.playerState.hpCurrent
+              <= request.resource.data.playerState.hpMax
+            && request.resource.data.playerState.hitDiceTotal is int
+            && request.resource.data.playerState.hitDiceTotal >= 0
+            && request.resource.data.playerState.hitDiceTotal <= 1000
             && request.resource.data.playerState.skills is list
             && request.resource.data.playerState.traits is list
             && request.resource.data.playerState.traits.size() <= 100
+            && request.resource.data.playerState.weapons is list
+            && request.resource.data.playerState.weapons.size() <= 100
+            && request.resource.data.playerState.armor is list
+            && request.resource.data.playerState.armor.size() <= 100
+            && request.resource.data.playerState.items is list
+            && request.resource.data.playerState.items.size() <= 500
             && request.resource.data.playerState.weaponState is map
             && request.resource.data.playerState.weaponState.size() <= 100
             && request.resource.data.playerState.armorState is map
@@ -132,13 +239,27 @@ service cloud.firestore {
             && uid == request.auth.uid
             && isMember(code)
             && (!exists(/databases/$(database)/documents/campaigns/$(code)/stashes/$(uid))
-              || get(/databases/$(database)/documents/campaigns/$(code)/members/$(uid)).data.stashKey == resource.data.playerKey));
+              || resource.data.playerName
+                == get(/databases/$(database)/documents/campaigns/$(code)/members/$(uid)).data.playerName));
         allow list: if isDm(code);
-        allow create, update: if isDm(code)
-          && request.resource.data.keys().hasOnly(['playerName', 'playerKey', 'items', 'updatedAt'])
-          && request.resource.data.playerName is string
-          && request.resource.data.playerKey is string
-          && request.resource.data.items is list;
+        allow create, update: if (isDm(code)
+            && request.resource.data.keys().hasOnly([
+              'playerName', 'playerKey', 'items', 'updatedAt'
+            ])
+            && request.resource.data.playerName is string
+            && request.resource.data.playerKey is string
+            && request.resource.data.items is list)
+          || (signedIn()
+            && uid == request.auth.uid
+            && isMember(code)
+            && request.resource.data.keys().hasOnly([
+              'playerName', 'playerKey', 'items', 'updatedAt'
+            ])
+            && request.resource.data.playerName
+              == get(/databases/$(database)/documents/campaigns/$(code)/members/$(uid)).data.playerName
+            && request.resource.data.playerKey is string
+            && request.resource.data.items is list
+            && request.resource.data.items.size() <= 500);
         allow delete: if isDm(code);
       }
 
@@ -163,6 +284,67 @@ service cloud.firestore {
           && request.resource.data.crit is bool
           && request.resource.data.fumble is bool;
         allow update, delete: if isDm(code);
+      }
+
+      match /vttMaps/{mapId} {
+        allow read: if isDm(code) || isMember(code);
+        allow create, update: if isDm(code)
+          && validVttMap(request.resource.data, mapId);
+        allow delete: if isDm(code);
+      }
+
+      match /vttTokens/{tokenId} {
+        allow read: if isDm(code)
+          || (isMember(code) && resource.data.hidden == false);
+        allow create: if isDm(code)
+          && validVttToken(request.resource.data, tokenId);
+        allow update: if (isDm(code)
+            && validVttToken(request.resource.data, tokenId))
+          || (isMember(code)
+            && resource.data.ownerUid == request.auth.uid
+            && resource.data.hidden == false
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['col', 'row', 'mapId', 'initiative', 'updatedAt'])
+            && request.resource.data.mapId is string
+            && (request.resource.data.initiative == null
+              || (request.resource.data.initiative is int
+                && request.resource.data.initiative >= -20
+                && request.resource.data.initiative <= 100))
+            && (!vttMovementChanged()
+              || (validVttTurnForMove(code, tokenId)
+                && validVttMoveDestination(code))));
+        allow delete: if isDm(code);
+      }
+
+      match /vtt/{docId} {
+        allow read: if isDm(code) || isMember(code);
+        // Rules can require the destination map to exist, but cannot verify a portal exists at the destination tile.
+        allow create, update: if isDm(code) && validVttCombat(request.resource.data);
+        allow delete: if isDm(code);
+      }
+
+      match /vttMapImages/{mapId} {
+        allow read: if isDm(code) || isMember(code);
+        allow create, update: if isDm(code)
+          && request.resource.data.keys().hasOnly(['data', 'mime', 'updatedAt'])
+          && request.resource.data.data is string
+          && request.resource.data.data.size() <= 1000000
+          && request.resource.data.mime is string;
+        allow delete: if isDm(code);
+      }
+
+      match /vttDoorStates/{mapId} {
+        allow read: if isDm(code) || isMember(code);
+        // Rules cannot verify map adjacency for door toggles; that remains client-enforced.
+        allow create, update: if (isDm(code)
+            && request.resource.data.keys().hasOnly(['open', 'updatedAt'])
+            && request.resource.data.open is list
+            && request.resource.data.open.size() <= 500)
+          || (isMember(code)
+            && request.resource.data.keys().hasOnly(['open', 'updatedAt'])
+            && request.resource.data.open is list
+            && request.resource.data.open.size() <= 500);
+        allow delete: if isDm(code);
       }
     }
   }

@@ -233,6 +233,34 @@ void main() {
     );
   });
 
+  test('stash preserves item amount and resets limited uses', () async {
+    final repository = _MemoryRepository();
+    final campaign = CampaignController(repository: repository);
+    await campaign.load();
+    final character = await campaign.createCharacter('First')
+      ..player = 'Player One';
+    final medkit = InventoryItem(
+      name: 'Medkit',
+      quantity: 2,
+      uses: 1,
+      usesMax: 4,
+    );
+    character.items.add(medkit);
+
+    expect(await campaign.moveToStash(character, 'items', medkit), isTrue);
+    final stored = campaign.stashForPlayer('Player One').single['item'] as Map;
+    expect(stored['quantity'], 2);
+    expect(stored['uses'], 4);
+    expect(character.items, isEmpty);
+
+    final recipient = await campaign.createCharacter('Second')
+      ..player = 'Player One';
+    expect(await campaign.moveFromStash(recipient, 0), isTrue);
+    expect(recipient.items.single.quantity, 2);
+    expect(recipient.items.single.uses, 4);
+    expect(campaign.stashForPlayer('Player One'), isEmpty);
+  });
+
   test('new character skills are sourced from bundled skill JSON', () async {
     final repository = _MemoryRepository();
     final legacy = Character(id: 'legacy-skill-list')

@@ -117,11 +117,6 @@ class CampaignController extends ChangeNotifier {
         ..hpMax = c.hpMax.clamp(1, 100)
         ..hpCurrent = c.hpCurrent.clamp(0, c.hpMax)
         ..hitDiceTotal = c.hitDiceTotal.clamp(0, 1)
-        ..weapons.clear()
-        ..armor.clear()
-        ..items.clear()
-        ..weaponHp = 0
-        ..armorHp = 0
         ..extras.clear();
     }
     final definitions = catalog.items('skills').whereType<GenericItem>();
@@ -143,14 +138,19 @@ class CampaignController extends ChangeNotifier {
         ..hpMax = c.hpMax.clamp(1, 100)
         ..hpCurrent = c.hpCurrent.clamp(0, c.hpMax)
         ..hitDiceTotal = c.hitDiceTotal.clamp(0, 1)
-        ..weapons.clear()
-        ..armor.clear()
-        ..items.clear()
-        ..weaponHp = 0
-        ..armorHp = 0;
+        ..weaponHp = c.weapons.isEmpty ? 0 : c.weaponHp
+        ..armorHp = c.armor.isEmpty ? 0 : c.armorHp;
       if (c.traits.length > 100) {
         throw StateError(
           'Player-created characters may have at most 100 features and traits.',
+        );
+      }
+      if (c.weapons.length > 100 ||
+          c.armor.length > 100 ||
+          c.items.length > 500) {
+        throw StateError(
+          'Player-created characters may have at most 100 weapons, 100 armor '
+          'entries, and 500 inventory items.',
         );
       }
       await sharedCampaign!.createPlayerCharacter(c);
@@ -411,15 +411,6 @@ class CampaignController extends ChangeNotifier {
     );
   }
 
-  Future<void> _syncPlayerStash(String playerName) async {
-    final service = sharedCampaign;
-    if (service?.isOwner != true) return;
-    await service!.syncStashForPlayer(
-      playerName,
-      _playerStashes[_playerKey(playerName)] ?? const [],
-    );
-  }
-
   void _publishCharacter(Character character) {
     final service = sharedCampaign;
     if (service?.isOwner == true) {
@@ -518,32 +509,84 @@ class CampaignController extends ChangeNotifier {
   List<Map<String, dynamic>> stashForPlayer(String player) =>
       List.unmodifiable(_playerStashes[_playerKey(player)] ?? const []);
 
+  void _ensureCanManageCharacterStash(Character character) {
+    final service = sharedCampaign;
+    if (service?.isConnected != true || service?.isOwner == true) return;
+    if (_playerKey(character.player) != _playerKey(service!.playerName ?? '') ||
+        !characters.any((candidate) => candidate.id == character.id)) {
+      throw StateError('Players can only manage their own assigned stash.');
+    }
+  }
+
+  Future<void> _saveStashTransfer(Character character) async {
+    await repository.saveCharacter(character);
+    await _saveCatalog();
+    final service = sharedCampaign;
+    if (service?.isOwner == true) {
+      await service!.syncCharacter(character);
+      await service.syncStashForPlayer(
+        character.player,
+        _playerStashes[_playerKey(character.player)] ?? const [],
+      );
+    } else if (service?.isConnected == true) {
+      await service!.syncPlayerStashTransfer(
+        character,
+        _playerStashes[_playerKey(character.player)] ?? const [],
+      );
+    }
+  }
+
   Future<bool> moveToStash(
       Character character, String kind, CatalogItem item) async {
-    _ensureDmCanEdit();
+    _ensureCanManageCharacterStash(character);
     final key = _playerKey(character.player);
     if (key.isEmpty) return false;
-    final removed = switch (kind) {
-      'weapons' => character.weapons.remove(item),
-      'armor' => character.armor.remove(item),
-      'items' => character.items.remove(item),
-      _ => false,
+    final source = switch (kind) {
+      'weapons' => character.weapons,
+      'armor' => character.armor,
+      'items' => character.items,
+      _ => null,
     };
-    if (!removed) return false;
-    _playerStashes.putIfAbsent(key, () => []).add({
+    if (source == null) return false;
+    final sourceIndex = source.indexOf(item);
+    if (sourceIndex < 0) return false;
+    source.removeAt(sourceIndex);
+    int? priorUses;
+    if (item is InventoryItem && item.usesMax > 0) {
+      priorUses = item.uses;
+      item.uses = item.usesMax;
+    }
+    final entry = {
       'kind': kind,
       'item': item.toJson(),
-    });
-    await repository.saveCharacter(character);
-    _publishCharacter(character);
-    await _saveCatalog();
-    await _syncPlayerStash(character.player);
+    };
+    final stash = _playerStashes.putIfAbsent(key, () => []);
+    stash.add(entry);
+    try {
+      await _saveStashTransfer(character);
+    } catch (error, stackTrace) {
+      stash.remove(entry);
+      if (stash.isEmpty) _playerStashes.remove(key);
+      source.insert(sourceIndex, item);
+      if (item is InventoryItem && priorUses != null) {
+        item.uses = priorUses;
+      }
+      try {
+        await _saveStashTransfer(character);
+      } catch (rollbackError) {
+        throw StateError(
+          'Could not move item to stash ($error); rollback also failed '
+          '($rollbackError).',
+        );
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    }
     notifyListeners();
     return true;
   }
 
   Future<bool> moveFromStash(Character character, int index) async {
-    _ensureDmCanEdit();
+    _ensureCanManageCharacterStash(character);
     final key = _playerKey(character.player);
     final stash = _playerStashes[key];
     if (key.isEmpty || stash == null || index < 0 || index >= stash.length) {
@@ -555,15 +598,19 @@ class CampaignController extends ChangeNotifier {
       throw const FormatException('Stashed item is not a JSON object.');
     }
     final json = Map<String, dynamic>.from(raw);
+    final CatalogItem item;
     switch (stored['kind']) {
       case 'weapons':
-        character.weapons.add(Weapon.fromJson(json));
+        item = Weapon.fromJson(json);
+        character.weapons.add(item as Weapon);
         break;
       case 'armor':
-        character.armor.add(Armor.fromJson(json));
+        item = Armor.fromJson(json);
+        character.armor.add(item as Armor);
         break;
       case 'items':
-        character.items.add(InventoryItem.fromJson(json));
+        item = InventoryItem.fromJson(json);
+        character.items.add(item as InventoryItem);
         break;
       default:
         throw FormatException(
@@ -571,10 +618,31 @@ class CampaignController extends ChangeNotifier {
     }
     stash.removeAt(index);
     if (stash.isEmpty) _playerStashes.remove(key);
-    await repository.saveCharacter(character);
-    _publishCharacter(character);
-    await _saveCatalog();
-    await _syncPlayerStash(character.player);
+    try {
+      await _saveStashTransfer(character);
+    } catch (error, stackTrace) {
+      switch (stored['kind']) {
+        case 'weapons':
+          character.weapons.remove(item);
+          break;
+        case 'armor':
+          character.armor.remove(item);
+          break;
+        case 'items':
+          character.items.remove(item);
+          break;
+      }
+      _playerStashes.putIfAbsent(key, () => []).insert(index, stored);
+      try {
+        await _saveStashTransfer(character);
+      } catch (rollbackError) {
+        throw StateError(
+          'Could not retrieve item from stash ($error); rollback also failed '
+          '($rollbackError).',
+        );
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    }
     notifyListeners();
     return true;
   }

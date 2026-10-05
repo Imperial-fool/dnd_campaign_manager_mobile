@@ -160,7 +160,6 @@ class VitalsPanel extends StatelessWidget {
                         label: 'Max',
                         value: c.hpMax,
                         onChanged: (value) => ctrl.edit((_) => c.hpMax = value),
-                        enabled: !ctrl.isPlayerMode,
                       ),
                     ),
                   ],
@@ -176,7 +175,7 @@ class VitalsPanel extends StatelessWidget {
           num_('Speed', c.speed, (v) => c.speed = v,
               hint: spd != c.speed ? 'Total $spd ft' : 'ft'),
           num_('Hit dice', c.hitDiceTotal, (v) => c.hitDiceTotal = v,
-              enabled: !ctrl.isPlayerMode),
+              enabled: true),
           num_('Used', c.hitDiceUsed, (v) => c.hitDiceUsed = v),
           if (maxHp != c.hpMax)
             Padding(

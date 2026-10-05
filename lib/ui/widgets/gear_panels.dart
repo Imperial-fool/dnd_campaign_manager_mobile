@@ -5,6 +5,7 @@ import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/inventory.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/models/ability.dart';
+import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/ui/theme.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
@@ -40,6 +41,35 @@ List<Widget> addButtons(
           onPressed: onBlank),
       catalogButton(context, bindingKey),
     ];
+
+Future<void> moveCharacterItemToStash(
+  BuildContext context,
+  String kind,
+  CatalogItem item,
+) async {
+  final editor = context.read<CharacterController>();
+  final campaign = context.read<CampaignController>();
+  try {
+    await editor.flush();
+    final moved = await campaign.moveToStash(editor.character, kind, item);
+    if (!context.mounted) return;
+    if (moved) {
+      editor.notifyExternalMutation();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Assign a player to the character before using stash.'),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not move item to stash: $error')),
+      );
+    }
+  }
+}
 
 class SheetTile extends StatelessWidget {
   const SheetTile(
@@ -325,9 +355,8 @@ class WeaponsPanel extends StatelessWidget {
                         label: const Text('Move to player stash'),
                         onPressed: c.player.trim().isEmpty
                             ? null
-                            : () => context
-                                .read<CampaignController>()
-                                .moveToStash(c, 'weapons', w),
+                            : () =>
+                                moveCharacterItemToStash(context, 'weapons', w),
                       ),
                       FilledButton.icon(
                         icon: const Icon(Icons.gps_fixed, size: 18),
@@ -540,9 +569,8 @@ class ArmorPanel extends StatelessWidget {
                             label: const Text('Move to player stash'),
                             onPressed: c.player.trim().isEmpty
                                 ? null
-                                : () => context
-                                    .read<CampaignController>()
-                                    .moveToStash(c, 'armor', a),
+                                : () => moveCharacterItemToStash(
+                                    context, 'armor', a),
                           ),
                         ]),
                     TextBinding(

@@ -51,6 +51,7 @@ class FirebaseCampaignService extends ChangeNotifier {
   bool get isConfigured => _auth != null && _firestore != null;
   bool get isConnected => isConfigured && joinCode != null;
   String? get userId => _auth?.currentUser?.uid;
+  FirebaseFirestore? get firestore => _firestore;
 
   static const _codeKey = 'dnd.sharedCampaign.code';
   static const _nameKey = 'dnd.sharedCampaign.playerName';
@@ -63,7 +64,17 @@ class FirebaseCampaignService extends ChangeNotifier {
             'Firebase sharing is not supported on Linux. Local mode is still available.',
       );
     }
-    final options = DefaultFirebaseOptions.currentPlatform;
+    final FirebaseOptions options;
+    try {
+      options = DefaultFirebaseOptions.currentPlatform;
+    } on UnsupportedError {
+      return FirebaseCampaignService._(
+        configurationError:
+            'Firebase is not configured for ${_currentPlatformName()}. '
+            'Run flutterfire configure --project=dnd-character-manager-80981 '
+            '--platforms=${_currentPlatformName()} and rebuild the app.',
+      );
+    }
     if (options.apiKey.isEmpty ||
         options.appId.isEmpty ||
         options.projectId.isEmpty) {
@@ -515,6 +526,33 @@ class FirebaseCampaignService extends ChangeNotifier {
     });
   }
 
+  Future<void> syncPlayerStashTransfer(
+    Character character,
+    List<Map<String, dynamic>> items,
+  ) async {
+    if (!isConnected || isOwner) {
+      throw StateError('Only a joined player can update their own stash.');
+    }
+    final uid = await _ensureAnonymousUser();
+    final member = await _campaignCollection('members').doc(uid).get();
+    final playerName = member.data()?['playerName'] as String?;
+    if (!member.exists || playerName == null || playerName != this.playerName) {
+      throw StateError('Rejoin the campaign before changing your stash.');
+    }
+    final batch = _requireFirestore().batch();
+    batch.update(_campaignCollection('characters').doc(character.id), {
+      'playerState': _playerStateFor(character),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+    batch.set(_campaignCollection('stashes').doc(uid), {
+      'playerName': playerName,
+      'playerKey': _playerKey(playerName),
+      'items': items,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+    await batch.commit();
+  }
+
   Map<String, dynamic> _playerStateFor(Character character) {
     final json = character.toJson();
     return {
@@ -529,10 +567,15 @@ class FirebaseCampaignService extends ChangeNotifier {
         'saveProficiencies',
         'skills',
         'traits',
+        'weapons',
+        'armor',
+        'items',
         'initiativeBonus',
         'speed',
         'armorClass',
         'hpCurrent',
+        'hpMax',
+        'hitDiceTotal',
         'inspiration',
         'hitDiceUsed',
         'deathSuccesses',
@@ -575,10 +618,15 @@ class FirebaseCampaignService extends ChangeNotifier {
       'saveProficiencies',
       'skills',
       'traits',
+      'weapons',
+      'armor',
+      'items',
       'initiativeBonus',
       'speed',
       'armorClass',
       'hpCurrent',
+      'hpMax',
+      'hitDiceTotal',
       'inspiration',
       'hitDiceUsed',
       'deathSuccesses',

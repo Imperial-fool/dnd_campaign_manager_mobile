@@ -174,33 +174,21 @@ class _SheetView extends StatelessWidget {
         absorbing: ctrl.isReadOnly,
         child: const VitalsPanel(),
       ),
-      if (ctrl.isPlayerMode)
-        AbsorbPointer(
-          absorbing: ctrl.isReadOnly,
-          child: const PlayerWeaponActions(),
-        )
-      else
-        AbsorbPointer(
-          absorbing: ctrl.isReadOnly,
-          child: const WeaponsPanel(),
-        ),
-      if (ctrl.isPlayerMode)
-        AbsorbPointer(
-          absorbing: ctrl.isReadOnly,
-          child: const PlayerArmorStatePanel(),
-        )
-      else
-        AbsorbPointer(
-          absorbing: ctrl.isReadOnly,
-          child: const ArmorPanel(),
-        ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const WeaponsPanel(),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const ArmorPanel(),
+      ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const InventoryPanel(),
       ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
-        child: StashPanel(isPlayerMode: ctrl.isPlayerMode),
+        child: const StashPanel(),
       ),
     ]);
     final right = _stack([

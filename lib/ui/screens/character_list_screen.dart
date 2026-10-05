@@ -9,6 +9,7 @@ import 'package:dnd_campaign_manager/ui/screens/character_creation_screen.dart';
 import 'package:dnd_campaign_manager/ui/screens/character_sheet_screen.dart';
 import 'package:dnd_campaign_manager/ui/screens/settings_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
+import 'package:dnd_campaign_manager/vtt/ui/vtt_screen.dart';
 
 class CharacterListScreen extends StatelessWidget {
   const CharacterListScreen({super.key});
@@ -178,6 +179,17 @@ class CharacterListScreen extends StatelessWidget {
                   : 'Campaign Characters',
         ),
         actions: [
+          if (shared?.isConnected == true)
+            IconButton(
+              tooltip: 'Campaign board',
+              icon: const Icon(Icons.map_outlined),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => VttScreen(characters: campaign.characters),
+                ),
+              ),
+            ),
           IconButton(
             tooltip: 'Campaign settings',
             icon: const Icon(Icons.settings_outlined),

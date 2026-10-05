@@ -28,11 +28,19 @@ for 105 parsed weapon profiles and 88 ammunition entries,
 [`content/skills.json`](content/skills.json) for data-defined skills,
 [`content/tarkov_mechanics.json`](content/tarkov_mechanics.json) for action and
 ballistics rules, and [`CONTENT_GUIDE.md`](CONTENT_GUIDE.md) for JSON schemas
-and authoring instructions.
+and authoring instructions. Class selection automatically grants fixed
+starting equipment; only the explicitly listed alternatives need to be
+selected. Juggernaut players choose one primary weapon (M249 or AA12) and one
+sidearm from the source list. The selected primary grants its listed
+ammunition: 320 rounds of M855 for the M249 or 60 rounds of 12 Gauge 00
+Buckshot for the AA12. The source does not list a Juggernaut starting melee
+weapon.
 
 The player stash is keyed to the character's **Player** field rather than its
 character ID. Assign the same player name to multiple characters to share
-weapons, armor, ammunition, and other items between them.
+weapons, armor, ammunition, and other items between them. Stashed entries show
+their item quantities and gear details; limited-use items refill when moved
+into the stash.
 
 ## Optional Firebase campaign sharing
 
@@ -78,9 +86,11 @@ generated.
    players can use the guided character creator; their new level-1 character is
    assigned to them automatically, or import a character JSON sheet from the
    character list. Imported player sheets are assigned to that player, reset
-   to level 1 and 0 XP, and stripped of weapons, armor, and inventory. Level
-   progression and gear definitions remain DM-controlled. Players can edit
-   their assigned sheet, use items, and roll dice. The creator's ability-score
+   to level 1 and 0 XP, and retain their starting weapons, armor, and inventory.
+   Players can edit their assigned character sheet, including gear stats,
+   inventory, features, and traits; the DM remains in control of level
+   progression, campaign rules, and shared catalog definitions. Players can
+   use items and roll dice. The creator's ability-score
    rule is defined in
    [`content/character_creation.json`](content/character_creation.json) and
    defaults to six rolls of 4d6, dropping the lowest die from each roll; it
@@ -90,10 +100,10 @@ generated.
    live player view; the DM can select **Edit character** to make changes.
 
 Firestore access is restricted by [`firestore.rules`](firestore.rules): only
-the DM can change campaign rules, assignments, and stash contents. Players can
-read only characters assigned to their anonymous account, create a level-1
-character assigned to themselves when the DM enables that option, update only
-player-owned sheet state, and submit their own rolls. A join code is a bearer
+the DM can change campaign rules and assignments. Players can read only
+characters assigned to their anonymous account, create a level-1 character
+assigned to themselves when the DM enables that option, update their sheet and
+their own shared stash, and submit their own rolls. A join code is a bearer
 invitation—share it only with intended players. Redeploy these rules after
 updating the application.
 The anonymous DM identity is device/browser-installation bound; clearing app
@@ -109,6 +119,36 @@ at runtime, while Firestore rules enforce access; never deploy privileged
 service-account credentials in this client app.
 Until platform-specific options are generated, Android has Firebase client
 configuration and other targets remain local-only. Linux remains local-only.
+
+## Campaign board (VTT-lite)
+
+Shared campaigns include a lightweight board for square-grid maps, tokens,
+portal tiles, and visible turn order. The DM can create layered overworld and
+local maps, place or edit tokens, draw walls, doors, windows, and terrain, set
+background images, manage portals, import or export map files, and control
+combat rounds and initiative. Players can view the same board state live, roll
+initiative for their own token(s), use local measuring tools (ruler, circle,
+cone, and line templates), and move only their own tokens; during combat they
+can move only on their turn. Entering a portal tile prompts for confirmation
+before the token uses that portal. Native exports use `.vttmap.json`; single
+maps can also export as Universal VTT `.dd2vtt`. On Windows, the board can be
+opened in a separate shared-controller window; on web, the board can open in a
+new browser window or directly by visiting the app URL with `?vttBoard=1`.
+
+The board requires a connected shared campaign from **Campaign Settings**. If
+you change the VTT access model, redeploy Firestore rules:
+
+```powershell
+firebase deploy --only firestore:rules
+```
+
+Known limitations: player collision against walls, doors, and portal validity
+is still enforced client-side; Firestore rules cannot independently verify
+every blocked edge or destination tile. Imported background images are
+downscaled to at most 2048 px / about 600 KB, the terrain palette is fixed,
+and fog of war / line-of-sight are not supported yet. Non-Windows native
+desktop builds use an in-window fullscreen toggle instead of a separate board
+window.
 
 ## Run the app
 

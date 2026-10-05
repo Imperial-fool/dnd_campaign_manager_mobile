@@ -51,12 +51,11 @@ class IdentityPanel extends StatelessWidget {
               onChanged: (v) => ctrl.edit((c) => c.background = v),
             ),
           ),
-          if (!ctrl.isPlayerMode)
-            catalogButton(
-              context,
-              'backgrounds',
-              tooltip: 'Apply background from catalog (adds its features)',
-            ),
+          catalogButton(
+            context,
+            'backgrounds',
+            tooltip: 'Apply background from catalog (adds its features)',
+          ),
         ])),
         if (ctrl.isPlayerMode)
           Text('Level ${c.level} · ${c.xp} XP (DM controlled)')
