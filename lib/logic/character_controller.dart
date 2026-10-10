@@ -12,6 +12,7 @@ import 'package:dnd_campaign_manager/models/ability.dart';
 import 'package:dnd_campaign_manager/models/catalog.dart';
 import 'package:dnd_campaign_manager/models/class_definition.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
+import 'package:dnd_campaign_manager/models/fire_mode.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
 import 'package:dnd_campaign_manager/models/sheet_template.dart';
@@ -27,9 +28,12 @@ class CharacterController extends ChangeNotifier {
     this.onRoll,
     this.isReadOnly = false,
     this.isPlayerMode = false,
+    this.pullAmmoFromInventory = _neverPullAmmoFromInventory,
     this.allowReadOnlyEditToggle = false,
     DiceRoller? dice,
   }) : dice = dice ?? DiceRoller();
+
+  static bool _neverPullAmmoFromInventory() => false;
 
   Character character;
   final CampaignRepository repository;
@@ -37,6 +41,7 @@ class CharacterController extends ChangeNotifier {
   final ValueChanged<RollEntry>? onRoll;
   bool isReadOnly;
   final bool isPlayerMode;
+  final bool Function() pullAmmoFromInventory;
   final bool allowReadOnlyEditToggle;
   final DiceRoller dice;
 
@@ -519,53 +524,93 @@ class CharacterController extends ChangeNotifier {
   /// Spend ammo, roll to hit, roll damage (doubled dice on a natural 20,
   /// no damage on a natural 1).
   ///
-  /// Ammo source:
-  ///  - weapon.ammoMax > 0  -> magazine: rounds come from the loaded count
-  ///    (use [reload] to refill it from inventory)
-  ///  - weapon.ammoMax == 0 -> rounds are removed from matching inventory ammo
-  ///  - weapon.ammoType blank -> no ammo needed
+  /// Magazine weapons may draw only loaded rounds, or pull a shortfall from
+  /// inventory when the campaign rule is enabled. Weapons without a configured
+  /// magazine always use matching inventory ammo as a fallback.
   RollEntry fire(Weapon w) {
     final mode = w.firingMode;
     final modeDamage = _weaponDamage(
       w,
-      mode == 'burst' ? w.burstDamage : w.damage,
+      mode == FireMode.burst ? w.burstDamage : w.damage,
     );
-    final need = mode == 'fullAuto'
-        ? _maximumDiceResult(w.bulletDice)
-        : mode == 'burst'
-            ? (w.burstRounds > 0 ? w.burstRounds : max(1, w.roundsPerShot))
-            : max(1, w.roundsPerShot);
     final type = w.ammoType.trim();
     final lines = <String>[];
 
-    if (mode == 'fullAuto' && w.bulletDice.trim().isEmpty) {
+    if (!w.fireModes.contains(mode)) {
+      return _log(RollEntry(
+        title: '${w.name}: unavailable firing mode',
+        lines: ['${mode.label} is not enabled for this weapon.'],
+      ));
+    }
+    if (mode == FireMode.fullAuto && w.bulletDice.trim().isEmpty) {
       return _log(RollEntry(
         title: '${w.name}: full auto unavailable',
         lines: const ['Set a bullet dice expression first.'],
       ));
     }
-    if (mode == 'burst' && w.burstDamage.trim().isEmpty) {
+    if (mode == FireMode.burst && w.burstDamage.trim().isEmpty) {
       return _log(RollEntry(
         title: '${w.name}: burst unavailable',
         lines: const ['Set a burst damage expression first.'],
       ));
     }
-    if (!{'semi', 'burst', 'fullAuto'}.contains(mode)) {
-      return _log(RollEntry(
-        title: '${w.name}: invalid firing mode',
-        lines: ['Unsupported firing mode "$mode".'],
-      ));
+
+    DiceResult? fullAutoRoll;
+    final int need;
+    switch (mode) {
+      case FireMode.semi:
+        need = max(1, w.roundsPerShot);
+        break;
+      case FireMode.burst:
+        need = w.burstRounds > 0 ? w.burstRounds : max(1, w.roundsPerShot);
+        break;
+      case FireMode.fullAuto:
+        try {
+          fullAutoRoll = dice.roll(w.bulletDice);
+          need = fullAutoRoll.total;
+        } on FormatException catch (e) {
+          return _log(RollEntry(
+            title: '${w.name}: full auto unavailable',
+            lines: ['Bullet dice could not be rolled: ${e.message}'],
+          ));
+        }
+        if (need < 1) {
+          return _log(RollEntry(
+            title: '${w.name}: full auto unavailable',
+            lines: const ['Bullet dice must produce at least one round.'],
+          ));
+        }
+        edit((_) => w.recordFullAutoRounds(need));
+        lines.add('Bullet dice: ${fullAutoRoll.parts} = $need round(s)');
+        break;
     }
 
     if (type.isNotEmpty) {
       if (w.ammoMax > 0) {
-        if (w.ammo < need) {
+        final inventoryRounds = Inventory.available(character, type);
+        final canPull = pullAmmoFromInventory();
+        if (need > w.ammoMax ||
+            w.ammo + (canPull ? inventoryRounds : 0) < need) {
+          final available = w.ammo + (canPull ? inventoryRounds : 0);
           return _log(RollEntry(
               title: '${w.name}: click!',
-              lines: ['Only ${w.ammo} loaded, needs $need. Reload first.']));
+              lines: [
+                'Only $available round(s) available for a $w.ammoMax-round '
+                    'magazine; needs $need. ${canPull ? 'Check inventory.' : 'Reload first.'}'
+              ]));
         }
-        edit((_) => w.ammo -= need);
-        lines.add('Used $need round(s); ${w.ammo}/${w.ammoMax} loaded');
+        final fromMagazine = min(w.ammo, need);
+        final fromInventory = need - fromMagazine;
+        edit((c) {
+          w.ammo -= fromMagazine;
+          if (fromInventory > 0) {
+            Inventory.consumeAmmo(c, type, fromInventory);
+          }
+        });
+        lines.add(
+          'Used $need round(s): $fromMagazine loaded, $fromInventory from '
+          'inventory; ${w.ammo}/${w.ammoMax} loaded',
+        );
       } else {
         final have = Inventory.available(character, type);
         if (have < need) {
@@ -583,52 +628,56 @@ class CharacterController extends ChangeNotifier {
     final bonus = Rules.attackBonus(character, w);
     final total = a.chosen + bonus;
     lines.add('Attack: d20 ${a.describe()} ${Rules.signed(bonus)} = $total');
+    int? damageTotal;
 
     if (a.fumble) {
       lines.add('Natural 1: miss');
-    } else if (mode == 'burst') {
+    } else if (mode == FireMode.burst) {
       try {
         final d = _rollTemplate(modeDamage, crit: a.crit);
+        damageTotal = d.total;
         lines
           ..add('Burst: all $need rounds hit')
-          ..add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total} (${d.parts})');
+          ..add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total} (${d.parts})')
+          ..add('Total damage: ${d.total}');
       } on FormatException catch (e) {
         lines.add('Burst damage not rolled: ${e.message}');
       }
-    } else if (mode == 'fullAuto') {
+    } else if (mode == FireMode.fullAuto) {
       try {
-        final hits = dice.roll(w.bulletDice).total.clamp(0, need).toInt();
-        lines.add('Full auto: $hits hits from $need rounds');
-        var damageTotal = 0;
+        final hits = need;
+        lines.add('Full auto: $hits rounds fired');
+        var totalDamage = 0;
         for (var i = 0; i < hits; i++) {
           final d = _rollTemplate(modeDamage, crit: a.crit);
-          damageTotal += d.total;
+          totalDamage += d.total;
           lines.add('Hit ${i + 1}: ${d.total} (${d.parts})');
         }
-        return _log(RollEntry(
-          title: '${w.name} full auto',
-          total: damageTotal,
-          lines: lines,
-          crit: a.crit,
-          fumble: a.fumble,
-        ));
+        damageTotal = totalDamage;
+        lines.add('Total damage: $totalDamage');
       } on FormatException catch (e) {
         lines.add('Full-auto damage not rolled: ${e.message}');
       }
     } else if (modeDamage.trim().isNotEmpty) {
       try {
         final d = _rollTemplate(modeDamage, crit: a.crit);
-        lines.add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total}  (${d.parts})');
+        damageTotal = d.total;
+        lines
+          ..add('${a.crit ? 'CRIT! ' : ''}Damage: ${d.total}  (${d.parts})')
+          ..add('Total damage: ${d.total}');
       } on FormatException catch (e) {
         lines.add('Damage not rolled: ${e.message}');
       }
     }
     return _log(RollEntry(
-        title: '${w.name} fires',
-        total: total,
-        lines: lines,
-        crit: a.crit,
-        fumble: a.fumble));
+      title: mode == FireMode.fullAuto ? '${w.name} full auto' : '${w.name} fires',
+      total: total,
+      attackTotal: total,
+      damageTotal: damageTotal,
+      lines: lines,
+      crit: a.crit,
+      fumble: a.fumble,
+    ));
   }
 
   /// Resolves {formula} segments (e.g. {1d6}d8+{str_mod}) then rolls.
@@ -654,14 +703,6 @@ class CharacterController extends ChangeNotifier {
     } on FormatException catch (e) {
       return _log(RollEntry(title: field.label, lines: [e.message]));
     }
-  }
-
-  int _maximumDiceResult(String expression) {
-    final match = RegExp(r'(?:^|[+-])(\d*)d(\d+)').firstMatch(expression);
-    if (match == null) return 1;
-    final count = int.tryParse(match.group(1) ?? '') ?? 1;
-    final sides = int.tryParse(match.group(2) ?? '') ?? 1;
-    return max(1, count * sides);
   }
 
   String _weaponDamage(Weapon weapon, String expression) {

@@ -5,10 +5,12 @@ import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/inventory.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/models/ability.dart';
+import 'package:dnd_campaign_manager/models/fire_mode.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/ui/theme.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
+import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
 
 /// Button that lets the user pick an item from the catalog (via its content
@@ -177,20 +179,28 @@ class WeaponsPanel extends StatelessWidget {
                                     onChanged: (v) =>
                                         ctrl.edit((_) => w.ammo = v))),
                           SizedBox(
-                              width: 90,
-                              child: IntBinding(
-                                  label: 'Semi rounds/shot',
-                                  value: w.roundsPerShot,
-                                  onChanged: (v) => ctrl.edit(
-                                      (_) => w.roundsPerShot = v < 1 ? 1 : v))),
-                          if (w.fireModes.contains('burst'))
+                            width: 120,
+                            child: IntBinding(
+                              label: switch (w.firingMode) {
+                                FireMode.semi => 'Semi rounds/shot',
+                                FireMode.burst => 'Rounds/shot',
+                                FireMode.fullAuto => 'Rounds/shot (roll)',
+                              },
+                              value: w.roundsPerShot,
+                              enabled: w.firingMode == FireMode.semi,
+                              onChanged: (value) => ctrl.edit(
+                                (_) => w.setSemiRoundsPerShot(value),
+                              ),
+                            ),
+                          ),
+                          if (w.fireModes.contains(FireMode.burst))
                             SizedBox(
                               width: 90,
                               child: IntBinding(
                                 label: 'Burst bullets',
                                 value: w.burstRounds,
                                 onChanged: (value) => ctrl.edit(
-                                  (_) => w.burstRounds = value < 1 ? 1 : value,
+                                  (_) => w.setBurstRounds(value),
                                 ),
                               ),
                             ),
@@ -201,7 +211,7 @@ class WeaponsPanel extends StatelessWidget {
                                   value: w.damage,
                                   onChanged: (v) =>
                                       ctrl.edit((_) => w.damage = v))),
-                          if (w.fireModes.contains('burst'))
+                          if (w.fireModes.contains(FireMode.burst))
                             SizedBox(
                               width: 130,
                               child: TextBinding(
@@ -211,7 +221,7 @@ class WeaponsPanel extends StatelessWidget {
                                     ctrl.edit((_) => w.burstDamage = v),
                               ),
                             ),
-                          if (w.fireModes.contains('fullAuto'))
+                          if (w.fireModes.contains(FireMode.fullAuto))
                             SizedBox(
                               width: 100,
                               child: TextBinding(
@@ -253,7 +263,7 @@ class WeaponsPanel extends StatelessWidget {
                             ),
                           ),
                           if (w.fireModes.length > 1)
-                            DropdownButton<String>(
+                            DropdownButton<FireMode>(
                               value: w.fireModes.contains(w.firingMode)
                                   ? w.firingMode
                                   : w.fireModes.first,
@@ -261,43 +271,40 @@ class WeaponsPanel extends StatelessWidget {
                                 for (final mode in w.fireModes)
                                   DropdownMenuItem(
                                     value: mode,
-                                    child: Text(switch (mode) {
-                                      'fullAuto' => 'Full auto',
-                                      'burst' => 'Burst',
-                                      _ => 'Semi',
-                                    }),
+                                    child: Text(mode.label),
                                   ),
                               ],
                               onChanged: (mode) {
                                 if (mode != null) {
-                                  ctrl.edit((_) => w.firingMode = mode);
+                                  ctrl.edit((_) => w.selectFiringMode(mode));
                                 }
                               },
                             ),
-                          SizedBox(
-                            width: 190,
-                            child: TextBinding(
-                              label: 'Fire modes (comma separated)',
-                              value: w.fireModes.join(','),
-                              onChanged: (v) => ctrl.edit((_) {
-                                w.fireModes = v
-                                    .split(',')
-                                    .map((mode) => mode.trim())
-                                    .where((mode) => {
-                                          'semi',
-                                          'burst',
-                                          'fullAuto',
-                                        }.contains(mode))
-                                    .toSet()
-                                    .toList();
-                                if (w.fireModes.isEmpty) {
-                                  w.fireModes = ['semi'];
-                                }
-                                if (!w.fireModes.contains(w.firingMode)) {
-                                  w.firingMode = w.fireModes.first;
-                                }
-                              }),
-                            ),
+                          Wrap(
+                            spacing: 4,
+                            children: [
+                              for (final mode in FireMode.values)
+                                FilterChip(
+                                  label: Text(mode.label),
+                                  selected: w.fireModes.contains(mode),
+                                  onSelected: (selected) => ctrl.edit((_) {
+                                    final modes = [...w.fireModes];
+                                    if (selected) {
+                                      if (!modes.contains(mode))
+                                        modes.add(mode);
+                                    } else {
+                                      modes.remove(mode);
+                                    }
+                                    if (modes.isEmpty) modes.add(FireMode.semi);
+                                    w.fireModes = FireMode.values
+                                        .where(modes.contains)
+                                        .toList();
+                                    if (!w.fireModes.contains(w.firingMode)) {
+                                      w.selectFiringMode(w.fireModes.first);
+                                    }
+                                  }),
+                                ),
+                            ],
                           ),
                           DropdownButton<Ability>(
                             value: w.attackAbility,
@@ -344,7 +351,9 @@ class WeaponsPanel extends StatelessWidget {
                         if (usesAmmo) 'Inventory ${w.ammoType}: $inv',
                         if (usesAmmo && !magazine)
                           'firing draws from inventory',
-                        if (magazine)
+                        if (magazine && ctrl.pullAmmoFromInventory())
+                          'firing pulls any loaded-ammo shortfall from inventory',
+                        if (magazine && !ctrl.pullAmmoFromInventory())
                           'firing uses loaded rounds; Reload pulls from inventory',
                       ].join('  ·  '),
                       style: Theme.of(context).textTheme.bodySmall,
@@ -476,7 +485,17 @@ class PlayerArmorStatePanel extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(item.name),
               subtitle: Text(
-                'Rating ${item.rating} · HP ${item.hp}/${item.hpMax}',
+                [
+                  if (item.equipmentSlot.isNotEmpty) item.equipmentSlot,
+                  'Rating ${item.rating}',
+                  'HP ${item.hp}/${item.hpMax}',
+                  if (item.weightKg > 0) '${item.weightKg} kg',
+                  if (item.storageSlots.isNotEmpty)
+                    item.storageSlots.entries
+                        .map((entry) => '${entry.key}: ${entry.value}')
+                        .join(', '),
+                  ...item.ruleEffects.map((effect) => effect.summary),
+                ].join(' · '),
               ),
               trailing: Switch(
                 value: item.equipped,
@@ -556,6 +575,47 @@ class ArmorPanel extends StatelessWidget {
                                   value: a.hpMax,
                                   onChanged: (v) =>
                                       ctrl.edit((_) => a.hpMax = v))),
+                          SizedBox(
+                            width: 130,
+                            child: DropdownButtonFormField<String>(
+                              initialValue: a.equipmentSlot,
+                              isExpanded: true,
+                              decoration:
+                                  const InputDecoration(labelText: 'Slot'),
+                              items: const [
+                                DropdownMenuItem(
+                                    value: '', child: Text('Unspecified')),
+                                DropdownMenuItem(
+                                    value: 'head', child: Text('Head')),
+                                DropdownMenuItem(
+                                    value: 'body', child: Text('Body')),
+                                DropdownMenuItem(
+                                    value: 'rig', child: Text('Rig')),
+                                DropdownMenuItem(
+                                    value: 'other', child: Text('Other')),
+                              ],
+                              onChanged: (value) => ctrl
+                                  .edit((_) => a.equipmentSlot = value ?? ''),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 125,
+                            child: DoubleBinding(
+                              label: 'Weight (kg)',
+                              value: a.weightKg,
+                              onChanged: (value) =>
+                                  ctrl.edit((_) => a.weightKg = value),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 145,
+                            child: DoubleBinding(
+                              label: 'Capacity (kg)',
+                              value: a.carryCapacityKg,
+                              onChanged: (value) =>
+                                  ctrl.edit((_) => a.carryCapacityKg = value),
+                            ),
+                          ),
                           Row(mainAxisSize: MainAxisSize.min, children: [
                             Switch(
                                 value: a.equipped,
@@ -577,10 +637,20 @@ class ArmorPanel extends StatelessWidget {
                         label: 'Properties',
                         value: a.properties,
                         onChanged: (v) => ctrl.edit((_) => a.properties = v)),
+                    StorageSlotsBinding(
+                      value: a.storageSlots,
+                      onChanged: (value) =>
+                          ctrl.edit((_) => a.storageSlots = value),
+                    ),
                     EffectsField(
                         effects: a.effects,
                         skills: c.skills,
                         onChanged: (e) => ctrl.edit((_) => a.effects = e)),
+                    EquipmentRuleEffectsField(
+                      effects: a.ruleEffects,
+                      onChanged: (effects) =>
+                          ctrl.edit((_) => a.ruleEffects = effects),
+                    ),
                   ],
                 );
               }),

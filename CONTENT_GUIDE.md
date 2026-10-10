@@ -158,6 +158,33 @@ Armor Class is displayed as the calculated total: base AC plus effects from
 equipped armor and active inventory items. Edit the base separately from the
 equipment bonuses.
 
+### Equipment rule effects
+
+Armor and ordinary inventory items can also carry `ruleEffects` for gear rules
+that are not numeric sheet modifiers:
+
+```json
+"ruleEffects": [
+  { "type": "ricochetChance", "value": 65 },
+  {
+    "type": "factionDisposition",
+    "faction": "Killa",
+    "disposition": "friendly"
+  }
+]
+```
+
+- `ricochetChance` sets the character's evaluated chance to an integer from 0
+  to 100. The last matching equipped/active gear effect takes precedence.
+- `factionDisposition` sets a faction's disposition to `friendly`, `neutral`,
+  or `hostile`. Faction names are matched without regard to case; the last
+  matching equipped/active gear effect takes precedence.
+- Armor rule effects apply only while equipped. Inventory-item rule effects
+  apply only while the item is active.
+
+These values are available to the character rules layer and shown with the
+gear; they do not perform a ricochet roll or change an NPC's AI automatically.
+
 ---
 
 ## 3. Weapons
@@ -184,14 +211,16 @@ equipment bonuses.
 | Field | Default | Meaning |
 |-------|---------|---------|
 | `ammoType` | `""` | Must match an ammo item's `ammoType` (not case-sensitive). **Blank = needs no ammo** (melee). |
-| `ammoMax` | `0` | Magazine size. **0 = fire straight from inventory ammo.** Above 0 = the weapon holds loaded rounds and you use **Reload**. |
+| `ammoMax` | `0` | Magazine size. **0 = fire straight from inventory ammo.** Above 0 = the weapon holds loaded rounds; the DM can allow firing to pull a shortfall from inventory, otherwise use **Reload**. |
 | `ammo` | `0` | Rounds currently loaded. Only used when `ammoMax` > 0. |
-| `roundsPerShot` | `1` | Rounds spent in semi or burst mode. |
-| `burstRounds` | `0` | Exact number of bullets spent in burst mode. When zero, burst falls back to `roundsPerShot`. |
+| `roundsPerShot` | `1` | Current rounds per shot: the semi-auto setting, burst count, or most recent full-auto die result. |
+| `semiRoundsPerShot` | `roundsPerShot` | Semi-auto rounds per shot, retained when switching firing modes. |
+| `lastFullAutoRounds` | unset | Most recent full-auto bullet-die result; becomes `roundsPerShot` while full auto is selected. |
+| `burstRounds` | `0` | Exact number of bullets spent in burst mode. When zero, burst falls back to the semi-auto rounds-per-shot setting. |
 | `damage` | `""` | Dice expression: `1d8`, `2d6+2`, `1d10-1`, `1d8+1d6+3`. |
-| `fireModes` | `["semi"]` | Available modes: `"semi"`, `"burst"`, `"fullAuto"`. |
-| `firingMode` | `"semi"` | Selected firing mode; chosen by the player in the weapon panel. |
-| `bulletDice` | `""` | Full-auto dice, e.g. `"1d6"`. The maximum is the rounds spent; the roll is the number of hits. |
+| `fireModes` | `["semi"]` | Available modes: `"semi"`, `"burst"`, `"fullAuto"` (represented in app code by the `FireMode` enum). |
+| `firingMode` | `"semi"` | Selected firing mode; chosen by the player in the weapon panel. JSON stores enum names as strings. |
+| `bulletDice` | `""` | Full-auto dice, e.g. `"1d6"`. The roll result is the rounds spent and, on a hit, the number of bullets that hit. |
 | `burstDamage` | `""` | Combined damage expression for the burst (e.g. `"3d6"` for three rounds). |
 | `damageAbility` | `""` | Optional ability modifier (`"str"` or `"dex"`) added to the damage roll. |
 | `weightKg` | `0` | Optional weapon weight, in kilograms. |
@@ -208,14 +237,21 @@ Semi/full-auto attack roll = d20 + ability modifier + proficiency (if proficient
 `2d6+2`); the ability modifier is not added to damage automatically unless
 `damageAbility` is set.
 
-For full auto, set `bulletDice` (for example `"1d6"`). Each trigger pull spends
-the maximum number of rounds shown by that expression and rolls it to determine
-how many rounds hit; damage is rolled once per hit. Burst mode spends
+For full auto, set `bulletDice` (for example `"1d6"`). Each trigger pull rolls
+that expression and spends exactly the result from the magazine or matching
+ammo stack. On a successful attack, that many rounds hit; damage is rolled
+once per hit. The weapon's `roundsPerShot` shows the roll result and restores
+the saved `semiRoundsPerShot` when switching back to semi-auto. Burst mode spends
 `burstRounds`, rolls one d20 attack, and on a hit all bullets in that burst
 hit; it does not roll `bulletDice`. `burstDamage` is rolled once for the
-combined burst. Full auto instead spends the maximum of `bulletDice` and uses
-the value rolled on that die as the number of bullets that hit. The selected
-mode is saved with the weapon.
+combined burst. The selected mode is saved with the weapon.
+
+The DM setting **Pull ammo from inventory when firing** controls magazine
+weapons (`ammoMax` > 0): when enabled, a shot uses loaded rounds first and
+pulls only any remaining rounds it needs from matching inventory ammo. The
+magazine capacity still limits a shot. When disabled, the magazine must already
+hold the complete shot and the weapon must be explicitly reloaded. Weapons with
+`ammoMax` of 0 always draw directly from inventory, regardless of this setting.
 
 A minimal melee weapon:
 ```json
@@ -247,11 +283,27 @@ A minimal melee weapon:
 | `rating` | `0` | The armor rating shown on the sheet (the "3" and "2" in your armor boxes). **Display only.** |
 | `hp` / `hpMax` | `0` | Armor durability (the "30" and "50"). `hpMax` defaults to `hp`. |
 | `equipped` | `true` | Only equipped armor applies its effects. |
+| `equipmentSlot` | `""` | Optional classification: `"head"`, `"body"`, `"rig"`, or `"other"`. Display only; it does not enforce one item per slot. |
+| `weightKg` | `0` | Armor weight in kilograms; included in known carried weight. |
+| `carryCapacityKg` | `0` | Optional container capacity in kilograms; counts only while the armor is equipped. |
+| `storageSlots` | `{}` | Optional slot counts by type, e.g. `{"magazine":4,"grenade":2}`. Displayed as capacity reference; slot occupancy is not assigned or enforced. |
 | `properties` | `""` | Free text. |
 | `effects` | `[]` | **This is how armor changes AC.** Use `{"target":"ac","value":N}`. |
+| `ruleEffects` | `[]` | Equipment rules such as ricochet chance or faction disposition (see section 2). |
 
 Important: `rating` does not change AC by itself. If the armor should raise AC,
 add an `ac` effect.
+
+For an armor formula such as `"AC=12+DEX"` on a sheet with base AC 10, encode
+the delta and ability modifier as an additive effect:
+
+```json
+{
+  "target": "ac",
+  "value": 2,
+  "components": [{ "ability": "dex", "calculation": "modifier" }]
+}
+```
 
 ---
 
@@ -296,6 +348,9 @@ Stacks of different names but the same `ammoType` (FMJ and AP, say) are pooled.
 | `kind` | `"item"` | `"item"` or `"ammo"`. Anything else is treated as `"item"`. |
 | `category` | inferred for older packs; `"misc"` for new blank items | Catalog grouping: `"ammo"`, `"medical"`, or `"misc"`. Set this explicitly so the item picker groups the entry correctly. This does not change item behavior; use `kind` to mark ammunition. |
 | `quantity` | `1` | Stack size (rounds for ammo). |
+| `weightKg` | `0` | Weight per unit (per round for ammo); stacked item weight is multiplied by quantity. |
+| `carryCapacityKg` | `0` | Optional container capacity in kilograms. Only active items contribute. If more than one container is active, only the greatest capacity counts; capacities do not stack. |
+| `storageSlots` | `{}` | Optional slot counts by type, e.g. `{"magazine":4,"grenade":2}`. Displayed as capacity reference; slot occupancy is not assigned or enforced. |
 | `usesMax` | `0` | Uses per unit. `0` = no uses; pressing **Use** just removes one from the stack. |
 | `uses` | `usesMax` | Uses left on the current unit. |
 | `ammoType` | `""` | Ammo only. Must match the weapon's `ammoType`. |
@@ -308,6 +363,14 @@ Stacks of different names but the same `ammoType` (FMJ and AP, say) are pooled.
 | `description` | `""` | Free text. |
 | `active` | `false` | When true, non-ammo item effects apply to the character. |
 | `effects` | `[]` | Numeric modifiers; only apply while the item is active. |
+| `ruleEffects` | `[]` | Ricochet/faction rules; apply only while the item is active. |
+
+The inventory panel shows known carried weight: weapon weight, armor weight,
+and item weight multiplied by quantity. Entries with no weight data contribute
+zero. An over-capacity warning appears only when an active/equipped container
+has a configured capacity. The active/equipped container with the largest
+capacity is used; capacities are not added together. The Active toggle also
+controls item effects and backpack capacity.
 
 The catalog item picker groups inventory under **Ammo**, **Medical
 equipment**, and **Tools / misc**, sorting names alphabetically in each group.
@@ -671,7 +734,7 @@ Full pack for the above:
 | "Invalid JSON" | Trailing comma, single quotes, or a comment. Paste into any JSON validator. |
 | An entry is missing after import | It had no `name`; check the result dialog's error list. |
 | Weapon says "out of ammo" but you have rounds | `ammoType` differs in spelling (`9x18` vs `9x18mm`) or the item's `kind` isn't `"ammo"`. Case and surrounding spaces don't matter. |
-| "Click! ... Reload first." | `ammoMax` is above 0, so the weapon uses its loaded `ammo`; press Reload or set `ammoMax` to 0. |
+| "Click! ... Reload first." | `ammoMax` is above 0 and the magazine does not hold enough rounds; reload it, or ask the DM to enable **Pull ammo from inventory when firing**. |
 | Reload does nothing | Weapon needs both `ammoType` and `ammoMax` above 0, and matching ammo must be in the inventory. |
 | Armor doesn't change AC | `rating` is display-only; add an `ac` effect, and make sure the armor is Equipped. |
 | An effect does nothing | Misspelled `target`; skill names are lowercase with underscores. |

@@ -87,7 +87,24 @@ class _RollPanelState extends State<RollPanel> {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              if (e.total != null)
+              if (e.attackTotal != null || e.damageTotal != null)
+                SizedBox(
+                  width: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (e.attackTotal != null)
+                        Text('Atk ${e.attackTotal}',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w800)),
+                      if (e.damageTotal != null)
+                        Text('Dmg ${e.damageTotal}',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                )
+              else if (e.total != null)
                 SizedBox(
                   width: 44,
                   child: Text('${e.total}',

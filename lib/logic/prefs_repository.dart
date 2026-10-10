@@ -21,6 +21,7 @@ class PrefsCampaignRepository implements CampaignRepository {
   static const _indexKey = 'dnd.index';
   static const _catalogKey = 'dnd.catalog';
   static const _requireXpKey = 'dnd.settings.requireXpForLevelUp';
+  static const _pullAmmoKey = 'dnd.settings.pullAmmoFromInventory';
   String _charKey(String id) => 'dnd.char.$id';
 
   List<String> get _ids => _prefs.getStringList(_indexKey) ?? <String>[];
@@ -80,4 +81,12 @@ class PrefsCampaignRepository implements CampaignRepository {
   @override
   Future<void> saveRequireXpForLevelUp(bool requireXp) =>
       _prefs.setBool(_requireXpKey, requireXp);
+
+  @override
+  Future<bool> loadPullAmmoFromInventory() async =>
+      _prefs.getBool(_pullAmmoKey) ?? false;
+
+  @override
+  Future<void> savePullAmmoFromInventory(bool pullAmmo) =>
+      _prefs.setBool(_pullAmmoKey, pullAmmo);
 }

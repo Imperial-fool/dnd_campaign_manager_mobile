@@ -642,6 +642,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               onChanged: campaign.setRequireXpForLevelUp,
             ),
+          if (shared?.isConnected == true && shared?.isOwner == false)
+            ListTile(
+              title: const Text('Pull ammo from inventory when firing'),
+              subtitle: Text(
+                'DM-controlled rule · ${campaign.pullAmmoFromInventory ? 'enabled' : 'disabled'}',
+              ),
+            )
+          else
+            SwitchListTile(
+              value: campaign.pullAmmoFromInventory,
+              title: const Text('Pull ammo from inventory when firing'),
+              subtitle: Text(
+                campaign.pullAmmoFromInventory
+                    ? 'Magazine weapons can use inventory rounds when their loaded ammo is short.'
+                    : 'Magazine weapons must be reloaded before firing; weapons without a magazine still use inventory ammo.',
+              ),
+              onChanged: campaign.setPullAmmoFromInventory,
+            ),
         ],
       ),
     );

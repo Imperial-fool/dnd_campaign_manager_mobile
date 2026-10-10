@@ -38,6 +38,7 @@ class CampaignController extends ChangeNotifier {
   bool loading = true;
   bool requireXpForLevelUp = false;
   bool allowPlayerCharacterCreation = false;
+  bool pullAmmoFromInventory = false;
   Map<String, dynamic> creationRules = const {};
   List<Character>? _localCharactersBeforeSharing;
   StreamSubscription<List<Character>>? _sharedCharactersSubscription;
@@ -90,6 +91,7 @@ class CampaignController extends ChangeNotifier {
     importer.loadInto(catalogJson, catalog);
     await _ensureSkillDefinitionsOnCharacters();
     requireXpForLevelUp = await repository.loadRequireXpForLevelUp();
+    pullAmmoFromInventory = await repository.loadPullAmmoFromInventory();
     if (sharedCampaign?.isConnected == true) {
       await _restoreSharedCampaign();
     }
@@ -215,6 +217,7 @@ class CampaignController extends ChangeNotifier {
         isReadOnly: forceReadOnly,
         isPlayerMode: sharedCampaign?.isConnected == true &&
             sharedCampaign?.isOwner == false,
+        pullAmmoFromInventory: () => pullAmmoFromInventory,
         allowReadOnlyEditToggle: allowReadOnlyEditToggle,
         onSaved: (savedCharacter) {
           final isPlayer = sharedCampaign?.isConnected == true &&
@@ -237,6 +240,7 @@ class CampaignController extends ChangeNotifier {
       catalog: catalog.toJson(),
       requireXpForLevelUp: requireXpForLevelUp,
       allowPlayerCharacterCreation: allowPlayerCharacterCreation,
+      pullAmmoFromInventory: pullAmmoFromInventory,
       creationRules: creationRules,
       characters: characters,
     );
@@ -395,6 +399,7 @@ class CampaignController extends ChangeNotifier {
       requireXpForLevelUp = rules['requireXpForLevelUp'] == true;
       allowPlayerCharacterCreation =
           rules['allowPlayerCharacterCreation'] == true;
+      pullAmmoFromInventory = rules['pullAmmoFromInventory'] == true;
     }
     final remoteCreationRules = data['creationRules'];
     if (remoteCreationRules is Map) {
@@ -707,6 +712,7 @@ class CampaignController extends ChangeNotifier {
         catalog: catalog.toJson(),
         requireXpForLevelUp: requireXpForLevelUp,
         allowPlayerCharacterCreation: allowPlayerCharacterCreation,
+        pullAmmoFromInventory: pullAmmoFromInventory,
         creationRules: creationRules,
       );
     }
@@ -724,6 +730,7 @@ class CampaignController extends ChangeNotifier {
           catalog: catalog.toJson(),
           requireXpForLevelUp: value,
           allowPlayerCharacterCreation: allowPlayerCharacterCreation,
+          pullAmmoFromInventory: pullAmmoFromInventory,
           creationRules: creationRules,
         );
       } catch (error) {
@@ -743,6 +750,28 @@ class CampaignController extends ChangeNotifier {
           catalog: catalog.toJson(),
           requireXpForLevelUp: requireXpForLevelUp,
           allowPlayerCharacterCreation: value,
+          pullAmmoFromInventory: pullAmmoFromInventory,
+          creationRules: creationRules,
+        );
+      } catch (error) {
+        service?.reportError(error);
+      }
+    }
+  }
+
+  Future<void> setPullAmmoFromInventory(bool value) async {
+    _ensureDmCanEdit();
+    await repository.savePullAmmoFromInventory(value);
+    pullAmmoFromInventory = value;
+    notifyListeners();
+    final service = sharedCampaign;
+    if (service?.isOwner == true) {
+      try {
+        await service!.syncConfiguration(
+          catalog: catalog.toJson(),
+          requireXpForLevelUp: requireXpForLevelUp,
+          allowPlayerCharacterCreation: allowPlayerCharacterCreation,
+          pullAmmoFromInventory: value,
           creationRules: creationRules,
         );
       } catch (error) {

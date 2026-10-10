@@ -27,6 +27,8 @@ class RollEntry {
   RollEntry({
     required this.title,
     this.total,
+    this.attackTotal,
+    this.damageTotal,
     this.lines = const [],
     this.crit = false,
     this.fumble = false,
@@ -34,12 +36,23 @@ class RollEntry {
 
   final String title;
   final int? total;
+  final int? attackTotal;
+  final int? damageTotal;
   final List<String> lines;
   final bool crit;
   final bool fumble;
   final DateTime time;
 
-  String get headline => total == null ? title : '$title: $total';
+  String get headline {
+    if (attackTotal != null || damageTotal != null) {
+      final results = [
+        if (attackTotal != null) 'Attack $attackTotal',
+        if (damageTotal != null) 'Damage $damageTotal',
+      ].join(' · ');
+      return '$title: $results';
+    }
+    return total == null ? title : '$title: $total';
+  }
   String get snackText => [headline, ...lines].join('  ·  ');
 }
 

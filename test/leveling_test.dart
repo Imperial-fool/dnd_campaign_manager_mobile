@@ -267,4 +267,10 @@ class _MemoryRepository implements CampaignRepository {
   Future<void> saveRequireXpForLevelUp(bool value) async {
     requireXp = value;
   }
+
+  @override
+  Future<bool> loadPullAmmoFromInventory() async => false;
+
+  @override
+  Future<void> savePullAmmoFromInventory(bool pullAmmo) async {}
 }

@@ -1,6 +1,7 @@
 import 'package:dnd_campaign_manager/models/ability.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/effect.dart';
+import 'package:dnd_campaign_manager/models/equipment_rule_effect.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
 
 /// Pure functions: derived stats from a [Character]. No Flutter imports.
@@ -47,6 +48,69 @@ class Rules {
     for (final item in c.items) {
       if (item.active && !item.isAmmo) yield* item.effects;
     }
+  }
+
+  static Iterable<EquipmentRuleEffect> _allEquipmentRuleEffects(
+      Character c) sync* {
+    for (final armor in c.armor) {
+      if (armor.equipped) yield* armor.ruleEffects;
+    }
+    for (final item in c.items) {
+      if (item.active && !item.isAmmo) yield* item.ruleEffects;
+    }
+  }
+
+  static double carriedWeightKg(Character c) {
+    final weaponWeight =
+        c.weapons.fold<double>(0, (sum, weapon) => sum + weapon.weightKg);
+    final armorWeight =
+        c.armor.fold<double>(0, (sum, armor) => sum + armor.weightKg);
+    final itemWeight = c.items.fold<double>(
+      0,
+      (sum, item) =>
+          sum + item.weightKg * (item.quantity < 0 ? 0 : item.quantity),
+    );
+    return weaponWeight + armorWeight + itemWeight;
+  }
+
+  /// Only the largest capacity from an equipped container is available.
+  static double? carryingCapacityKg(Character c) {
+    final capacities = [
+      ...c.armor
+          .where((armor) => armor.equipped)
+          .map((armor) => armor.carryCapacityKg),
+      ...c.items
+          .where((item) => item.active && !item.isAmmo)
+          .map((item) => item.carryCapacityKg),
+    ].where((capacity) => capacity > 0);
+    if (capacities.isEmpty) return null;
+    return capacities.reduce((a, b) => a > b ? a : b);
+  }
+
+  static bool exceedsCarryCapacity(Character c) {
+    final capacity = carryingCapacityKg(c);
+    return capacity != null && carriedWeightKg(c) > capacity;
+  }
+
+  static int ricochetChance(Character c, {int baseChance = 0}) {
+    var chance = baseChance;
+    for (final effect in _allEquipmentRuleEffects(c)) {
+      if (effect.type == 'ricochetChance') chance = effect.value;
+    }
+    return chance.clamp(0, 100).toInt();
+  }
+
+  static String factionDisposition(Character c, String faction,
+      {String defaultDisposition = 'neutral'}) {
+    var disposition = defaultDisposition;
+    final normalizedFaction = faction.trim().toLowerCase();
+    for (final effect in _allEquipmentRuleEffects(c)) {
+      if (effect.type == 'factionDisposition' &&
+          effect.faction.trim().toLowerCase() == normalizedFaction) {
+        disposition = effect.disposition;
+      }
+    }
+    return disposition;
   }
 
   /// Sum of every effect (traits, equipped armor, weapons) for [target].

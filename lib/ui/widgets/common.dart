@@ -172,6 +172,165 @@ class _IntBindingState extends State<IntBinding> {
       );
 }
 
+class DoubleBinding extends StatefulWidget {
+  const DoubleBinding({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.enabled = true,
+  });
+
+  final String label;
+  final double value;
+  final ValueChanged<double> onChanged;
+  final bool enabled;
+
+  @override
+  State<DoubleBinding> createState() => _DoubleBindingState();
+}
+
+class _DoubleBindingState extends State<DoubleBinding> {
+  late final TextEditingController _controller =
+      TextEditingController(text: '${widget.value}');
+  final FocusNode _focus = FocusNode();
+
+  @override
+  void didUpdateWidget(DoubleBinding oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_focus.hasFocus && double.tryParse(_controller.text) != widget.value) {
+      _controller.text = '${widget.value}';
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _BindingLabel(widget.label),
+          TextField(
+            controller: _controller,
+            focusNode: _focus,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            enabled: widget.enabled,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
+            ],
+            onTapOutside: (_) => _focus.unfocus(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isDense: true,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            onChanged: (text) => widget.onChanged(double.tryParse(text) ?? 0),
+          ),
+        ],
+      );
+}
+
+class StorageSlotsBinding extends StatefulWidget {
+  const StorageSlotsBinding({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.label = 'Storage slots',
+    this.onError,
+  });
+
+  final Map<String, int> value;
+  final ValueChanged<Map<String, int>> onChanged;
+  final String label;
+  final ValueChanged<String?>? onError;
+
+  @override
+  State<StorageSlotsBinding> createState() => _StorageSlotsBindingState();
+}
+
+class _StorageSlotsBindingState extends State<StorageSlotsBinding> {
+  late final TextEditingController _controller =
+      TextEditingController(text: _format(widget.value));
+  final FocusNode _focus = FocusNode();
+  String? _error;
+
+  String _format(Map<String, int> slots) =>
+      slots.entries.map((entry) => '${entry.key}=${entry.value}').join(', ');
+
+  Map<String, int> _parse(String text) {
+    final slots = <String, int>{};
+    if (text.trim().isEmpty) return slots;
+    for (final part in text.split(',')) {
+      final pair = part.split('=');
+      if (pair.length != 2 || pair.first.trim().isEmpty) {
+        throw const FormatException('Use slot=count entries separated by commas.');
+      }
+      final name = pair.first.trim();
+      final count = int.tryParse(pair.last.trim());
+      if (count == null || count < 0 || slots.containsKey(name)) {
+        throw const FormatException(
+            'Slot counts must be non-negative integers with unique names.');
+      }
+      slots[name] = count;
+    }
+    return slots;
+  }
+
+  @override
+  void didUpdateWidget(StorageSlotsBinding oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_focus.hasFocus && _format(widget.value) != _controller.text) {
+      _controller.text = _format(widget.value);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _BindingLabel(widget.label),
+          TextField(
+            controller: _controller,
+            focusNode: _focus,
+            enabled: true,
+            onTapOutside: (_) => _focus.unfocus(),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              helperText: 'Example: magazine=4, grenade=2',
+              errorText: _error,
+            ),
+            onChanged: (text) {
+              try {
+                final slots = _parse(text);
+                setState(() => _error = null);
+                widget.onError?.call(null);
+                widget.onChanged(slots);
+              } on FormatException catch (error) {
+                setState(() => _error = error.message);
+                widget.onError?.call(error.message);
+              }
+            },
+          ),
+        ],
+      );
+}
+
 class _BindingLabel extends StatelessWidget {
   const _BindingLabel(this.text);
 

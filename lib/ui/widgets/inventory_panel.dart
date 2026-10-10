@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
+import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
+import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
+
+String _formatKg(double value) =>
+    value.toStringAsFixed(2).replaceFirst(RegExp(r'\.?0+$'), '');
 
 /// Items held: consumables with uses, and ammo stacks that weapons draw from.
 class InventoryPanel extends StatelessWidget {
@@ -21,6 +26,8 @@ class InventoryPanel extends StatelessWidget {
       ammoTotals.update(i.ammoType.trim(), (v) => v + i.quantity,
           ifAbsent: () => i.quantity);
     }
+    final carriedWeight = Rules.carriedWeightKg(c);
+    final carryCapacity = Rules.carryingCapacityKg(c);
 
     return SheetCard(
       title: 'Items',
@@ -36,6 +43,19 @@ class InventoryPanel extends StatelessWidget {
         catalogButton(context, 'items', tooltip: 'Add item from catalog'),
       ],
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(
+          carryCapacity == null
+              ? 'Known carried weight: ${_formatKg(carriedWeight)} kg · no active container capacity'
+              : 'Known carried weight: ${_formatKg(carriedWeight)} / ${_formatKg(carryCapacity)} kg · largest active container',
+        ),
+        if (Rules.exceedsCarryCapacity(c))
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              'Over capacity by ${_formatKg(carriedWeight - carryCapacity!)} kg.',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
         if (ammoTotals.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
@@ -79,7 +99,7 @@ class InventoryPanel extends StatelessWidget {
                             onChanged: (value) =>
                                 ctrl.edit((_) => it.active = value),
                           ),
-                          const Text('Apply this item’s effects'),
+                          const Text('Apply effects and container capacity'),
                         ],
                       ),
                     Wrap(
@@ -94,6 +114,25 @@ class InventoryPanel extends StatelessWidget {
                                   value: it.quantity,
                                   onChanged: (v) => ctrl.edit(
                                       (_) => it.quantity = v < 0 ? 0 : v))),
+                          SizedBox(
+                            width: 140,
+                            child: DoubleBinding(
+                              label: 'Weight per unit (kg)',
+                              value: it.weightKg,
+                              onChanged: (value) =>
+                                  ctrl.edit((_) => it.weightKg = value),
+                            ),
+                          ),
+                          if (!it.isAmmo)
+                            SizedBox(
+                              width: 140,
+                              child: DoubleBinding(
+                                label: 'Capacity (kg)',
+                                value: it.carryCapacityKg,
+                                onChanged: (value) => ctrl
+                                    .edit((_) => it.carryCapacityKg = value),
+                              ),
+                            ),
                           if (it.isAmmo) ...[
                             SizedBox(
                                 width: 180,
@@ -225,6 +264,11 @@ class InventoryPanel extends StatelessWidget {
                         minLines: 1,
                         onChanged: (v) => ctrl.edit((_) => it.description = v),
                         enabled: true),
+                    StorageSlotsBinding(
+                      value: it.storageSlots,
+                      onChanged: (value) =>
+                          ctrl.edit((_) => it.storageSlots = value),
+                    ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: OutlinedButton.icon(
@@ -242,6 +286,12 @@ class InventoryPanel extends StatelessWidget {
                         skills: c.skills,
                         onChanged: (effects) =>
                             ctrl.edit((_) => it.effects = effects),
+                      ),
+                    if (!it.isAmmo)
+                      EquipmentRuleEffectsField(
+                        effects: it.ruleEffects,
+                        onChanged: (effects) =>
+                            ctrl.edit((_) => it.ruleEffects = effects),
                       ),
                   ],
                 );

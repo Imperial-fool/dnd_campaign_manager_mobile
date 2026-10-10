@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dnd_campaign_manager/models/effect.dart';
+import 'package:dnd_campaign_manager/models/equipment_rule_effect.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
+import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
 import 'package:dnd_campaign_manager/ui/widgets/formula_field.dart';
 
 enum FieldKind {
@@ -12,8 +14,10 @@ enum FieldKind {
   toggle,
   choice,
   multiChoice,
+  storageSlots,
   dice,
-  effects
+  effects,
+  ruleEffects,
 }
 
 class FieldSpec {
@@ -93,7 +97,9 @@ final Map<String, ItemSchema> itemSchemas = {
     FieldSpec('ammoMax', 'Magazine size', FieldKind.integer,
         group: 'Ammo & firing', help: '0 = draw straight from inventory.'),
     FieldSpec('roundsPerShot', 'Rounds per shot', FieldKind.integer,
-        group: 'Ammo & firing'),
+        group: 'Ammo & firing',
+        help: 'Semi-auto rounds. Burst and full-auto update this value from '
+            'their burst count or bullet-dice roll.'),
     FieldSpec('fireModes', 'Fire modes', FieldKind.multiChoice,
         group: 'Ammo & firing',
         choices: [
@@ -118,11 +124,23 @@ final Map<String, ItemSchema> itemSchemas = {
   ]),
   'armor': const ItemSchema('armor', 'Armor', Icons.shield_outlined, [
     FieldSpec('name', 'Name', FieldKind.text),
+    FieldSpec('equipmentSlot', 'Equipment slot', FieldKind.choice, choices: [
+      ('', 'Unspecified'),
+      ('head', 'Head'),
+      ('body', 'Body'),
+      ('rig', 'Rig'),
+      ('other', 'Other'),
+    ]),
     FieldSpec('properties', 'Description / properties', FieldKind.multiline),
     FieldSpec('rating', 'Ballistic rating', FieldKind.integer),
     FieldSpec('hpMax', 'Durability (HP)', FieldKind.integer),
+    FieldSpec('weightKg', 'Weight (kg)', FieldKind.decimal),
+    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal),
+    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots),
     FieldSpec('equipped', 'Equipped by default', FieldKind.toggle),
     _effects,
+    FieldSpec('ruleEffects', 'Equipment rules', FieldKind.ruleEffects,
+        group: 'Effects'),
   ]),
   'items': const ItemSchema('items', 'Item', Icons.backpack_outlined, [
     FieldSpec('name', 'Name', FieldKind.text),
@@ -135,6 +153,9 @@ final Map<String, ItemSchema> itemSchemas = {
     ]),
     FieldSpec('description', 'Description', FieldKind.multiline),
     FieldSpec('quantity', 'Quantity', FieldKind.integer),
+    FieldSpec('weightKg', 'Weight per unit (kg)', FieldKind.decimal),
+    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal),
+    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots),
     FieldSpec('usesMax', 'Uses per unit', FieldKind.integer),
     FieldSpec('ammoType', 'Ammo type', FieldKind.text,
         group: 'Combat', help: 'For ammo: the weapon ammo type it feeds.'),
@@ -149,6 +170,8 @@ final Map<String, ItemSchema> itemSchemas = {
     FieldSpec('durabilityBurn', 'Durability burn', FieldKind.integer,
         group: 'Combat'),
     _effects,
+    FieldSpec('ruleEffects', 'Equipment rules', FieldKind.ruleEffects,
+        group: 'Effects'),
   ]),
   for (final t in const [
     ('traits', 'Trait', 'trait'),
@@ -190,6 +213,7 @@ class ItemFormScreen extends StatefulWidget {
 
 class _ItemFormScreenState extends State<ItemFormScreen> {
   late final Map<String, dynamic> _data;
+  String? _storageSlotsError;
 
   @override
   void initState() {
@@ -211,6 +235,10 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       });
 
   void _save() {
+    if (_storageSlotsError != null) {
+      _snack(_storageSlotsError!);
+      return;
+    }
     final data = {..._data, ...widget.schema.preset};
     if (asStr(data['name']).trim().isEmpty) {
       _snack('Give it a name first.');
@@ -338,6 +366,18 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
             ]),
           ],
         ));
+      case FieldKind.storageSlots:
+        final rawSlots = _data[f.key];
+        final slots =
+            rawSlots is Map ? Map<String, int>.from(rawSlots) : <String, int>{};
+        return _row(StorageSlotsBinding(
+          value: slots,
+          onError: (error) => _storageSlotsError = error,
+          onChanged: (value) {
+            _set(f.key, value.isEmpty ? null : value);
+            _storageSlotsError = null;
+          },
+        ));
       case FieldKind.dice:
         return FormulaTextField(
           label: f.label,
@@ -359,6 +399,20 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
             onChanged: (list) =>
                 _set(f.key, list.map((e) => e.toJson()).toList()),
           ),
+        ));
+      case FieldKind.ruleEffects:
+        List<EquipmentRuleEffect> effects;
+        try {
+          effects = asMapList(_data[f.key])
+              .map(EquipmentRuleEffect.fromJson)
+              .toList();
+        } on FormatException {
+          effects = [];
+        }
+        return _row(EquipmentRuleEffectsField(
+          effects: effects,
+          onChanged: (list) =>
+              _set(f.key, list.map((effect) => effect.toJson()).toList()),
         ));
     }
   }

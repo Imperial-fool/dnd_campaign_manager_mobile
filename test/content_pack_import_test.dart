@@ -11,6 +11,37 @@ import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
 
 void main() {
+  test('Tarkov armory pack imports protection and carry gear', () {
+    final json = File('content/tarkov_armory.json').readAsStringSync();
+    final catalog = Catalog();
+    final result =
+        ContentImporter(ContentRegistry.standard()).importJson(json, catalog);
+
+    expect(result.errors, isEmpty, reason: result.errors.join('\n'));
+    expect(result.warnings, isEmpty, reason: result.warnings.join('\n'));
+    expect(catalog.items('weapons'), hasLength(135));
+    expect(catalog.items('armor'), hasLength(54));
+    expect(catalog.items('items'), hasLength(111));
+    expect(catalog.items('features'), hasLength(4));
+
+    final korund = catalog
+        .items('armor')
+        .whereType<Armor>()
+        .singleWhere((item) => item.id == 'korund_vm');
+    expect(korund.rating, 5);
+    expect(korund.hpMax, 200);
+    expect(korund.effects.single.target, 'ac');
+    expect(korund.effects.single.value, 4);
+    expect(korund.effects.single.components.single.ability, 'dex');
+
+    final blackjack = catalog
+        .items('items')
+        .whereType<InventoryItem>()
+        .singleWhere((item) => item.id == 'blackjack_50_backpack');
+    expect(blackjack.effects.map((effect) => effect.target),
+        containsAll(['speed', 'initiative']));
+  });
+
   test('Tarkov pack imports from its standalone JSON file', () {
     final json =
         File('content/tarkov_character_options.json').readAsStringSync();
@@ -453,4 +484,10 @@ class _NoopRepository implements CampaignRepository {
 
   @override
   Future<void> saveRequireXpForLevelUp(bool requireXp) async {}
+
+  @override
+  Future<bool> loadPullAmmoFromInventory() async => false;
+
+  @override
+  Future<void> savePullAmmoFromInventory(bool pullAmmo) async {}
 }

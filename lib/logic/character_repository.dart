@@ -13,6 +13,8 @@ abstract class CampaignRepository {
   Future<void> saveCatalogJson(Map<String, dynamic> json);
   Future<bool> loadRequireXpForLevelUp();
   Future<void> saveRequireXpForLevelUp(bool requireXp);
+  Future<bool> loadPullAmmoFromInventory();
+  Future<void> savePullAmmoFromInventory(bool pullAmmo);
 }
 
 /// One pretty-printed JSON file per character plus catalog.json:
@@ -90,6 +92,32 @@ class FileCampaignRepository implements CampaignRepository {
   }
 
   @override
-  Future<void> saveRequireXpForLevelUp(bool requireXp) =>
-      _writeAtomic(_settingsFile, {'requireXpForLevelUp': requireXp});
+  Future<void> saveRequireXpForLevelUp(bool requireXp) async {
+    final settings = await _loadSettings();
+    settings['requireXpForLevelUp'] = requireXp;
+    await _writeAtomic(_settingsFile, settings);
+  }
+
+  Future<Map<String, dynamic>> _loadSettings() async {
+    if (!await _settingsFile.exists()) return {};
+    try {
+      final data = jsonDecode(await _settingsFile.readAsString());
+      return data is Map ? Map<String, dynamic>.from(data) : {};
+    } on FormatException {
+      return {};
+    }
+  }
+
+  @override
+  Future<bool> loadPullAmmoFromInventory() async {
+    final settings = await _loadSettings();
+    return settings['pullAmmoFromInventory'] == true;
+  }
+
+  @override
+  Future<void> savePullAmmoFromInventory(bool pullAmmo) async {
+    final settings = await _loadSettings();
+    settings['pullAmmoFromInventory'] = pullAmmo;
+    await _writeAtomic(_settingsFile, settings);
+  }
 }

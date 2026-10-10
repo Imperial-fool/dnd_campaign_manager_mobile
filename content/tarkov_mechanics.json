@@ -92,8 +92,8 @@
     "modes": ["semi", "burst", "fullAuto"],
     "fullAuto": {
       "bulletDiceField": "bulletDice",
-      "roundsConsumed": "The maximum result of bulletDice.",
-      "hits": "Roll bulletDice; the result is the number of rounds that hit."
+      "roundsConsumed": "Roll bulletDice; spend exactly the result.",
+      "hits": "On a successful attack, the bulletDice result is the number of rounds that hit."
     },
     "burst": {
       "damageField": "burstDamage",

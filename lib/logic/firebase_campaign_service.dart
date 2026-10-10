@@ -259,6 +259,7 @@ class FirebaseCampaignService extends ChangeNotifier {
     required Map<String, dynamic> catalog,
     required bool requireXpForLevelUp,
     required bool allowPlayerCharacterCreation,
+    required bool pullAmmoFromInventory,
     required Map<String, dynamic> creationRules,
     required List<Character> characters,
   }) async {
@@ -278,6 +279,7 @@ class FirebaseCampaignService extends ChangeNotifier {
         'rules': {
           'requireXpForLevelUp': requireXpForLevelUp,
           'allowPlayerCharacterCreation': allowPlayerCharacterCreation,
+          'pullAmmoFromInventory': pullAmmoFromInventory,
         },
         'creationRules': creationRules,
         'createdAt': FieldValue.serverTimestamp(),
@@ -816,6 +818,7 @@ class FirebaseCampaignService extends ChangeNotifier {
     required Map<String, dynamic> catalog,
     required bool requireXpForLevelUp,
     required bool allowPlayerCharacterCreation,
+    required bool pullAmmoFromInventory,
     required Map<String, dynamic> creationRules,
   }) async {
     if (!isOwner) throw StateError('Only the DM can update campaign rules.');
@@ -824,6 +827,7 @@ class FirebaseCampaignService extends ChangeNotifier {
       'rules': {
         'requireXpForLevelUp': requireXpForLevelUp,
         'allowPlayerCharacterCreation': allowPlayerCharacterCreation,
+        'pullAmmoFromInventory': pullAmmoFromInventory,
       },
       'creationRules': creationRules,
       'updatedAt': FieldValue.serverTimestamp(),

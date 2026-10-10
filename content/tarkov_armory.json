@@ -1,6 +1,6 @@
 {
   "pack": "Tarkov Armory and Ammunition",
-  "description": "Weapon profiles and ammunition entries parsed from the supplied reference documents. Original weapon notes are retained in properties.",
+  "description": "Firearm and ammunition profiles plus parsed grenade, melee, and tactical clothing entries from the supplied reference documents. Unsupported conditional and timed rules are retained in descriptions or properties for manual adjudication. AC formulas on vests and armored rigs assume the character base AC is 10; backpack carrying capacities remain descriptive. Armor locations, gear weights, container capacities, storage slots, ricochet chances, and faction disposition are structured for character-sheet calculations.",
   "weapons": [
     {
       "id": "adar_2_15",
@@ -2112,6 +2112,238 @@
       "firingMode": "semi",
       "properties": "MP 443 9x19 1d8+DEX 0.5KG PIS",
       "weightKg": 0.5
+    },
+    {
+      "id": "6kh5_bayonet",
+      "name": "6KH5 Bayonet",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, 35% chance to cause light bleeds and 25% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "akula_push_dagger",
+      "name": "Akula Push Dagger",
+      "attackAbility": "str",
+      "attackBonus": 1,
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. Piercing damage; +1 damage; 45% chance to cause light bleeds and 30% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "antique_axe",
+      "name": "Antique Axe",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. Slashing damage; 10% chance to cause light bleeds and 5% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "apok_tactical_wasteland_gladius",
+      "name": "APOK Tactical Wasteland Gladius",
+      "attackAbility": "str",
+      "attackBonus": 2,
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. +2 damage; slashing damage; 50% chance to cause light bleeds and 40% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "a_2607",
+      "name": "A 2607",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB. On hit, slashing damage; 10% chance to cause light bleeds and 5% chance to cause heavy bleeds. Source does not specify reach or base damage dice."
+    },
+    {
+      "id": "camper_axe",
+      "name": "Camper Axe",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, slashing damage; 10% chance to cause a fracture, 20% chance to cause light bleeds, and 10% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "crash_axe",
+      "name": "Crash Axe",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, slashing damage; 15% chance to cause a fracture, 20% chance to cause light bleeds, and 10% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "cultist_knife",
+      "name": "Cultist Knife",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, piercing damage, one light bleed, and Cultist Toxin poison until cured by Therapist or XTG Anti Toxin; while poisoned, the target takes 1d12 poison damage. 50% chance to cause a fracture and 50% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "fulcrum_bayonet",
+      "name": "Fulcrum Bayonet",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, piercing damage; 45% chance to cause light bleeds and 35% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "crowbar",
+      "name": "Crowbar",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, piercing or bludgeoning damage; 40% chance to cause a fracture. Source does not specify base damage dice."
+    },
+    {
+      "id": "ka_bar",
+      "name": "KA BAR",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, piercing damage; 20% chance to cause light bleeds and 50% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "kiba_arms_tactical_tomahawk",
+      "name": "Kiba Arms Tactical Tomahawk",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, slashing damage; 40% chance to cause light bleeds, 40% chance to cause a fracture, and 35% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "jagdkommando",
+      "name": "Jagdkommando",
+      "damage": "20",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. Piercing damage; on hit, automatically inflicts one heavy bleed and two light bleeds, with a 60% chance to cause two additional heavy bleeds."
+    },
+    {
+      "id": "m2_tactical_sword",
+      "name": "M-2 Tactical Sword",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, slashing damage; 50% chance to cause light bleeds and 40% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "mpl_40",
+      "name": "MPL 40",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, bludgeoning damage; 40% chance to cause a fracture. Source does not specify base damage dice."
+    },
+    {
+      "id": "finka",
+      "name": "Finka",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, piercing damage; 20% chance to cause light bleeds and 10% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "pr_taran_baton",
+      "name": "PR Taran Baton",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, bludgeoning damage; 50% chance to cause a fracture. Source does not specify base damage dice."
+    },
+    {
+      "id": "sog_tactical_tomahawk",
+      "name": "SOG Tactical Tomahawk",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, 25% chance to cause a fracture, 25% chance to cause light bleeds, and 10% chance to cause heavy bleeds. Source does not specify base damage dice or damage type."
+    },
+    {
+      "id": "sp8_survival_machete",
+      "name": "SP-8 Survival Machete",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. Slashing damage. On hit, DC 18 CON save or lose a limb to dismemberment (roll 1d4); 45% chance to cause a fracture, 60% chance to cause light bleeds, and 45% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "m48_tactical_kukri",
+      "name": "M48 Tactical Kukri",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, slashing damage; 45% chance to cause light bleeds and 35% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "taiga_survival_machete",
+      "name": "Taiga Survival Machete",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "One-handed melee; requires CQB; 5 ft reach. On hit, DC 20 CON save or lose a limb to dismemberment (roll 1d4); 60% chance to cause light bleeds and 50% chance to cause heavy bleeds. Source does not specify base damage dice."
+    },
+    {
+      "id": "deadblow_12_pound_sledgehammer",
+      "name": "Deadblow 12 pound sledgehammer",
+      "damage": "1d10",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; requires Berserker Subclass. Bludgeoning damage. On hit, DC 18 CON save or suffer a fractured limb (roll 1d4)."
+    },
+    {
+      "id": "chained_labrys",
+      "name": "Chained Labrys",
+      "damage": "2d12",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; requires Berserker Subclass. Slashing damage. On hit, DC 20 CON save or lose a limb to dismemberment (roll 1d4) and suffer two heavy bleeds; on a successful save, suffer one light bleed instead."
+    },
+    {
+      "id": "scythe",
+      "name": "Scythe",
+      "damage": "1d10",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; requires Berserker Subclass. Slashing damage; 60% chance to cause light bleeds and 50% chance to cause heavy bleeds."
+    },
+    {
+      "id": "wired_wooden_bat",
+      "name": "Wired wooden bat",
+      "damage": "1d8+1d4",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; bludgeoning damage plus piercing damage."
+    },
+    {
+      "id": "spiked_metal_club",
+      "name": "Spiked metal club",
+      "damage": "1d10+1d6",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; bludgeoning damage plus piercing damage."
+    },
+    {
+      "id": "tagillas_hammer",
+      "name": "Tagilla's Hammer",
+      "damage": "4d12+3",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "attackBonus": 3,
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; requires Berserker Subclass. On hit, target must succeed on a DC 22 CON save or suffer a shattered limb (roll 1d4)."
+    },
+    {
+      "id": "medieval_mace",
+      "name": "Medieval Mace",
+      "damage": "1d12+1d4",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; bludgeoning damage plus piercing damage. On hit, target must succeed on a DC 18 CON save or suffer a broken limb (roll 1d4); if the attack was aimed at the head and determined to hit on the d100, it instead knocks the target unconscious for one minute."
+    },
+    {
+      "id": "statues_claymore",
+      "name": "Statue's Claymore",
+      "damage": "1d12",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; slashing damage. Critical hits automatically decapitate any target that does not have legendary ricochets."
+    },
+    {
+      "id": "chainsaw",
+      "name": "Chainsaw",
+      "damage": "4d12",
+      "damageAbility": "str",
+      "attackAbility": "str",
+      "weaponType": "Melee",
+      "properties": "Brutal melee weapon; requires fuel. On hit, target's gear is ruined beyond repair; 80% chance to cause light bleeds, 70% chance to cause heavy bleeds, and DC 22 CON save or lose a limb to dismemberment (roll 1d4)."
     }
   ],
   "items": [
@@ -3082,6 +3314,314 @@
       "penetration": 35,
       "durabilityBurn": 1,
       "description": "FMJ 35 pen"
+    },
+    {
+      "id": "f1_m67_rgd5_grenade",
+      "name": "F-1 / M67 / RGD-5 Grenade",
+      "kind": "item",
+      "category": "misc",
+      "description": "After 3 turns, all targets within the blast radius make a DC 18 DEX save. On a failed save, they take the listed piercing damage. App fields do not resolve the delay or save outcome; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "damage": "60d6",
+      "damageType": "piercing",
+      "areaRadius": 20,
+      "saveDc": 18,
+      "saveAbility": "dex"
+    },
+    {
+      "id": "vog_17_25_grenade",
+      "name": "VOG-17 / VOG-25 Grenade",
+      "kind": "item",
+      "category": "misc",
+      "description": "After 2 turns, targets within the blast radius make a DC 20 DEX save at disadvantage. On a failed save, they take the listed piercing damage. App fields do not resolve the delay, disadvantage, or save outcome; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "damage": "60d6",
+      "damageType": "piercing",
+      "areaRadius": 10,
+      "saveDc": 20,
+      "saveAbility": "dex"
+    },
+    {
+      "id": "impact_grenade",
+      "name": "Impact Grenade",
+      "kind": "item",
+      "category": "misc",
+      "description": "Targets in the 10 ft area immediately make a DC 22 DEX save at disadvantage. Failed save: 60d60 piercing damage; successful save: half damage. App fields do not resolve disadvantage or success/failure damage; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "damage": "60d60",
+      "damageType": "piercing",
+      "areaRadius": 10,
+      "saveDc": 22,
+      "saveAbility": "dex"
+    },
+    {
+      "id": "flashbang",
+      "name": "Flashbang",
+      "kind": "item",
+      "category": "misc",
+      "description": "Targets in the 20 ft area make a DC 18 CON save or are blinded until the next round, at the start of their next turn. App fields do not resolve the condition or duration; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "areaRadius": 20,
+      "saveDc": 18,
+      "saveAbility": "con"
+    },
+    {
+      "id": "9_banger",
+      "name": "9 Banger",
+      "kind": "item",
+      "category": "misc",
+      "description": "Targets in the 40 ft area make a DC 24 CON save at disadvantage or are blinded for 1 minute. App fields do not resolve disadvantage, the condition, or duration; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "areaRadius": 40,
+      "saveDc": 24,
+      "saveAbility": "con"
+    },
+    {
+      "id": "model_8230_cs_gas",
+      "name": "Model 8230 CS Gas",
+      "kind": "item",
+      "category": "misc",
+      "description": "Creates a 20 ft area lasting 5 rounds. Targets without full-face gas masks immediately make a DC 22 CON save or suffer asphyxiation and are stunned until they leave the area or the gas disperses. Targets that succeed repeat the save at the start of each turn they remain in the gas. Regardless of save, unmasked targets take 1d6 gas damage when entering the area and at the start of each turn they remain in it. The app does not resolve masks, repeating saves, conditions, or damage-over-time; adjudicate those from this description.",
+      "quantity": 1,
+      "usesMax": 1,
+      "damage": "1d6",
+      "damageType": "gas",
+      "areaRadius": 20,
+      "saveDc": 22,
+      "saveAbility": "con"
+    },
+    {
+      "id": "pcu_ironsight_upper",
+      "name": "PCU Ironsight Upper",
+      "kind": "item",
+      "category": "misc",
+      "description": "Common tactical clothing (upper). +1 WIS. The item bonus applies while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.wis",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "tac_life_terrain_lower",
+      "name": "Tac Life Terrain Lower",
+      "kind": "item",
+      "category": "misc",
+      "description": "Common tactical clothing (lower). Source says +WIS; interpreted as +1 WIS under the common-clothing rule. The item bonus applies while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.wis",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "woodland_infiltrator_upper",
+      "name": "Woodland Infiltrator Upper",
+      "kind": "item",
+      "category": "misc",
+      "description": "Rare tactical clothing (upper). The item bonus applies while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.dex",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "woodland_infiltrator_lower",
+      "name": "Woodland Infiltrator Lower",
+      "kind": "item",
+      "category": "misc",
+      "description": "Rare tactical clothing (lower). The item bonus applies while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.str",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "alone_in_the_woods_upper",
+      "name": "Alone in the Woods Upper",
+      "kind": "item",
+      "category": "misc",
+      "description": "Legendary tactical clothing (upper). The item bonuses apply while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.dex",
+          "value": 2
+        },
+        {
+          "target": "ability.str",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "alone_in_the_woods_lower",
+      "name": "Alone in the Woods Lower",
+      "kind": "item",
+      "category": "misc",
+      "description": "Legendary tactical clothing (lower). +2 CON and +2 AC. The item bonuses apply while this inventory item is active.",
+      "quantity": 1,
+      "active": true,
+      "effects": [
+        {
+          "target": "ability.con",
+          "value": 2
+        },
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "black_rock_rig",
+      "name": "Black Rock",
+      "kind": "item",
+      "category": "misc",
+      "description": "Unarmored rig; 1.8 kg; slots: 6 magazines, 4 grenades, 1 drum. Slot capacity is descriptive only.",
+      "weightKg": 1.8,
+      "storageSlots": {
+        "magazine": 6,
+        "grenade": 4,
+        "drum": 1
+      }
+    },
+    {
+      "id": "black_hawk_rig",
+      "name": "Black Hawk",
+      "kind": "item",
+      "category": "misc",
+      "description": "Unarmored rig; 1 kg; slots: 4 magazines. Slot capacity is descriptive only.",
+      "weightKg": 1,
+      "storageSlots": {
+        "magazine": 4
+      }
+    },
+    {
+      "id": "scav_vest",
+      "name": "Scav Vest",
+      "kind": "item",
+      "category": "misc",
+      "description": "Unarmored rig; 0.5 kg; slots: 2 magazines, 2 grenades. Slot capacity is descriptive only.",
+      "weightKg": 0.5,
+      "storageSlots": {
+        "magazine": 2,
+        "grenade": 2
+      }
+    },
+    {
+      "id": "dragon_egg_backpack",
+      "name": "Dragon Egg",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 3 kg; carrying capacity up to 25 kg. Capacity and weight are descriptive only.",
+      "weightKg": 3,
+      "carryCapacityKg": 25
+    },
+    {
+      "id": "mechanism_backpack",
+      "name": "Mechanism",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 2 kg; carrying capacity up to 35 kg; reduces movement speed by 5 ft while active. Capacity and weight are descriptive only.",
+      "effects": [
+        {
+          "target": "speed",
+          "value": -5
+        }
+      ],
+      "weightKg": 2,
+      "carryCapacityKg": 35
+    },
+    {
+      "id": "berkut_backpack",
+      "name": "Berkut",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 1 kg; carrying capacity up to 20 kg. Capacity and weight are descriptive only.",
+      "weightKg": 1,
+      "carryCapacityKg": 20
+    },
+    {
+      "id": "lbt_backpack",
+      "name": "LBT",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 1 kg; carrying capacity up to 25 kg. Capacity and weight are descriptive only.",
+      "weightKg": 1,
+      "carryCapacityKg": 25
+    },
+    {
+      "id": "blackjack_50_backpack",
+      "name": "Blackjack 50",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 4 kg; carrying capacity up to 50 kg; reduces movement speed by 20 ft and initiative by 2 while active. Capacity and weight are descriptive only.",
+      "effects": [
+        {
+          "target": "speed",
+          "value": -20
+        },
+        {
+          "target": "initiative",
+          "value": -2
+        }
+      ],
+      "weightKg": 4,
+      "carryCapacityKg": 50
+    },
+    {
+      "id": "tri_zip_backpack",
+      "name": "Tri Zip",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 2 kg; carrying capacity up to 35 kg; reduces movement speed by 5 ft while active. Capacity and weight are descriptive only.",
+      "effects": [
+        {
+          "target": "speed",
+          "value": -5
+        }
+      ],
+      "weightKg": 2,
+      "carryCapacityKg": 35
+    },
+    {
+      "id": "mbss_backpack",
+      "name": "MBSS Backpack",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 1 kg; carrying capacity up to 15 kg. Capacity and weight are descriptive only.",
+      "weightKg": 1,
+      "carryCapacityKg": 15
+    },
+    {
+      "id": "tbag_backpack",
+      "name": "Tbag",
+      "kind": "item",
+      "category": "misc",
+      "description": "Backpack; 0.5 kg; carrying capacity up to 10 kg. Capacity and weight are descriptive only.",
+      "weightKg": 0.5,
+      "carryCapacityKg": 10
     }
   ],
   "ammunitionByCaliber": [
@@ -3204,6 +3744,975 @@
       "name": ".357 Magnum",
       "caliber": ".357 Magnum",
       "standardMagazine": 6
+    }
+  ],
+  "features": [
+    {
+      "id": "woodland_infiltrator_set_bonus_cqb",
+      "name": "Woodland Infiltrator Set Bonus (CQB)",
+      "category": "feature",
+      "source": "Woodland Infiltrator Set",
+      "description": "While wearing the full Woodland Infiltrator set, gain advantage on all melee attacks; enemies roll at disadvantage when saving against your maneuvers. This feature is descriptive only; the app does not check set membership or apply advantage automatically."
+    },
+    {
+      "id": "woodland_infiltrator_set_bonus_non_cqb",
+      "name": "Woodland Infiltrator Set Bonus (Non-CQB)",
+      "category": "feature",
+      "source": "Woodland Infiltrator Set",
+      "description": "While wearing the full Woodland Infiltrator set, gain three hand-to-hand maneuvers of your choosing, with DC equal to 8 + STR + DEX. This feature is descriptive only; the app does not check set membership or implement the maneuver choices."
+    },
+    {
+      "id": "shot_baiter",
+      "name": "Shot Baiter",
+      "category": "feature",
+      "source": "Alone in the Woods Set",
+      "description": "Opportunity attacks against you have disadvantage. This feature is descriptive only; the app does not apply disadvantage automatically."
+    },
+    {
+      "id": "1000_years_of_death",
+      "name": "1000 Years of Death",
+      "category": "feature",
+      "source": "Alone in the Woods Set",
+      "description": "Set bonus: as one action, throw a grenade of your choice and chase after it; then make one attack roll against each target standing in the blast radius. This feature is descriptive only; the app does not check set membership or automate the sequence."
+    }
+  ],
+  "armor": [
+    {
+      "id": "altyn_helmet",
+      "name": "Altyn Helmet",
+      "rating": 5,
+      "hp": 81,
+      "hpMax": 81,
+      "properties": "Helmet (heavy); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "rhys_t_helmet",
+      "name": "Rhys t",
+      "rating": 5,
+      "hp": 90,
+      "hpMax": 90,
+      "properties": "Helmet (heavy); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "vulcan_5_helmet",
+      "name": "Vulcan 5",
+      "rating": 5,
+      "hp": 75,
+      "hpMax": 75,
+      "properties": "Helmet (heavy); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "killas_maska",
+      "name": "Killa's Maska",
+      "rating": 6,
+      "hp": 120,
+      "hpMax": 120,
+      "properties": "Helmet (heavy); AC +3.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 3
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "maska_helmet",
+      "name": "Maska",
+      "rating": 5,
+      "hp": 120,
+      "hpMax": 120,
+      "properties": "Helmet (heavy); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "champions_helmet",
+      "name": "Champion's Helmet",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "bnti_helmet",
+      "name": "BNTI",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "rudiarius_aramid_helmet",
+      "name": "Atlant Armour Aramid Helmet Rudiarius",
+      "rating": 4,
+      "hp": 78,
+      "hpMax": 78,
+      "properties": "Helmet (medium); AC +3.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 3
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "nova_steel_helmet",
+      "name": "Nova Steel",
+      "rating": 4,
+      "hp": 72,
+      "hpMax": 72,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "ulach_helmet",
+      "name": "Ulach",
+      "rating": 4,
+      "hp": 66,
+      "hpMax": 66,
+      "properties": "Helmet (medium).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "zsh_1_helmet",
+      "name": "ZSH 1",
+      "rating": 4,
+      "hp": 60,
+      "hpMax": 60,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "exfil_helmet",
+      "name": "Exfil",
+      "rating": 4,
+      "hp": 50,
+      "hpMax": 50,
+      "properties": "Helmet (medium).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "exfil_with_mods",
+      "name": "Exfil w/h mods",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "bastion_helmet",
+      "name": "Bastion",
+      "rating": 4,
+      "hp": 48,
+      "hpMax": 48,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "bastion_slaap",
+      "name": "Bastion w/h SLAAP",
+      "rating": 6,
+      "hp": 90,
+      "hpMax": 90,
+      "properties": "Helmet (medium); AC +3; ricochet chance increases to 65% (descriptive only).",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 3
+        }
+      ],
+      "equipmentSlot": "head",
+      "ruleEffects": [
+        {
+          "type": "ricochetChance",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "id": "fast_mt_helmet",
+      "name": "FAST MT",
+      "rating": 4,
+      "hp": 48,
+      "hpMax": 48,
+      "properties": "Helmet (medium).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "fast_mt_with_mods",
+      "name": "FAST MT w/h Mods",
+      "rating": 4,
+      "hp": 80,
+      "hpMax": 80,
+      "properties": "Helmet (medium); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "ronin_helmet",
+      "name": "Ronin",
+      "rating": 3,
+      "hp": 180,
+      "hpMax": 180,
+      "properties": "Helmet (light); AC +1.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 1
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "sssh_94_helmet",
+      "name": "SSSH 94",
+      "rating": 3,
+      "hp": 133,
+      "hpMax": 133,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "kiver_m_helmet",
+      "name": "Kiver-M",
+      "rating": 3,
+      "hp": 63,
+      "hpMax": 63,
+      "properties": "Helmet (light); AC +1.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 1
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "caimon_helmet",
+      "name": "Caimon",
+      "rating": 3,
+      "hp": 60,
+      "hpMax": 60,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "caimon_with_mods",
+      "name": "Caimon w/h mods",
+      "rating": 4,
+      "hp": 80,
+      "hpMax": 80,
+      "properties": "Helmet (light); AC +1; ricochet chance increases to 50% (descriptive only).",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 1
+        }
+      ],
+      "equipmentSlot": "head",
+      "ruleEffects": [
+        {
+          "type": "ricochetChance",
+          "value": 50
+        }
+      ]
+    },
+    {
+      "id": "ssh68_helmet",
+      "name": "Ssh68",
+      "rating": 3,
+      "hp": 68,
+      "hpMax": 68,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "6b47_ratnik",
+      "name": "6b47 Ratnik",
+      "rating": 3,
+      "hp": 45,
+      "hpMax": 45,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "un_tar_helmet",
+      "name": "UN TAR",
+      "rating": 3,
+      "hp": 45,
+      "hpMax": 45,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "lshz_helmet",
+      "name": "LSHZ",
+      "rating": 3,
+      "hp": 40,
+      "hpMax": 40,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "lshz_with_mods",
+      "name": "LSHZ w/h mods",
+      "rating": 3,
+      "hp": 60,
+      "hpMax": 60,
+      "properties": "Helmet (light); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "atomic_cqcm",
+      "name": "Atomic CQCM",
+      "rating": 3,
+      "hp": 35,
+      "hpMax": 35,
+      "properties": "Helmet (light); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "psh97_helmet",
+      "name": "PSH97",
+      "rating": 2,
+      "hp": 156,
+      "hpMax": 156,
+      "properties": "Helmet (light); AC +1.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 1
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "shpm_helmet",
+      "name": "ShPm",
+      "rating": 2,
+      "hp": 96,
+      "hpMax": 96,
+      "properties": "Helmet (light); AC +1.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 1
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "kolpak_helmet",
+      "name": "Kolpak",
+      "rating": 2,
+      "hp": 65,
+      "hpMax": 65,
+      "properties": "Helmet (light); AC +2.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "bomber_beanie",
+      "name": "Bomber Beanie",
+      "rating": 1,
+      "hp": 156,
+      "hpMax": 156,
+      "properties": "Hat; AC +3; reduces ricochet chance to 0 and makes Killa friendly to anyone wearing it (both descriptive only).",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 3
+        }
+      ],
+      "equipmentSlot": "head",
+      "ruleEffects": [
+        {
+          "type": "ricochetChance",
+          "value": 0
+        },
+        {
+          "type": "factionDisposition",
+          "faction": "Killa",
+          "disposition": "friendly"
+        }
+      ]
+    },
+    {
+      "id": "tagillas_welding_masks",
+      "name": "Tagilla's Welding Masks",
+      "rating": 6,
+      "hp": 40,
+      "hpMax": 40,
+      "properties": "Helmet (light); AC +3.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 3
+        }
+      ],
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "tsh_4m_tank_crew",
+      "name": "TSH-4M Tank Crew",
+      "rating": 1,
+      "hp": 105,
+      "hpMax": 105,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "tac_kek_fast_mt",
+      "name": "TAC Kek Fast MT",
+      "rating": 1,
+      "hp": 48,
+      "hpMax": 48,
+      "properties": "Helmet (light).",
+      "equipmentSlot": "head"
+    },
+    {
+      "id": "usec_trooper",
+      "name": "USEC Trooper",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored vest (medium), 6.8 kg; listed AC 12 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 6.8
+    },
+    {
+      "id": "paca_soft_armour",
+      "name": "PACA Soft Armour",
+      "rating": 2,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored vest (light), 3.5 kg; listed AC 10 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 0,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 3.5
+    },
+    {
+      "id": "korund_vm",
+      "name": "Korund VM",
+      "rating": 5,
+      "hp": 200,
+      "hpMax": 200,
+      "properties": "Armored vest (heavy), 10 kg; listed AC 14 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 4,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 10
+    },
+    {
+      "id": "kiass",
+      "name": "KIASS",
+      "rating": 3,
+      "hp": 125,
+      "hpMax": 125,
+      "properties": "Armored vest (light), 6 kg (source text has malformed weight); listed AC 10 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 0,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 6
+    },
+    {
+      "id": "thor_concealable",
+      "name": "THOR Concealable",
+      "rating": 4,
+      "hp": 70,
+      "hpMax": 70,
+      "properties": "Armored vest (medium), 6.5 kg; listed AC 12 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 6.5
+    },
+    {
+      "id": "mf_untar",
+      "name": "MF UNTAR",
+      "rating": 3,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored vest (light), 5.5 kg; listed AC 10 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 0,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 5.5
+    },
+    {
+      "id": "kirasa",
+      "name": "Kirasa",
+      "rating": 3,
+      "hp": 150,
+      "hpMax": 150,
+      "properties": "Armored vest (light), 3 kg; listed AC 12 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 3
+    },
+    {
+      "id": "6b13",
+      "name": "6B13",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored vest (medium), 7 kg; listed AC 12 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 7
+    },
+    {
+      "id": "slick_plate",
+      "name": "Slick Plate",
+      "rating": 6,
+      "hp": 160,
+      "hpMax": 160,
+      "properties": "Armored vest (heavy), 10.5 kg; listed AC 16 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 6,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 10.5
+    },
+    {
+      "id": "hex_grid",
+      "name": "Hex Grid",
+      "rating": 6,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored vest (heavy), 15.5 kg; listed AC 16 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 6,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 15.5
+    },
+    {
+      "id": "zabralo_fort",
+      "name": "Zabralo FORT",
+      "rating": 6,
+      "hp": 300,
+      "hpMax": 300,
+      "properties": "Armored vest (heavy), 20 kg; listed AC 18 + DEX.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 8,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "body",
+      "weightKg": 20
+    },
+    {
+      "id": "avs_armored_rig",
+      "name": "AVS",
+      "rating": 4,
+      "hp": 200,
+      "hpMax": 200,
+      "properties": "Armored tactical rig (medium), 11 kg; listed AC 12 + DEX; slots: 4 mags, 4 bases, 2 drums.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 11,
+      "storageSlots": {
+        "magazine": 4,
+        "base": 4,
+        "drum": 2
+      }
+    },
+    {
+      "id": "jaypc_armored_rig",
+      "name": "JAYPC",
+      "rating": 5,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored tactical rig (medium), 10 kg; listed AC 12 + DEX; slots: 8 mags, 2 drums.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 10,
+      "storageSlots": {
+        "magazine": 8,
+        "drum": 2
+      }
+    },
+    {
+      "id": "mbss_armored_rig",
+      "name": "MBSS",
+      "rating": 3,
+      "hp": 70,
+      "hpMax": 70,
+      "properties": "Armored tactical rig (light), 4 kg; listed AC 10 + DEX; slots: 4 mags, 4 grenades.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 0,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 4,
+      "storageSlots": {
+        "magazine": 4,
+        "grenade": 4
+      }
+    },
+    {
+      "id": "siege_r_fort",
+      "name": "Siege R FORT",
+      "rating": 5,
+      "hp": 350,
+      "hpMax": 350,
+      "properties": "Armored tactical rig (heavy), 20 kg; listed AC 16 + DEX; slots: 3 extended mags, 6 grenades, 1 drum, 1 2x3 storage.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 6,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 20,
+      "storageSlots": {
+        "extendedMagazine": 3,
+        "grenade": 6,
+        "drum": 1,
+        "storage2x3": 1
+      }
+    },
+    {
+      "id": "lv119_multicam_black_edition",
+      "name": "LV-119 Multicam Black Edition",
+      "rating": 5,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored tactical rig (medium), 5.5 kg; listed AC 12 + DEX; slots: 10 magazines, 4 grenades, 1 drum. Source includes '?????' before Edition.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 5.5,
+      "storageSlots": {
+        "magazine": 10,
+        "grenade": 4,
+        "drum": 1
+      }
+    },
+    {
+      "id": "mmac_armored_rig",
+      "name": "MMAC",
+      "rating": 4,
+      "hp": 65,
+      "hpMax": 65,
+      "properties": "Armored tactical rig (light), 3 kg; listed AC 10 + DEX; slots: 6 magazine slots, 2 grenade slots.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 0,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 3,
+      "storageSlots": {
+        "magazine": 6,
+        "grenade": 2
+      }
+    },
+    {
+      "id": "tac_tec_armored_rig",
+      "name": "TAC TEC",
+      "rating": 5,
+      "hp": 80,
+      "hpMax": 80,
+      "properties": "Armored tactical rig (medium), 6.5 kg; listed AC 12 + DEX; slots: 6 magazines, 6 grenade slots.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 6.5,
+      "storageSlots": {
+        "magazine": 6,
+        "grenade": 6
+      }
+    },
+    {
+      "id": "ana_tactical_rig",
+      "name": "Ana Tactical Rig",
+      "rating": 4,
+      "hp": 100,
+      "hpMax": 100,
+      "properties": "Armored tactical rig (medium), 6.5 kg; listed AC 12 + DEX; slots: 4 magazines, 2 drums, 4 grenades.",
+      "effects": [
+        {
+          "target": "ac",
+          "value": 2,
+          "components": [
+            {
+              "ability": "dex",
+              "calculation": "modifier"
+            }
+          ]
+        }
+      ],
+      "equipmentSlot": "rig",
+      "weightKg": 6.5,
+      "storageSlots": {
+        "magazine": 4,
+        "drum": 2,
+        "grenade": 4
+      }
     }
   ]
 }

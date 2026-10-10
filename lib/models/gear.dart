@@ -1,5 +1,7 @@
 import 'ability.dart';
 import 'effect.dart';
+import 'equipment_rule_effect.dart';
+import 'fire_mode.dart';
 import 'json_utils.dart';
 
 /// Anything that can live in the campaign catalog and be added to a character.
@@ -12,6 +14,43 @@ abstract class CatalogItem {
 
 List<Effect> _effects(dynamic v) => asMapList(v).map(Effect.fromJson).toList();
 
+List<EquipmentRuleEffect> _equipmentRuleEffects(dynamic value) =>
+    asMapList(value).map(EquipmentRuleEffect.fromJson).toList();
+
+double _nonNegativeDouble(dynamic value, String field) {
+  final result = value is num ? value.toDouble() : double.tryParse('$value');
+  if (result == null || !result.isFinite || result < 0) {
+    throw FormatException('"$field" must be a non-negative number.');
+  }
+  return result;
+}
+
+Map<String, int> _storageSlots(dynamic value) {
+  if (value == null) return {};
+  if (value is! Map) {
+    throw const FormatException('"storageSlots" must be an object.');
+  }
+  final slots = <String, int>{};
+  for (final entry in value.entries) {
+    final key = entry.key.toString().trim();
+    final count = entry.value;
+    if (key.isEmpty || count is! int || count < 0) {
+      throw const FormatException(
+          'Storage slots need non-empty names and non-negative integer counts.');
+    }
+    slots[key] = count;
+  }
+  return slots;
+}
+
+List<FireMode> _normalizedFireModes(List<FireMode>? modes, FireMode selected) {
+  final normalized = modes == null || modes.isEmpty
+      ? <FireMode>[FireMode.semi]
+      : FireMode.values.where(modes.contains).toList();
+  if (!normalized.contains(selected)) normalized.add(selected);
+  return normalized;
+}
+
 class Weapon implements CatalogItem {
   Weapon({
     this.id = '',
@@ -19,12 +58,14 @@ class Weapon implements CatalogItem {
     this.ammoType = '',
     this.ammo = 0,
     this.ammoMax = 0,
-    this.roundsPerShot = 1,
-    this.burstRounds = 0,
-    List<String>? fireModes,
+    int roundsPerShot = 1,
+    int? semiRoundsPerShot,
+    int burstRounds = 0,
+    this.lastFullAutoRounds,
+    List<FireMode>? fireModes,
     this.bulletDice = '',
     this.burstDamage = '',
-    this.firingMode = 'semi',
+    this.firingMode = FireMode.semi,
     this.damageAbility = '',
     this.weightKg = 0,
     this.weaponType = '',
@@ -38,7 +79,25 @@ class Weapon implements CatalogItem {
     this.origin = '',
     List<Effect>? effects,
   })  : effects = effects ?? [],
-        fireModes = fireModes ?? ['semi'];
+        roundsPerShot = roundsPerShot < 1 ? 1 : roundsPerShot,
+        semiRoundsPerShot = (semiRoundsPerShot ?? roundsPerShot) < 1
+            ? 1
+            : (semiRoundsPerShot ?? roundsPerShot),
+        burstRounds = burstRounds < 0 ? 0 : burstRounds,
+        fireModes = _normalizedFireModes(fireModes, firingMode) {
+    switch (firingMode) {
+      case FireMode.semi:
+        this.roundsPerShot = this.semiRoundsPerShot;
+        break;
+      case FireMode.burst:
+        this.roundsPerShot =
+            this.burstRounds > 0 ? this.burstRounds : this.semiRoundsPerShot;
+        break;
+      case FireMode.fullAuto:
+        this.roundsPerShot = lastFullAutoRounds ?? this.semiRoundsPerShot;
+        break;
+    }
+  }
 
   @override
   String id;
@@ -54,11 +113,13 @@ class Weapon implements CatalogItem {
   /// Magazine size. 0 = no magazine: firing draws straight from inventory ammo.
   int ammoMax;
   int roundsPerShot;
+  int semiRoundsPerShot;
   int burstRounds;
-  List<String> fireModes;
+  int? lastFullAutoRounds;
+  List<FireMode> fireModes;
   String bulletDice;
   String burstDamage;
-  String firingMode;
+  FireMode firingMode;
   String damageAbility;
   double weightKg;
   String weaponType;
@@ -73,6 +134,37 @@ class Weapon implements CatalogItem {
   String properties;
   String origin;
   List<Effect> effects;
+
+  void selectFiringMode(FireMode mode) {
+    firingMode = mode;
+    switch (mode) {
+      case FireMode.semi:
+        roundsPerShot = semiRoundsPerShot;
+        break;
+      case FireMode.burst:
+        roundsPerShot = burstRounds > 0 ? burstRounds : semiRoundsPerShot;
+        break;
+      case FireMode.fullAuto:
+        roundsPerShot = lastFullAutoRounds ?? semiRoundsPerShot;
+        break;
+    }
+  }
+
+  void setSemiRoundsPerShot(int value) {
+    semiRoundsPerShot = value < 1 ? 1 : value;
+    if (firingMode == FireMode.semi) roundsPerShot = semiRoundsPerShot;
+  }
+
+  void setBurstRounds(int value) {
+    burstRounds = value < 1 ? 1 : value;
+    if (firingMode == FireMode.burst) roundsPerShot = burstRounds;
+  }
+
+  void recordFullAutoRounds(int value) {
+    final rounds = value < 1 ? 1 : value;
+    lastFullAutoRounds = rounds;
+    if (firingMode == FireMode.fullAuto) roundsPerShot = rounds;
+  }
 
   @override
   String get summary => [
@@ -92,12 +184,19 @@ class Weapon implements CatalogItem {
       roundsPerShot:
           asInt(j['roundsPerShot'], 1) < 1 ? 1 : asInt(j['roundsPerShot'], 1),
       burstRounds: asInt(j['burstRounds']),
-      fireModes: j['fireModes'] is List
-          ? (j['fireModes'] as List).map((mode) => mode.toString()).toList()
-          : ['semi'],
+      fireModes: FireMode.listFromJson(j['fireModes']),
       bulletDice: asStr(j['bulletDice']),
       burstDamage: asStr(j['burstDamage']),
-      firingMode: asStr(j['firingMode'], 'semi'),
+      firingMode: j['firingMode'] == null
+          ? FireMode.semi
+          : FireMode.fromJson(j['firingMode']),
+      semiRoundsPerShot: asInt(
+        j['semiRoundsPerShot'],
+        asInt(j['roundsPerShot'], 1),
+      ),
+      lastFullAutoRounds: j['lastFullAutoRounds'] == null
+          ? null
+          : asInt(j['lastFullAutoRounds']),
       damageAbility: asStr(j['damageAbility']),
       weightKg: j['weightKg'] is num
           ? (j['weightKg'] as num).toDouble()
@@ -123,12 +222,15 @@ class Weapon implements CatalogItem {
         'ammo': ammo,
         'ammoMax': ammoMax,
         'roundsPerShot': roundsPerShot,
+        'semiRoundsPerShot': semiRoundsPerShot,
         if (burstRounds > 0) 'burstRounds': burstRounds,
-        'fireModes': fireModes,
+        if (lastFullAutoRounds != null)
+          'lastFullAutoRounds': lastFullAutoRounds,
+        'fireModes': fireModes.map((mode) => mode.name).toList(),
         'bulletDice': bulletDice,
         'damage': damage,
         'burstDamage': burstDamage,
-        'firingMode': firingMode,
+        'firingMode': firingMode.name,
         if (damageAbility.isNotEmpty) 'damageAbility': damageAbility,
         if (weightKg > 0) 'weightKg': weightKg,
         if (weaponType.isNotEmpty) 'weaponType': weaponType,
@@ -147,42 +249,66 @@ class Armor implements CatalogItem {
   Armor({
     this.id = '',
     this.name = '',
+    this.equipmentSlot = '',
     this.rating = 0,
     this.hp = 0,
     this.hpMax = 0,
     this.equipped = true,
+    this.weightKg = 0,
+    this.carryCapacityKg = 0,
+    Map<String, int>? storageSlots,
     this.properties = '',
     this.origin = '',
     List<Effect>? effects,
-  }) : effects = effects ?? [];
+    List<EquipmentRuleEffect>? ruleEffects,
+  })  : storageSlots = storageSlots ?? {},
+        effects = effects ?? [],
+        ruleEffects = ruleEffects ?? [];
 
   @override
   String id;
   @override
   String name;
+  String equipmentSlot;
   int rating;
   int hp;
   int hpMax;
   bool equipped;
+  double weightKg;
+  double carryCapacityKg;
+  Map<String, int> storageSlots;
   String properties;
   String origin;
   List<Effect> effects;
+  List<EquipmentRuleEffect> ruleEffects;
 
   @override
   String get summary => 'Rating $rating · HP $hpMax';
 
   factory Armor.fromJson(Map<String, dynamic> j) {
     final name = asStr(j['name']);
+    final equipmentSlot = asStr(j['equipmentSlot']);
+    if (equipmentSlot.isNotEmpty &&
+        !{'head', 'body', 'rig', 'other'}.contains(equipmentSlot)) {
+      throw FormatException(
+          'Unsupported armor equipment slot "$equipmentSlot".');
+    }
     return Armor(
       id: idFor(j, name),
       name: name,
+      equipmentSlot: equipmentSlot,
       rating: asInt(j['rating']),
       hp: asInt(j['hp']),
       hpMax: asInt(j['hpMax'], asInt(j['hp'])),
       equipped: asBool(j['equipped'], true),
+      weightKg: _nonNegativeDouble(j['weightKg'] ?? 0, 'weightKg'),
+      carryCapacityKg:
+          _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg'),
+      storageSlots: _storageSlots(j['storageSlots']),
       properties: asStr(j['properties']),
       origin: asStr(j['origin']),
       effects: _effects(j['effects']),
+      ruleEffects: _equipmentRuleEffects(j['ruleEffects']),
     );
   }
 
@@ -190,13 +316,19 @@ class Armor implements CatalogItem {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
+        if (equipmentSlot.isNotEmpty) 'equipmentSlot': equipmentSlot,
         'rating': rating,
         'hp': hp,
         'hpMax': hpMax,
         'equipped': equipped,
+        if (weightKg > 0) 'weightKg': weightKg,
+        if (carryCapacityKg > 0) 'carryCapacityKg': carryCapacityKg,
+        if (storageSlots.isNotEmpty) 'storageSlots': storageSlots,
         'properties': properties,
         'origin': origin,
         'effects': effects.map((e) => e.toJson()).toList(),
+        if (ruleEffects.isNotEmpty)
+          'ruleEffects': ruleEffects.map((effect) => effect.toJson()).toList(),
       };
 }
 
@@ -293,10 +425,16 @@ class InventoryItem implements CatalogItem {
     this.durabilityBurn = 1,
     this.origin = '',
     this.active = false,
+    this.weightKg = 0,
+    this.carryCapacityKg = 0,
+    Map<String, int>? storageSlots,
     List<Effect>? effects,
+    List<EquipmentRuleEffect>? ruleEffects,
   })  : kind = kind,
         category = category ?? (kind == 'ammo' ? 'ammo' : 'misc'),
-        effects = effects ?? [];
+        storageSlots = storageSlots ?? {},
+        effects = effects ?? [],
+        ruleEffects = ruleEffects ?? [];
 
   @override
   String id;
@@ -318,7 +456,11 @@ class InventoryItem implements CatalogItem {
   int durabilityBurn;
   String origin;
   bool active;
+  double weightKg;
+  double carryCapacityKg;
+  Map<String, int> storageSlots;
   List<Effect> effects;
+  List<EquipmentRuleEffect> ruleEffects;
 
   bool get isAmmo => kind == 'ammo';
 
@@ -356,7 +498,12 @@ class InventoryItem implements CatalogItem {
       durabilityBurn: asInt(j['durabilityBurn'], 1),
       origin: asStr(j['origin']),
       active: asBool(j['active']),
+      weightKg: _nonNegativeDouble(j['weightKg'] ?? 0, 'weightKg'),
+      carryCapacityKg:
+          _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg'),
+      storageSlots: _storageSlots(j['storageSlots']),
       effects: _effects(j['effects']),
+      ruleEffects: _equipmentRuleEffects(j['ruleEffects']),
     );
   }
 
@@ -380,7 +527,12 @@ class InventoryItem implements CatalogItem {
         if (durabilityBurn != 1) 'durabilityBurn': durabilityBurn,
         'origin': origin,
         'active': active,
+        if (weightKg > 0) 'weightKg': weightKg,
+        if (carryCapacityKg > 0) 'carryCapacityKg': carryCapacityKg,
+        if (storageSlots.isNotEmpty) 'storageSlots': storageSlots,
         'effects': effects.map((e) => e.toJson()).toList(),
+        if (ruleEffects.isNotEmpty)
+          'ruleEffects': ruleEffects.map((effect) => effect.toJson()).toList(),
       };
 }
 
