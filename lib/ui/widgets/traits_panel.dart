@@ -5,33 +5,63 @@ import 'package:dnd_campaign_manager/ui/theme.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 
+enum TraitPanelFilter { all, feats, featuresAndTraits }
+
 class TraitsPanel extends StatelessWidget {
-  const TraitsPanel({super.key});
+  const TraitsPanel({
+    super.key,
+    this.filter = TraitPanelFilter.all,
+  });
+
+  final TraitPanelFilter filter;
 
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<CharacterController>();
     final c = ctrl.character;
+    final traits = c.traits.where((trait) => switch (filter) {
+          TraitPanelFilter.all => true,
+          TraitPanelFilter.feats => trait.category == 'feat',
+          TraitPanelFilter.featuresAndTraits => trait.category != 'feat',
+        });
     return SheetCard(
-      title: 'Features & Traits',
+      title: switch (filter) {
+        TraitPanelFilter.all => 'Features & Traits',
+        TraitPanelFilter.feats => 'Feats',
+        TraitPanelFilter.featuresAndTraits => 'Features & Traits',
+      },
       actions: [
-        IconButton(
-          tooltip: 'Add blank feature',
-          icon: const Icon(Icons.add_circle_outline),
-          onPressed: () => ctrl.addBlankTrait(category: 'feature'),
-        ),
-        IconButton(
-          tooltip: 'Add blank trait',
-          icon: const Icon(Icons.add),
-          onPressed: () => ctrl.addBlankTrait(),
-        ),
-        catalogButton(context, 'features', tooltip: 'Add feature from catalog'),
-        catalogButton(context, 'traits', tooltip: 'Add trait from catalog'),
-        catalogButton(context, 'feats', tooltip: 'Add feat from catalog'),
+        if (filter != TraitPanelFilter.feats) ...[
+          IconButton(
+            tooltip: 'Add blank feature',
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: () => ctrl.addBlankTrait(category: 'feature'),
+          ),
+          IconButton(
+            tooltip: 'Add blank trait',
+            icon: const Icon(Icons.add),
+            onPressed: () => ctrl.addBlankTrait(),
+          ),
+          catalogButton(context, 'features',
+              tooltip: 'Add feature from catalog'),
+          catalogButton(context, 'traits', tooltip: 'Add trait from catalog'),
+        ],
+        if (filter != TraitPanelFilter.featuresAndTraits) ...[
+          if (filter == TraitPanelFilter.feats)
+            IconButton(
+              tooltip: 'Add blank feat',
+              icon: const Icon(Icons.add),
+              onPressed: () => ctrl.addBlankTrait(category: 'feat'),
+            ),
+          catalogButton(context, 'feats', tooltip: 'Add feat from catalog'),
+        ],
       ],
       child: Column(children: [
-        if (c.traits.isEmpty) const Text('No features or traits yet.'),
-        for (final t in c.traits)
+        if (traits.isEmpty)
+          Text(filter == TraitPanelFilter.feats
+              ? 'No feats yet.'
+              : 'No features or traits yet.'),
+        for (final t in traits)
           Container(
             key: ObjectKey(t),
             margin: const EdgeInsets.only(bottom: 10),

@@ -26,6 +26,7 @@ what you need.
   "items":        [ ],
   "skills":       [ ],
   "feats":        [ ],
+  "spells":       [ ],
   "actions":      [ ],
   "traits":       [ ],
   "features":     [ ],
@@ -35,16 +36,42 @@ what you need.
 ```
 
 - `pack`, `description`, `author`, `schemaVersion` are optional notes and are ignored.
-- Any other top-level key produces a **warning** and is skipped. `classes` is
-  a supported catalog section. The legacy `affiliations` key is still accepted
+- Every section shown above is supported. Any other top-level key produces a
+  **warning** and is skipped. The legacy `affiliations` key is still accepted
   and imported as `backgrounds`.
 - **Ammo is an item** with `"kind": "ammo"` and `"category": "ammo"` (see
   section 5).
-- Skills, feats, and actions are data-defined catalog sections. Skills define
-  the ability used for a check; feats can carry `effects`; actions are a
-  grouped reference list.
+- Skills, feats, spells, and actions are data-defined catalog sections. Skills
+  define the ability used for a check; feats can carry `effects`; actions are a
+  grouped reference list. Spells can include any fields, and the character
+  sheet's **Spells** tab edits their name, level, school, casting time, range,
+  components, duration, and description.
 - Class definitions are selected from the character's level-up control; they
   are not added to a character with the Catalog library button.
+
+### Spells
+
+Import spells into the Catalog, then add them to a character from the **Spells**
+tab. The app keeps spell entries as generic JSON, so additional fields in a
+content pack are preserved when characters are saved and exported.
+
+```json
+{
+  "spells": [
+    {
+      "id": "fire_bolt",
+      "name": "Fire Bolt",
+      "level": "Cantrip",
+      "school": "Evocation",
+      "castingTime": "1 action",
+      "range": "120 feet",
+      "components": "V, S",
+      "duration": "Instantaneous",
+      "description": "A streak of fire."
+    }
+  ]
+}
+```
 
 ### JSON rules (the usual cause of "Invalid JSON")
 - Double quotes only: `"name"`, not `'name'`.
@@ -322,9 +349,14 @@ Everything carried that isn't a weapon or armor goes in `items`.
   "quantity": 90
 }
 ```
-`quantity` is the number of **rounds**. Firing a weapon removes rounds from any
-ammo stack whose `ammoType` matches the weapon's `ammoType` (first stack first).
-Stacks of different names but the same `ammoType` (FMJ and AP, say) are pooled.
+`quantity` is the number of **rounds**. `ammoType` identifies the caliber or
+cartridge; a round/load subtype such as FMJ or AP is not part of compatibility.
+For example, a weapon with `ammoType: ".338"` can use an ammo item whose type is
+`.338 Lapua Magnum FMJ`. Firing and reloading match by the leading caliber and
+cartridge designation, ignoring subtype text; distinct cartridges such as
+`7.62x39` and `7.62x51` remain separate. Matching stacks are consumed first
+stack first. For display, the catalog picker sorts ammunition by type first,
+then subtype/name; medical and miscellaneous items are sorted alphabetically.
 
 ### Ordinary items
 ```json
@@ -353,7 +385,7 @@ Stacks of different names but the same `ammoType` (FMJ and AP, say) are pooled.
 | `storageSlots` | `{}` | Optional slot counts by type, e.g. `{"magazine":4,"grenade":2}`. Displayed as capacity reference; slot occupancy is not assigned or enforced. |
 | `usesMax` | `0` | Uses per unit. `0` = no uses; pressing **Use** just removes one from the stack. |
 | `uses` | `usesMax` | Uses left on the current unit. |
-| `ammoType` | `""` | Ammo only. Must match the weapon's `ammoType`. |
+| `ammoType` | `""` | Ammo only. Caliber/cartridge used to match a weapon; any round/load subtype is ignored. |
 | `penetration` | `0` | Ammunition penetration rating, if provided. |
 | `durabilityBurn` | `1` | Weapon durability multiplier for this ammunition. |
 | `damage` | `""` | Optional damage dice rolled by **Use**, e.g. for a grenade. |
@@ -373,8 +405,9 @@ capacity is used; capacities are not added together. The Active toggle also
 controls item effects and backpack capacity.
 
 The catalog item picker groups inventory under **Ammo**, **Medical
-equipment**, and **Tools / misc**, sorting names alphabetically in each group.
-Set `category` on every new catalog item:
+equipment**, and **Tools / misc**. Ammo is sorted by `ammoType` and then its
+subtype/name; medical and miscellaneous items are sorted alphabetically. Set
+`category` on every new catalog item:
 
 - `"ammo"` for ammunition. Also set `"kind": "ammo"` and `ammoType`.
 - `"medical"` for medical supplies and treatment kits. Use `"kind": "item"`.
@@ -740,7 +773,7 @@ Full pack for the above:
 | An effect does nothing | Misspelled `target`; skill names are lowercase with underscores. |
 | Imported a changed item but the character still has the old one | Catalog entries are copied when added; remove the old copy and add the updated one. |
 | Two entries overwrote each other | They share an `id`. Give each a unique `id`. |
-| Unknown section warning | The top-level key isn't `weapons`, `armor`, `items`, `traits`, `features`, `backgrounds` or `classes` (legacy `affiliations` is also accepted as `backgrounds`). |
+| Unknown section warning | The top-level key isn't a supported content section such as `weapons`, `armor`, `items`, `traits`, `features`, `backgrounds`, `skills`, `feats`, `spells`, `actions`, or `classes` (legacy `affiliations` is also accepted as `backgrounds`). |
 | Class missing from level-up selection | Import a valid entry under `classes`; check the result dialog for an invalid `hitDie`, subclass, or progression level. |
 | Cannot choose a subclass | The subclass dropdown appears at `subclassLevel`; a class with subclasses requires a choice at that level. |
 | Class features are not appearing | Add features to a `levels` entry for the exact target level; subclass feature objects also need a `level`. |

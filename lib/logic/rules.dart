@@ -63,13 +63,10 @@ class Rules {
   static double carriedWeightKg(Character c) {
     final weaponWeight =
         c.weapons.fold<double>(0, (sum, weapon) => sum + weapon.weightKg);
-    final armorWeight =
-        c.armor.fold<double>(0, (sum, armor) => sum + armor.weightKg);
-    final itemWeight = c.items.fold<double>(
-      0,
-      (sum, item) =>
-          sum + item.weightKg * (item.quantity < 0 ? 0 : item.quantity),
-    );
+    final armorWeight = c.armor.fold<double>(
+        0, (sum, armor) => sum + armor.weightKg + armor.storedWeightKg);
+    final itemWeight =
+        c.items.fold<double>(0, (sum, item) => sum + item.totalWeightKg);
     return weaponWeight + armorWeight + itemWeight;
   }
 
@@ -77,10 +74,10 @@ class Rules {
   static double? carryingCapacityKg(Character c) {
     final capacities = [
       ...c.armor
-          .where((armor) => armor.equipped)
+          .where((armor) => armor.equipped && armor.isContainer)
           .map((armor) => armor.carryCapacityKg),
       ...c.items
-          .where((item) => item.active && !item.isAmmo)
+          .where((item) => item.active && item.isContainer)
           .map((item) => item.carryCapacityKg),
     ].where((capacity) => capacity > 0);
     if (capacities.isEmpty) return null;
@@ -258,7 +255,10 @@ class Rules {
         base = effectValue(c, effect);
       }
     }
-    return base + effectTotal(c, 'ac');
+    final armorRating = c.armor
+        .where((a) => a.equipped)
+        .fold<int>(0, (sum, a) => sum + a.rating);
+    return base + armorRating + effectTotal(c, 'ac');
   }
 
   static int speed(Character c) => c.speed + effectTotal(c, 'speed');

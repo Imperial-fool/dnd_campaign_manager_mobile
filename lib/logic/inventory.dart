@@ -7,13 +7,37 @@ import 'package:dnd_campaign_manager/models/gear.dart';
 class Inventory {
   Inventory._();
 
+  static final _caliberPattern = RegExp(
+    r'^\s*(\.?\d+(?:\.\d+)?(?:\s*x\s*\d+(?:\.\d+)?)?)(?:\s*(mm|ga|gauge|bmg))?',
+    caseSensitive: false,
+  );
+
+  static String _typeKey(String type) {
+    final match = _caliberPattern.firstMatch(type);
+    if (match == null) {
+      return type.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+    }
+    final caliber =
+        match.group(1)!.replaceAll(RegExp(r'\s+'), '').toLowerCase();
+    final unit = switch (match.group(2)?.toLowerCase()) {
+      'gauge' => 'ga',
+      'mm' => '',
+      final value => value ?? '',
+    };
+    return unit == 'bmg'
+        ? '${caliber.replaceFirst('.', '')}$unit'
+        : '$caliber$unit';
+  }
+
   static bool _matches(InventoryItem i, String type) =>
-      i.isAmmo && i.ammoType.trim().toLowerCase() == type.trim().toLowerCase();
+      i.isAmmo && _typeKey(i.ammoType) == _typeKey(type);
 
   /// Total rounds of [type] across all matching ammo stacks.
   static int available(Character c, String type) {
     if (type.trim().isEmpty) return 0;
-    return c.items.where((i) => _matches(i, type)).fold(0, (s, i) => s + max(0, i.quantity));
+    return c.items
+        .where((i) => _matches(i, type))
+        .fold(0, (s, i) => s + max(0, i.quantity));
   }
 
   /// Removes up to [amount] rounds from matching stacks (first stack first).

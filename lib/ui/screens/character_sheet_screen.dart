@@ -18,6 +18,7 @@ import 'package:dnd_campaign_manager/ui/widgets/identity_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/inventory_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/skills_panel.dart';
+import 'package:dnd_campaign_manager/ui/widgets/spells_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/stash_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/text_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/traits_panel.dart';
@@ -166,19 +167,27 @@ class _SheetView extends StatelessWidget {
     final drive = context.watch<GoogleDriveService>();
     final campaign = context.read<CampaignController>();
 
-    final left = AbsorbPointer(
-      absorbing: ctrl.isReadOnly,
-      child: _stack(const [AbilityPanel(), SkillsPanel()]),
-    );
-    final middle = _stack([
+    final overview = _stack([
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const IdentityPanel(),
+      ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const VitalsPanel(),
+      ),
+      const RollPanel(),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const ActionsPanel(),
       ),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const CustomSheetPanel(),
       ),
+    ]);
+    final combat = _stack([
+      const RollPanel(),
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const WeaponsPanel(),
@@ -187,6 +196,8 @@ class _SheetView extends StatelessWidget {
         absorbing: ctrl.isReadOnly,
         child: const ArmorPanel(),
       ),
+    ]);
+    final items = _stack([
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
         child: const InventoryPanel(),
@@ -196,89 +207,175 @@ class _SheetView extends StatelessWidget {
         child: const StashPanel(),
       ),
     ]);
-    final right = _stack([
-      const RollPanel(),
+    final feats = AbsorbPointer(
+      absorbing: ctrl.isReadOnly,
+      child: const TraitsPanel(filter: TraitPanelFilter.feats),
+    );
+    final features = AbsorbPointer(
+      absorbing: ctrl.isReadOnly,
+      child: const TraitsPanel(filter: TraitPanelFilter.featuresAndTraits),
+    );
+    final notes = _stack([
       AbsorbPointer(
         absorbing: ctrl.isReadOnly,
-        child: _stack([
-          const ActionsPanel(),
-          const TraitsPanel(),
-          const FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
-          const FreeTextPanel(
-              title: 'Proficiencies & Languages',
-              field: SheetText.proficiencies),
-          const FreeTextPanel(title: 'Notes', field: SheetText.notes),
-        ]),
+        child:
+            const FreeTextPanel(title: 'Equipment', field: SheetText.equipment),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const FreeTextPanel(
+          title: 'Proficiencies & Languages',
+          field: SheetText.proficiencies,
+        ),
+      ),
+      AbsorbPointer(
+        absorbing: ctrl.isReadOnly,
+        child: const FreeTextPanel(title: 'Notes', field: SheetText.notes),
       ),
     ]);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(ctrl.character.name),
-        actions: [
-          if (ctrl.allowReadOnlyEditToggle)
-            IconButton(
-              tooltip: ctrl.isReadOnly ? 'Edit character' : 'Finish editing',
-              icon: Icon(ctrl.isReadOnly ? Icons.edit_outlined : Icons.lock),
-              onPressed: ctrl.toggleReadOnly,
+    return DefaultTabController(
+        length: 9,
+        child: Scaffold(
+          endDrawer: const Drawer(child: SafeArea(child: _RollHistoryDrawer())),
+          appBar: AppBar(
+            title: Text(ctrl.character.name),
+            bottom: const TabBar(
+              isScrollable: true,
+              tabs: [
+                Tab(icon: Icon(Icons.person_outline), text: 'Overview'),
+                Tab(icon: Icon(Icons.grid_view_outlined), text: 'Abilities'),
+                Tab(icon: Icon(Icons.checklist), text: 'Skills'),
+                Tab(icon: Icon(Icons.sports_martial_arts), text: 'Combat'),
+                Tab(icon: Icon(Icons.auto_fix_high), text: 'Spells'),
+                Tab(icon: Icon(Icons.backpack_outlined), text: 'Inventory'),
+                Tab(icon: Icon(Icons.military_tech_outlined), text: 'Feats'),
+                Tab(
+                    icon: Icon(Icons.workspace_premium_outlined),
+                    text: 'Features & Traits'),
+                Tab(icon: Icon(Icons.notes_outlined), text: 'Notes'),
+              ],
             ),
-          IconButton(
-            tooltip: 'Save character JSON file',
-            icon: const Icon(Icons.save_alt),
-            onPressed: () => _saveCharacterJson(context, ctrl.character),
-          ),
-          if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
-            IconButton(
-              tooltip: 'Save character to Google Drive',
-              icon: const Icon(Icons.cloud_upload_outlined),
-              onPressed: () => _saveCharacterToDrive(
-                context,
-                drive,
-                campaign,
-                ctrl.character,
+            actions: [
+              if (ctrl.allowReadOnlyEditToggle)
+                IconButton(
+                  tooltip:
+                      ctrl.isReadOnly ? 'Edit character' : 'Finish editing',
+                  icon:
+                      Icon(ctrl.isReadOnly ? Icons.edit_outlined : Icons.lock),
+                  onPressed: ctrl.toggleReadOnly,
+                ),
+              IconButton(
+                tooltip: 'Save character JSON file',
+                icon: const Icon(Icons.save_alt),
+                onPressed: () => _saveCharacterJson(context, ctrl.character),
               ),
-            ),
-          if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
-            IconButton(
-              tooltip: 'Catalog',
-              icon: const Icon(Icons.inventory_2_outlined),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const CatalogScreen())),
-            ),
-          IconButton(
-            tooltip: 'View / copy character JSON',
-            icon: const Icon(Icons.data_object),
-            onPressed: () => showJsonViewDialog(context,
-                title: '${ctrl.character.name}.json',
-                json: campaign.exportCharacter(ctrl.character)),
-          ),
-        ],
-      ),
-      body: LayoutBuilder(builder: (context, box) {
-        final wide = box.maxWidth >= 1150;
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AbsorbPointer(
-                absorbing: ctrl.isReadOnly,
-                child: const IdentityPanel(),
+              if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
+                IconButton(
+                  tooltip: 'Save character to Google Drive',
+                  icon: const Icon(Icons.cloud_upload_outlined),
+                  onPressed: () => _saveCharacterToDrive(
+                    context,
+                    drive,
+                    campaign,
+                    ctrl.character,
+                  ),
+                ),
+              if (!ctrl.isReadOnly && !ctrl.isPlayerMode)
+                IconButton(
+                  tooltip: 'Catalog',
+                  icon: const Icon(Icons.inventory_2_outlined),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CatalogScreen())),
+                ),
+              IconButton(
+                tooltip: 'View / copy character JSON',
+                icon: const Icon(Icons.data_object),
+                onPressed: () => showJsonViewDialog(context,
+                    title: '${ctrl.character.name}.json',
+                    json: campaign.exportCharacter(ctrl.character)),
               ),
-              const SizedBox(height: 12),
-              if (wide)
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(flex: 4, child: left),
-                  const SizedBox(width: 12),
-                  Expanded(flex: 6, child: middle),
-                  const SizedBox(width: 12),
-                  Expanded(flex: 5, child: right),
-                ])
-              else ...[left, middle, right],
+              Builder(
+                builder: (context) => IconButton(
+                  tooltip: 'Roll history',
+                  icon: const Icon(Icons.history),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                ),
+              ),
             ],
           ),
-        );
-      }),
-    );
+          body: TabBarView(children: [
+            _scroll(overview),
+            _scroll(AbsorbPointer(
+              absorbing: ctrl.isReadOnly,
+              child: const AbilityPanel(),
+            )),
+            _scroll(AbsorbPointer(
+              absorbing: ctrl.isReadOnly,
+              child: const SkillsPanel(),
+            )),
+            _scroll(combat),
+            _scroll(AbsorbPointer(
+              absorbing: ctrl.isReadOnly,
+              child: const SpellsPanel(),
+            )),
+            _scroll(items),
+            _scroll(feats),
+            _scroll(features),
+            _scroll(notes),
+          ]),
+        ));
+  }
+
+  Widget _scroll(Widget child) =>
+      SingleChildScrollView(padding: const EdgeInsets.all(12), child: child);
+}
+
+class _RollHistoryDrawer extends StatelessWidget {
+  const _RollHistoryDrawer();
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = context.watch<CharacterController>();
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      ListTile(
+        title: const Text('Roll history'),
+        trailing: IconButton(
+          tooltip: 'Clear log',
+          icon: const Icon(Icons.delete_sweep_outlined),
+          onPressed: ctrl.clearLog,
+        ),
+      ),
+      const Divider(height: 1),
+      Expanded(
+        child: ctrl.rollLog.isEmpty
+            ? const Center(child: Text('No rolls yet.'))
+            : ListView(padding: const EdgeInsets.all(8), children: [
+                for (final e in ctrl.rollLog)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: e.crit
+                          ? Colors.green.withValues(alpha: 0.18)
+                          : e.fumble
+                              ? Colors.red.withValues(alpha: 0.18)
+                              : Colors.white10,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e.headline,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w700)),
+                        for (final l in e.lines)
+                          Text(l, style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
+              ]),
+      ),
+    ]);
   }
 }

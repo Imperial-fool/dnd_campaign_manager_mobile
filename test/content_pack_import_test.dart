@@ -11,6 +11,36 @@ import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/models/json_utils.dart';
 
 void main() {
+  test('spells import as generic catalog entries and attach to characters', () {
+    final catalog = Catalog();
+    final result = ContentImporter(ContentRegistry.standard()).importJson(
+      '{"spells":[{"id":"fire_bolt","name":"Fire Bolt","level":"Cantrip",'
+      '"school":"Evocation","description":"A streak of fire."}]}',
+      catalog,
+    );
+
+    expect(result.errors, isEmpty, reason: result.errors.join('\n'));
+    expect(result.warnings, isEmpty, reason: result.warnings.join('\n'));
+    final binding = ContentRegistry.standard()['spells']!;
+    final spell = catalog.items('spells').single;
+    final character = Character(id: 'spell-import');
+    binding.apply(character, binding.parse(spell.toJson()));
+
+    expect(character.extras['spells'], [
+      {
+        'id': 'fire_bolt',
+        'name': 'Fire Bolt',
+        'level': 'Cantrip',
+        'school': 'Evocation',
+        'description': 'A streak of fire.',
+      },
+    ]);
+    expect(
+      Character.fromJson(character.toJson()).extras['spells'],
+      character.extras['spells'],
+    );
+  });
+
   test('Tarkov armory pack imports protection and carry gear', () {
     final json = File('content/tarkov_armory.json').readAsStringSync();
     final catalog = Catalog();

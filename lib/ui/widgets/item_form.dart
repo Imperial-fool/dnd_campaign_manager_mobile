@@ -29,6 +29,8 @@ class FieldSpec {
     this.choices = const [],
     this.group = 'Basics',
     this.defaultValue,
+    this.onlyWhenKey,
+    this.onlyWhenValue,
   });
 
   final String key;
@@ -40,6 +42,10 @@ class FieldSpec {
   final List<(String, String)> choices;
   final String group;
   final Object? defaultValue;
+
+  /// Shown only while the field [onlyWhenKey] equals [onlyWhenValue].
+  final String? onlyWhenKey;
+  final String? onlyWhenValue;
 }
 
 /// Describes the form for one content type. Adding a type to the pack
@@ -135,8 +141,10 @@ final Map<String, ItemSchema> itemSchemas = {
     FieldSpec('rating', 'Ballistic rating', FieldKind.integer),
     FieldSpec('hpMax', 'Durability (HP)', FieldKind.integer),
     FieldSpec('weightKg', 'Weight (kg)', FieldKind.decimal),
-    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal),
-    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots),
+    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal,
+        onlyWhenKey: 'equipmentSlot', onlyWhenValue: 'rig'),
+    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots,
+        onlyWhenKey: 'equipmentSlot', onlyWhenValue: 'rig'),
     FieldSpec('equipped', 'Equipped by default', FieldKind.toggle),
     _effects,
     FieldSpec('ruleEffects', 'Equipment rules', FieldKind.ruleEffects,
@@ -149,13 +157,16 @@ final Map<String, ItemSchema> itemSchemas = {
     FieldSpec('category', 'Category', FieldKind.choice, choices: [
       ('misc', 'Miscellaneous'),
       ('medical', 'Medical'),
+      ('backpack', 'Backpack'),
       ('ammo', 'Ammo'),
     ]),
     FieldSpec('description', 'Description', FieldKind.multiline),
     FieldSpec('quantity', 'Quantity', FieldKind.integer),
     FieldSpec('weightKg', 'Weight per unit (kg)', FieldKind.decimal),
-    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal),
-    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots),
+    FieldSpec('carryCapacityKg', 'Carry capacity (kg)', FieldKind.decimal,
+        onlyWhenKey: 'category', onlyWhenValue: 'backpack'),
+    FieldSpec('storageSlots', 'Storage slot counts', FieldKind.storageSlots,
+        onlyWhenKey: 'category', onlyWhenValue: 'backpack'),
     FieldSpec('usesMax', 'Uses per unit', FieldKind.integer),
     FieldSpec('ammoType', 'Ammo type', FieldKind.text,
         group: 'Combat', help: 'For ammo: the weapon ammo type it feeds.'),
@@ -283,7 +294,10 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                 padding: const EdgeInsets.only(top: 16, bottom: 4),
                 child: Text(g, style: Theme.of(context).textTheme.titleMedium),
               ),
-            for (final f in widget.schema.fields.where((f) => f.group == g))
+            for (final f in widget.schema.fields.where((f) =>
+                f.group == g &&
+                (f.onlyWhenKey == null ||
+                    _data[f.onlyWhenKey] == f.onlyWhenValue)))
               _field(f),
           ],
         ],

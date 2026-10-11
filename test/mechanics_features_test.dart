@@ -9,6 +9,7 @@ import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_repository.dart';
 import 'package:dnd_campaign_manager/logic/content_importer.dart';
 import 'package:dnd_campaign_manager/logic/dice.dart';
+import 'package:dnd_campaign_manager/logic/inventory.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/models/ability.dart';
 import 'package:dnd_campaign_manager/models/catalog.dart';
@@ -38,6 +39,15 @@ void main() {
     expect(fullAuto.firingMode, FireMode.semi);
     expect(fullAuto.damageAbility, 'dex');
     expect(fullAuto.ammoMax, 30);
+    final axmc = catalog.items('weapons').whereType<Weapon>().singleWhere(
+          (weapon) => weapon.id == 'axmc',
+        );
+    final lapuaFmJ =
+        catalog.items('items').whereType<InventoryItem>().singleWhere(
+              (item) => item.id == 'ammo_338_lapua_magnum_fmj',
+            );
+    expect(axmc.ammoType, '.338');
+    expect(lapuaFmJ.ammoType, axmc.ammoType);
     final m855 = catalog.items('items').whereType<InventoryItem>().singleWhere(
           (item) => item.id == 'ammo_5_56x45_m855',
         );
@@ -70,12 +80,14 @@ void main() {
       ..armor = [
         Armor(
           name: 'Equipped rig',
+          equipmentSlot: 'rig',
           weightKg: 2,
           carryCapacityKg: 25,
           equipped: true,
         ),
         Armor(
           name: 'Stored armor',
+          equipmentSlot: 'rig',
           weightKg: 3,
           carryCapacityKg: 100,
           equipped: false,
@@ -84,18 +96,21 @@ void main() {
       ..items = [
         InventoryItem(
           name: 'Active backpack',
+          category: 'backpack',
           weightKg: 2,
           carryCapacityKg: 30,
           active: true,
         ),
         InventoryItem(
           name: 'Smaller active backpack',
+          category: 'backpack',
           weightKg: 1,
           carryCapacityKg: 20,
           active: true,
         ),
         InventoryItem(
           name: 'Stored backpack',
+          category: 'backpack',
           weightKg: 5,
           carryCapacityKg: 90,
           active: false,
@@ -112,6 +127,25 @@ void main() {
     final restored = Character.fromJson(character.toJson());
     expect(Rules.carriedWeightKg(restored), 35.5);
     expect(Rules.carryingCapacityKg(restored), 30);
+  });
+
+  test('containers hold items that count toward weight and round-trip', () {
+    final pack = InventoryItem(
+      name: 'Pack',
+      category: 'backpack',
+      weightKg: 1,
+      carryCapacityKg: 20,
+      storageSlots: {'magazine': 2},
+      stored: {
+        'magazine': [InventoryItem(name: 'Mag', weightKg: 0.5, quantity: 2)],
+      },
+    );
+    final character = Character(id: 'stored')..items = [pack];
+    expect(Rules.carriedWeightKg(character), 2);
+    final restored = Character.fromJson(character.toJson());
+    final restoredPack = restored.items.single;
+    expect(restoredPack.stored['magazine']!.single.name, 'Mag');
+    expect(Rules.carriedWeightKg(restored), 2);
   });
 
   test('equipped gear resolves ricochet and faction dispositions', () {
@@ -446,6 +480,43 @@ void main() {
 
     expect(result.lines.any((line) => line.startsWith('Attack:')), isTrue);
     expect(ammo.quantity, 0);
+  });
+
+  test('ammo matches weapon caliber independently of round subtype', () {
+    final examples = [
+      (weaponType: '.338', ammoType: '.338 Lapua Magnum FMJ'),
+      (weaponType: '5.56x45', ammoType: '5.56x45 M855'),
+      (weaponType: '9x19', ammoType: '9x19mm Pst'),
+      (weaponType: '12Ga', ammoType: '12 gauge Flechette'),
+      (weaponType: '50BMG', ammoType: '50 BMG M33'),
+      (weaponType: '.50BMG', ammoType: '50BMG M33'),
+    ];
+
+    for (final (weaponType: weaponType, ammoType: ammoType) in examples) {
+      final ammo = InventoryItem(
+        name: ammoType,
+        kind: 'ammo',
+        ammoType: ammoType,
+        quantity: 2,
+      );
+      final character = Character(id: 'caliber-match')..items = [ammo];
+
+      expect(Inventory.available(character, weaponType), 2,
+          reason: '$weaponType should match $ammoType');
+      expect(Inventory.consumeAmmo(character, weaponType, 1), 1);
+      expect(ammo.quantity, 1);
+    }
+
+    final sevenSixTwo = Character(id: 'distinct-cartridges')
+      ..items = [
+        InventoryItem(
+          name: '7.62x39 round',
+          kind: 'ammo',
+          ammoType: '7.62x39',
+          quantity: 2,
+        ),
+      ];
+    expect(Inventory.available(sevenSixTwo, '7.62x51'), 0);
   });
 
   test('full auto can pull its rolled round count from inventory', () {

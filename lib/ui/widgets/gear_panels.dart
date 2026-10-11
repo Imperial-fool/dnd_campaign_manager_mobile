@@ -9,6 +9,7 @@ import 'package:dnd_campaign_manager/models/fire_mode.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/ui/theme.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
+import 'package:dnd_campaign_manager/ui/widgets/container_contents.dart';
 import 'package:dnd_campaign_manager/ui/widgets/dialogs.dart';
 import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
@@ -490,7 +491,7 @@ class PlayerArmorStatePanel extends StatelessWidget {
                   'Rating ${item.rating}',
                   'HP ${item.hp}/${item.hpMax}',
                   if (item.weightKg > 0) '${item.weightKg} kg',
-                  if (item.storageSlots.isNotEmpty)
+                  if (item.isContainer && item.storageSlots.isNotEmpty)
                     item.storageSlots.entries
                         .map((entry) => '${entry.key}: ${entry.value}')
                         .join(', '),
@@ -607,15 +608,16 @@ class ArmorPanel extends StatelessWidget {
                                   ctrl.edit((_) => a.weightKg = value),
                             ),
                           ),
-                          SizedBox(
-                            width: 145,
-                            child: DoubleBinding(
-                              label: 'Capacity (kg)',
-                              value: a.carryCapacityKg,
-                              onChanged: (value) =>
-                                  ctrl.edit((_) => a.carryCapacityKg = value),
+                          if (a.isContainer)
+                            SizedBox(
+                              width: 145,
+                              child: DoubleBinding(
+                                label: 'Capacity (kg)',
+                                value: a.carryCapacityKg,
+                                onChanged: (value) =>
+                                    ctrl.edit((_) => a.carryCapacityKg = value),
+                              ),
                             ),
-                          ),
                           Row(mainAxisSize: MainAxisSize.min, children: [
                             Switch(
                                 value: a.equipped,
@@ -637,11 +639,18 @@ class ArmorPanel extends StatelessWidget {
                         label: 'Properties',
                         value: a.properties,
                         onChanged: (v) => ctrl.edit((_) => a.properties = v)),
-                    StorageSlotsBinding(
-                      value: a.storageSlots,
-                      onChanged: (value) =>
-                          ctrl.edit((_) => a.storageSlots = value),
-                    ),
+                    if (a.isContainer)
+                      StorageSlotsBinding(
+                        value: a.storageSlots,
+                        onChanged: (value) =>
+                            ctrl.edit((_) => a.storageSlots = value),
+                      ),
+                    if (a.isContainer)
+                      ContainerContents(
+                        owner: a,
+                        slots: a.storageSlots,
+                        stored: a.stored,
+                      ),
                     EffectsField(
                         effects: a.effects,
                         skills: c.skills,

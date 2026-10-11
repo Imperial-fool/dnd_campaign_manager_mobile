@@ -112,27 +112,8 @@ Future<CatalogItem?> pickCatalogItem(
             ]
           : groupedItems != null
               ? [
-                  for (final entry in groupedItems.entries) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 4),
-                      child: Text(
-                        entry.key,
-                        style: Theme.of(ctx).textTheme.titleSmall,
-                      ),
-                    ),
-                    for (final item in entry.value)
-                      SimpleDialogOption(
-                        onPressed: () => Navigator.pop(ctx, item),
-                        child: ListTile(
-                          title: Text(item.name),
-                          subtitle: Text(
-                            item.summary,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                  ],
+                  for (final entry in groupedItems.entries)
+                    _catalogSection(ctx, entry.key, entry.value),
                 ]
               : [
                   for (final item in items)
@@ -149,8 +130,52 @@ Future<CatalogItem?> pickCatalogItem(
   );
 }
 
+Widget _catalogTile(BuildContext ctx, CatalogItem item) => SimpleDialogOption(
+      onPressed: () => Navigator.pop(ctx, item),
+      child: ListTile(
+        title: Text(item.name),
+        subtitle: Text(
+          item.summary,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+
+/// A section is expanded by default; ammo is split into collapsible
+/// sub sections by ammo type.
+Widget _catalogSection(
+    BuildContext ctx, String title, List<CatalogItem> items) {
+  final children = <Widget>[];
+  if (title == 'Ammo') {
+    final byType = <String, List<CatalogItem>>{};
+    for (final item in items) {
+      final type = item is InventoryItem && item.ammoType.trim().isNotEmpty
+          ? item.ammoType.trim()
+          : 'Other';
+      byType.putIfAbsent(type, () => []).add(item);
+    }
+    for (final entry in byType.entries) {
+      children.add(ExpansionTile(
+        key: PageStorageKey('catalog-ammo-${entry.key}'),
+        title: Text(entry.key),
+        childrenPadding: const EdgeInsets.only(left: 16),
+        children: [for (final item in entry.value) _catalogTile(ctx, item)],
+      ));
+    }
+  } else {
+    children.addAll(items.map((item) => _catalogTile(ctx, item)));
+  }
+  return ExpansionTile(
+    key: PageStorageKey('catalog-section-$title'),
+    initiallyExpanded: true,
+    title: Text(title, style: Theme.of(ctx).textTheme.titleSmall),
+    children: children,
+  );
+}
+
 Map<String, List<CatalogItem>> _groupInventoryItems(List<CatalogItem> items) {
-  const groups = ['Ammo', 'Medical equipment', 'Tools / misc'];
+  const groups = ['Backpacks', 'Tools / misc', 'Medical equipment', 'Ammo'];
   final grouped = {
     for (final group in groups) group: <CatalogItem>[],
   };
@@ -159,19 +184,46 @@ Map<String, List<CatalogItem>> _groupInventoryItems(List<CatalogItem> items) {
       InventoryItem(:final category) when category == 'ammo' => 'Ammo',
       InventoryItem(:final category) when category == 'medical' =>
         'Medical equipment',
+      InventoryItem(:final category) when category == 'backpack' => 'Backpacks',
       _ => 'Tools / misc',
     };
     grouped[group]!.add(item);
   }
   for (final itemsInGroup in grouped.values) {
     itemsInGroup.sort(
-      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      (a, b) {
+        if (a is InventoryItem &&
+            b is InventoryItem &&
+            a.category == 'ammo' &&
+            b.category == 'ammo') {
+          final typeComparison = a.ammoType
+              .trim()
+              .toLowerCase()
+              .compareTo(b.ammoType.trim().toLowerCase());
+          if (typeComparison != 0) return typeComparison;
+
+          final subtypeComparison = _ammoSubtype(a)
+              .toLowerCase()
+              .compareTo(_ammoSubtype(b).toLowerCase());
+          if (subtypeComparison != 0) return subtypeComparison;
+        }
+        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      },
     );
   }
   return {
     for (final group in groups)
       if (grouped[group]!.isNotEmpty) group: grouped[group]!,
   };
+}
+
+String _ammoSubtype(InventoryItem item) {
+  final type = item.ammoType.trim();
+  final name = item.name.trim();
+  if (type.isNotEmpty && name.toLowerCase().startsWith(type.toLowerCase())) {
+    return name.substring(type.length).trimLeft();
+  }
+  return name;
 }
 
 Future<Skill?> promptNewSkill(BuildContext context) {

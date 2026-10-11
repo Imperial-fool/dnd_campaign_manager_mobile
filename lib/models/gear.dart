@@ -25,6 +25,28 @@ double _nonNegativeDouble(dynamic value, String field) {
   return result;
 }
 
+Map<String, List<InventoryItem>> _storedItems(dynamic value) {
+  if (value == null) return {};
+  if (value is! Map) {
+    throw const FormatException('"stored" must be an object.');
+  }
+  return {
+    for (final entry in value.entries)
+      entry.key.toString():
+          asMapList(entry.value).map(InventoryItem.fromJson).toList(),
+  };
+}
+
+Map<String, dynamic> _storedToJson(Map<String, List<InventoryItem>> stored) => {
+      for (final entry in stored.entries)
+        if (entry.value.isNotEmpty)
+          entry.key: entry.value.map((item) => item.toJson()).toList(),
+    };
+
+double _storedWeightKg(Map<String, List<InventoryItem>> stored) => stored.values
+    .expand((items) => items)
+    .fold<double>(0, (sum, item) => sum + item.totalWeightKg);
+
 Map<String, int> _storageSlots(dynamic value) {
   if (value == null) return {};
   if (value is! Map) {
@@ -257,11 +279,13 @@ class Armor implements CatalogItem {
     this.weightKg = 0,
     this.carryCapacityKg = 0,
     Map<String, int>? storageSlots,
+    Map<String, List<InventoryItem>>? stored,
     this.properties = '',
     this.origin = '',
     List<Effect>? effects,
     List<EquipmentRuleEffect>? ruleEffects,
   })  : storageSlots = storageSlots ?? {},
+        stored = stored ?? {},
         effects = effects ?? [],
         ruleEffects = ruleEffects ?? [];
 
@@ -277,10 +301,17 @@ class Armor implements CatalogItem {
   double weightKg;
   double carryCapacityKg;
   Map<String, int> storageSlots;
+
+  /// Items placed in this container, keyed by storage slot name.
+  Map<String, List<InventoryItem>> stored;
   String properties;
   String origin;
   List<Effect> effects;
   List<EquipmentRuleEffect> ruleEffects;
+
+  bool get isContainer => equipmentSlot == 'rig';
+
+  double get storedWeightKg => _storedWeightKg(stored);
 
   @override
   String get summary => 'Rating $rating · HP $hpMax';
@@ -302,9 +333,12 @@ class Armor implements CatalogItem {
       hpMax: asInt(j['hpMax'], asInt(j['hp'])),
       equipped: asBool(j['equipped'], true),
       weightKg: _nonNegativeDouble(j['weightKg'] ?? 0, 'weightKg'),
-      carryCapacityKg:
-          _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg'),
-      storageSlots: _storageSlots(j['storageSlots']),
+      carryCapacityKg: equipmentSlot == 'rig'
+          ? _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg')
+          : 0,
+      storageSlots:
+          equipmentSlot == 'rig' ? _storageSlots(j['storageSlots']) : null,
+      stored: equipmentSlot == 'rig' ? _storedItems(j['stored']) : null,
       properties: asStr(j['properties']),
       origin: asStr(j['origin']),
       effects: _effects(j['effects']),
@@ -322,8 +356,12 @@ class Armor implements CatalogItem {
         'hpMax': hpMax,
         'equipped': equipped,
         if (weightKg > 0) 'weightKg': weightKg,
-        if (carryCapacityKg > 0) 'carryCapacityKg': carryCapacityKg,
-        if (storageSlots.isNotEmpty) 'storageSlots': storageSlots,
+        if (isContainer && carryCapacityKg > 0)
+          'carryCapacityKg': carryCapacityKg,
+        if (isContainer && storageSlots.isNotEmpty)
+          'storageSlots': storageSlots,
+        if (isContainer && _storedToJson(stored).isNotEmpty)
+          'stored': _storedToJson(stored),
         'properties': properties,
         'origin': origin,
         'effects': effects.map((e) => e.toJson()).toList(),
@@ -428,11 +466,13 @@ class InventoryItem implements CatalogItem {
     this.weightKg = 0,
     this.carryCapacityKg = 0,
     Map<String, int>? storageSlots,
+    Map<String, List<InventoryItem>>? stored,
     List<Effect>? effects,
     List<EquipmentRuleEffect>? ruleEffects,
   })  : kind = kind,
         category = category ?? (kind == 'ammo' ? 'ammo' : 'misc'),
         storageSlots = storageSlots ?? {},
+        stored = stored ?? {},
         effects = effects ?? [],
         ruleEffects = ruleEffects ?? [];
 
@@ -459,10 +499,20 @@ class InventoryItem implements CatalogItem {
   double weightKg;
   double carryCapacityKg;
   Map<String, int> storageSlots;
+
+  /// Items placed in this container, keyed by storage slot name.
+  Map<String, List<InventoryItem>> stored;
   List<Effect> effects;
   List<EquipmentRuleEffect> ruleEffects;
 
   bool get isAmmo => kind == 'ammo';
+  bool get isContainer => !isAmmo && category == 'backpack';
+
+  double get storedWeightKg => _storedWeightKg(stored);
+
+  /// Own weight plus everything packed inside.
+  double get totalWeightKg =>
+      weightKg * (quantity < 0 ? 0 : quantity) + storedWeightKg;
 
   @override
   String get summary => isAmmo
@@ -477,13 +527,23 @@ class InventoryItem implements CatalogItem {
     final usesMax = asInt(j['usesMax']);
     final kind = asStr(j['kind']) == 'ammo' ? 'ammo' : 'item';
     final description = asStr(j['description']);
+    var category = j.containsKey('category')
+        ? asStr(j['category'])
+        : _legacyInventoryCategory(name, description, kind);
+    // Legacy data: anything that stored things is a backpack.
+    if (kind != 'ammo' &&
+        category == 'misc' &&
+        ((double.tryParse('${j['carryCapacityKg'] ?? 0}') ?? 0) > 0 ||
+            (j['storageSlots'] is Map &&
+                (j['storageSlots'] as Map).isNotEmpty))) {
+      category = 'backpack';
+    }
+    final isContainer = kind != 'ammo' && category == 'backpack';
     return InventoryItem(
       id: idFor(j, name),
       name: name,
       kind: kind,
-      category: j.containsKey('category')
-          ? asStr(j['category'])
-          : _legacyInventoryCategory(name, description, kind),
+      category: category,
       description: description,
       quantity: asInt(j['quantity'], 1),
       uses: asInt(j['uses'], usesMax),
@@ -499,9 +559,11 @@ class InventoryItem implements CatalogItem {
       origin: asStr(j['origin']),
       active: asBool(j['active']),
       weightKg: _nonNegativeDouble(j['weightKg'] ?? 0, 'weightKg'),
-      carryCapacityKg:
-          _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg'),
-      storageSlots: _storageSlots(j['storageSlots']),
+      carryCapacityKg: isContainer
+          ? _nonNegativeDouble(j['carryCapacityKg'] ?? 0, 'carryCapacityKg')
+          : 0,
+      storageSlots: isContainer ? _storageSlots(j['storageSlots']) : null,
+      stored: isContainer ? _storedItems(j['stored']) : null,
       effects: _effects(j['effects']),
       ruleEffects: _equipmentRuleEffects(j['ruleEffects']),
     );
@@ -528,8 +590,12 @@ class InventoryItem implements CatalogItem {
         'origin': origin,
         'active': active,
         if (weightKg > 0) 'weightKg': weightKg,
-        if (carryCapacityKg > 0) 'carryCapacityKg': carryCapacityKg,
-        if (storageSlots.isNotEmpty) 'storageSlots': storageSlots,
+        if (isContainer && carryCapacityKg > 0)
+          'carryCapacityKg': carryCapacityKg,
+        if (isContainer && storageSlots.isNotEmpty)
+          'storageSlots': storageSlots,
+        if (isContainer && _storedToJson(stored).isNotEmpty)
+          'stored': _storedToJson(stored),
         'effects': effects.map((e) => e.toJson()).toList(),
         if (ruleEffects.isNotEmpty)
           'ruleEffects': ruleEffects.map((effect) => effect.toJson()).toList(),

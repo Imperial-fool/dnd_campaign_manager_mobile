@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
+import 'package:dnd_campaign_manager/ui/widgets/container_contents.dart';
 import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
@@ -91,6 +92,23 @@ class InventoryPanel extends StatelessWidget {
                       ),
                     ]),
                     if (!it.isAmmo)
+                      DropdownButton<String>(
+                        value: {'misc', 'medical', 'backpack'}
+                                .contains(it.category)
+                            ? it.category
+                            : 'misc',
+                        items: const [
+                          DropdownMenuItem(
+                              value: 'misc', child: Text('Miscellaneous')),
+                          DropdownMenuItem(
+                              value: 'medical', child: Text('Medical')),
+                          DropdownMenuItem(
+                              value: 'backpack', child: Text('Backpack')),
+                        ],
+                        onChanged: (v) =>
+                            ctrl.edit((_) => it.category = v ?? 'misc'),
+                      ),
+                    if (!it.isAmmo)
                       Row(
                         children: [
                           const Text('Active'),
@@ -123,7 +141,7 @@ class InventoryPanel extends StatelessWidget {
                                   ctrl.edit((_) => it.weightKg = value),
                             ),
                           ),
-                          if (!it.isAmmo)
+                          if (it.isContainer)
                             SizedBox(
                               width: 140,
                               child: DoubleBinding(
@@ -264,11 +282,18 @@ class InventoryPanel extends StatelessWidget {
                         minLines: 1,
                         onChanged: (v) => ctrl.edit((_) => it.description = v),
                         enabled: true),
-                    StorageSlotsBinding(
-                      value: it.storageSlots,
-                      onChanged: (value) =>
-                          ctrl.edit((_) => it.storageSlots = value),
-                    ),
+                    if (it.isContainer)
+                      StorageSlotsBinding(
+                        value: it.storageSlots,
+                        onChanged: (value) =>
+                            ctrl.edit((_) => it.storageSlots = value),
+                      ),
+                    if (it.isContainer)
+                      ContainerContents(
+                        owner: it,
+                        slots: it.storageSlots,
+                        stored: it.stored,
+                      ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: OutlinedButton.icon(

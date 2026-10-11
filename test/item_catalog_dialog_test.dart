@@ -14,8 +14,46 @@ void main() {
     final campaign = CampaignController(repository: _MemoryRepository());
     campaign.catalog
       ..upsert('items', InventoryItem(name: 'Zinc Tool'))
-      ..upsert('items',
-          InventoryItem(name: '9mm Ammo', kind: 'ammo', category: 'ammo'))
+      ..upsert(
+          'items',
+          InventoryItem(
+            name: '9x18mm Ammo',
+            kind: 'ammo',
+            category: 'ammo',
+            ammoType: '9x18mm',
+          ))
+      ..upsert(
+          'items',
+          InventoryItem(
+            name: '9x39 Alpha',
+            kind: 'ammo',
+            category: 'ammo',
+            ammoType: '9x39',
+          ))
+      ..upsert(
+          'items',
+          InventoryItem(
+            name: '9x19 Zeta',
+            kind: 'ammo',
+            category: 'ammo',
+            ammoType: '9x19',
+          ))
+      ..upsert(
+          'items',
+          InventoryItem(
+            name: '5.56x45 Zeta',
+            kind: 'ammo',
+            category: 'ammo',
+            ammoType: '5.56x45',
+          ))
+      ..upsert(
+          'items',
+          InventoryItem(
+            name: '5.56x45 Alpha',
+            kind: 'ammo',
+            category: 'ammo',
+            ammoType: '5.56x45',
+          ))
       ..upsert('items',
           InventoryItem(name: 'Army Bandage Pack', category: 'medical'))
       ..upsert(
@@ -48,25 +86,28 @@ void main() {
     expect(find.text('Ammo'), findsOneWidget);
     expect(find.text('Medical equipment'), findsOneWidget);
     expect(find.text('Tools / misc'), findsOneWidget);
+    // Ammo sub sections are sorted by type and start collapsed.
+    expect(find.text('5.56x45'), findsOneWidget);
+    expect(find.text('5.56x45 Alpha'), findsNothing);
+    for (final type in ['5.56x45', '9x18mm', '9x19', '9x39']) {
+      await tester.ensureVisible(find.text(type));
+      await tester.tap(find.text(type));
+      await tester.pumpAndSettle();
+    }
     final labels = tester
         .widgetList<Text>(find.byType(Text))
         .map((text) => text.data)
         .whereType<String>()
         .toList();
-    expect(labels.indexOf('9mm Ammo'),
-        lessThan(labels.indexOf('AFAK Medical Kit')));
-    expect(
-      labels.indexOf('AFAK Medical Kit'),
-      lessThan(labels.indexOf('Aluminum Splint')),
-    );
-    expect(
-      labels.indexOf('Aluminum Splint'),
-      lessThan(labels.indexOf('Army Bandage Pack')),
-    );
-    expect(
-      labels.indexOf('Army Bandage Pack'),
-      lessThan(labels.indexOf('Flashlight')),
-    );
+    int at(String label) => labels.indexOf(label);
+    expect(at('Flashlight'), lessThan(at('Zinc Tool')));
+    expect(at('Zinc Tool'), lessThan(at('AFAK Medical Kit')));
+    expect(at('AFAK Medical Kit'), lessThan(at('Aluminum Splint')));
+    expect(at('Aluminum Splint'), lessThan(at('Army Bandage Pack')));
+    expect(at('Army Bandage Pack'), lessThan(at('5.56x45')));
+    expect(at('5.56x45 Alpha'), lessThan(at('5.56x45 Zeta')));
+    expect(at('5.56x45 Zeta'), lessThan(at('9x18mm Ammo')));
+    expect(at('9x19 Zeta'), lessThan(at('9x39 Alpha')));
   });
 }
 

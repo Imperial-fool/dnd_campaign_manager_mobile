@@ -4,14 +4,86 @@ import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/campaign_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/character_repository.dart';
+import 'package:dnd_campaign_manager/logic/google_drive_service.dart';
 import 'package:dnd_campaign_manager/models/character.dart';
 import 'package:dnd_campaign_manager/models/gear.dart';
+import 'package:dnd_campaign_manager/ui/screens/character_sheet_screen.dart';
 import 'package:dnd_campaign_manager/ui/widgets/gear_panels.dart';
 import 'package:dnd_campaign_manager/ui/widgets/inventory_panel.dart';
 import 'package:dnd_campaign_manager/ui/widgets/stash_panel.dart';
 import 'support/content_asset_bundle.dart';
 
 void main() {
+  testWidgets('character sheet separates sections and supports spell editing',
+      (tester) async {
+    final repository = _MemoryRepository();
+    final campaign = CampaignController(
+      repository: repository,
+      assetBundle: ContentAssetBundle(),
+    );
+    await campaign.load();
+    final character = Character(id: 'sectioned-sheet')..name = 'Test Hero';
+    final drive = GoogleDriveService();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<CampaignController>.value(value: campaign),
+          ChangeNotifierProvider<GoogleDriveService>.value(value: drive),
+        ],
+        child: MaterialApp(
+          home: CharacterSheetScreen(character: character),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    for (final section in [
+      'Abilities',
+      'Skills',
+      'Combat',
+      'Spells',
+      'Inventory',
+      'Feats',
+      'Features & Traits',
+      'Notes',
+    ]) {
+      expect(find.text(section), findsOneWidget);
+    }
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(TabBar).first,
+        matching: find.text('Combat'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      DefaultTabController.of(tester.element(find.byType(TabBar).first)).index,
+      3,
+    );
+    expect(find.text('DICE'), findsOneWidget);
+    expect(find.text('Roll (e.g. 2d6+3)'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Roll'));
+    await tester.pump();
+    expect(find.text('No rolls yet.'), findsNothing);
+
+    await tester.ensureVisible(find.text('Spells'));
+    await tester.tap(find.text('Spells'));
+    await tester.pumpAndSettle();
+    expect(find.text('No spells yet. Add one or import spells to the catalog.'),
+        findsOneWidget);
+
+    await tester.tap(find.byTooltip('Add blank spell'));
+    await tester.pump();
+    expect((character.extras['spells'] as List).single['name'], 'New Spell');
+    expect(find.text('Spell name'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    drive.dispose();
+    campaign.dispose();
+  });
+
   testWidgets('player mode exposes the full editable gear panels',
       (tester) async {
     final repository = _MemoryRepository();

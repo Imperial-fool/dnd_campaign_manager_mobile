@@ -110,6 +110,7 @@ class ContentRegistry {
     ));
     r.registerGeneric('skills', 'Skills');
     r.registerGeneric('actions', 'Actions');
+    r.registerGeneric('spells', 'Spells');
     r.registerGeneric('ammunitionByCaliber', 'Ammunition by caliber');
     return r;
   }

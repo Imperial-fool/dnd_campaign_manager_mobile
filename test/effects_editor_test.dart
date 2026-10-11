@@ -127,7 +127,7 @@ void main() {
     expect(Rules.armorClass(character), 15);
 
     character.armor.add(Armor(name: 'Ballistic vest', rating: 3));
-    expect(Rules.armorClass(character), 18);
+    expect(Rules.armorClass(character), 21);
 
     character.armor.last.equipped = false;
     expect(Rules.armorClass(character), 15);

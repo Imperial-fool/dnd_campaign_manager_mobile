@@ -236,6 +236,7 @@ class _DoubleBindingState extends State<DoubleBinding> {
       );
 }
 
+/// Edits a container's slot definitions as rows of (slot name, capacity).
 class StorageSlotsBinding extends StatefulWidget {
   const StorageSlotsBinding({
     super.key,
@@ -254,79 +255,116 @@ class StorageSlotsBinding extends StatefulWidget {
   State<StorageSlotsBinding> createState() => _StorageSlotsBindingState();
 }
 
+class _SlotRow {
+  _SlotRow(String name, int count)
+      : name = TextEditingController(text: name),
+        count = TextEditingController(text: '$count');
+
+  final TextEditingController name;
+  final TextEditingController count;
+
+  void dispose() {
+    name.dispose();
+    count.dispose();
+  }
+}
+
 class _StorageSlotsBindingState extends State<StorageSlotsBinding> {
-  late final TextEditingController _controller =
-      TextEditingController(text: _format(widget.value));
-  final FocusNode _focus = FocusNode();
+  late final List<_SlotRow> _rows = [
+    for (final e in widget.value.entries) _SlotRow(e.key, e.value),
+  ];
   String? _error;
-
-  String _format(Map<String, int> slots) =>
-      slots.entries.map((entry) => '${entry.key}=${entry.value}').join(', ');
-
-  Map<String, int> _parse(String text) {
-    final slots = <String, int>{};
-    if (text.trim().isEmpty) return slots;
-    for (final part in text.split(',')) {
-      final pair = part.split('=');
-      if (pair.length != 2 || pair.first.trim().isEmpty) {
-        throw const FormatException('Use slot=count entries separated by commas.');
-      }
-      final name = pair.first.trim();
-      final count = int.tryParse(pair.last.trim());
-      if (count == null || count < 0 || slots.containsKey(name)) {
-        throw const FormatException(
-            'Slot counts must be non-negative integers with unique names.');
-      }
-      slots[name] = count;
-    }
-    return slots;
-  }
-
-  @override
-  void didUpdateWidget(StorageSlotsBinding oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!_focus.hasFocus && _format(widget.value) != _controller.text) {
-      _controller.text = _format(widget.value);
-    }
-  }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _focus.dispose();
+    for (final row in _rows) {
+      row.dispose();
+    }
     super.dispose();
+  }
+
+  void _commit() {
+    final slots = <String, int>{};
+    String? error;
+    for (final row in _rows) {
+      final name = row.name.text.trim();
+      final count = int.tryParse(row.count.text.trim());
+      if (name.isEmpty) {
+        error = 'Every slot needs a name.';
+      } else if (count == null || count < 0) {
+        error = 'Slot counts must be non-negative whole numbers.';
+      } else if (slots.containsKey(name)) {
+        error = 'Slot names must be unique.';
+      } else {
+        slots[name] = count;
+      }
+    }
+    setState(() => _error = error);
+    widget.onError?.call(error);
+    if (error == null) widget.onChanged(slots);
   }
 
   @override
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _BindingLabel(widget.label),
-          TextField(
-            controller: _controller,
-            focusNode: _focus,
-            enabled: true,
-            onTapOutside: (_) => _focus.unfocus(),
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              helperText: 'Example: magazine=4, grenade=2',
-              errorText: _error,
+          Row(children: [
+            Expanded(child: _BindingLabel(widget.label)),
+            TextButton.icon(
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text('Add slot'),
+              onPressed: () {
+                setState(() => _rows.add(_SlotRow('', 1)));
+                _commit();
+              },
             ),
-            onChanged: (text) {
-              try {
-                final slots = _parse(text);
-                setState(() => _error = null);
-                widget.onError?.call(null);
-                widget.onChanged(slots);
-              } on FormatException catch (error) {
-                setState(() => _error = error.message);
-                widget.onError?.call(error.message);
-              }
-            },
-          ),
+          ]),
+          for (final row in _rows)
+            Padding(
+              key: ObjectKey(row),
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(children: [
+                Expanded(
+                  child: TextField(
+                    controller: row.name,
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                    decoration: const InputDecoration(
+                      labelText: 'Slot (e.g. magazine)',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onChanged: (_) => _commit(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: row.count,
+                    keyboardType: TextInputType.number,
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                    decoration: const InputDecoration(
+                      labelText: 'Count',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onChanged: (_) => _commit(),
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Remove slot',
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () {
+                    setState(() => _rows.remove(row));
+                    row.dispose();
+                    _commit();
+                  },
+                ),
+              ]),
+            ),
+          if (_error != null)
+            Text(_error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
         ],
       );
 }
