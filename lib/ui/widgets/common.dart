@@ -132,6 +132,18 @@ class _IntBindingState extends State<IntBinding> {
   final FocusNode _focus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    _focus.addListener(_commitOnBlur);
+  }
+
+  void _commitOnBlur() {
+    if (!_focus.hasFocus) {
+      widget.onChanged(int.tryParse(_c.text) ?? 0);
+    }
+  }
+
+  @override
   void didUpdateWidget(IntBinding old) {
     super.didUpdateWidget(old);
     if (!_focus.hasFocus && int.tryParse(_c.text) != widget.value) {
@@ -141,6 +153,7 @@ class _IntBindingState extends State<IntBinding> {
 
   @override
   void dispose() {
+    _focus.removeListener(_commitOnBlur);
     _c.dispose();
     _focus.dispose();
     super.dispose();
@@ -196,6 +209,18 @@ class _DoubleBindingState extends State<DoubleBinding> {
   final FocusNode _focus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    _focus.addListener(_commitOnBlur);
+  }
+
+  void _commitOnBlur() {
+    if (!_focus.hasFocus) {
+      widget.onChanged(double.tryParse(_controller.text) ?? 0);
+    }
+  }
+
+  @override
   void didUpdateWidget(DoubleBinding oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!_focus.hasFocus && double.tryParse(_controller.text) != widget.value) {
@@ -205,6 +230,7 @@ class _DoubleBindingState extends State<DoubleBinding> {
 
   @override
   void dispose() {
+    _focus.removeListener(_commitOnBlur);
     _controller.dispose();
     _focus.dispose();
     super.dispose();

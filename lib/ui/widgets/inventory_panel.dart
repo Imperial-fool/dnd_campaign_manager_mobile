@@ -128,6 +128,7 @@ class InventoryPanel extends StatelessWidget {
                           SizedBox(
                               width: 90,
                               child: IntBinding(
+                                  key: ObjectKey((it, 'quantity')),
                                   label: it.isAmmo ? 'Rounds' : 'Quantity',
                                   value: it.quantity,
                                   onChanged: (v) => ctrl.edit(
@@ -135,6 +136,7 @@ class InventoryPanel extends StatelessWidget {
                           SizedBox(
                             width: 140,
                             child: DoubleBinding(
+                              key: ObjectKey((it, 'weightKg')),
                               label: 'Weight per unit (kg)',
                               value: it.weightKg,
                               onChanged: (value) =>
@@ -145,6 +147,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                               width: 140,
                               child: DoubleBinding(
+                                key: ObjectKey((it, 'carryCapacityKg')),
                                 label: 'Capacity (kg)',
                                 value: it.carryCapacityKg,
                                 onChanged: (value) => ctrl
@@ -163,6 +166,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                               width: 90,
                               child: IntBinding(
+                                key: ObjectKey((it, 'penetration')),
                                 label: 'Penetration',
                                 value: it.penetration,
                                 onChanged: (v) =>
@@ -173,6 +177,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                               width: 100,
                               child: IntBinding(
+                                key: ObjectKey((it, 'durabilityBurn')),
                                 label: 'Durability burn',
                                 value: it.durabilityBurn,
                                 onChanged: (v) => ctrl.edit(
@@ -205,6 +210,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                               width: 95,
                               child: IntBinding(
+                                key: ObjectKey((it, 'areaRadius')),
                                 label: 'Area (ft)',
                                 value: it.areaRadius,
                                 onChanged: (v) =>
@@ -215,6 +221,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                               width: 85,
                               child: IntBinding(
+                                key: ObjectKey((it, 'saveDc')),
                                 label: 'Save DC',
                                 value: it.saveDc,
                                 onChanged: (v) =>
@@ -257,6 +264,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                                 width: 90,
                                 child: IntBinding(
+                                    key: ObjectKey((it, 'uses')),
                                     label: 'Uses left',
                                     value: it.uses,
                                     onChanged: (v) =>
@@ -264,6 +272,7 @@ class InventoryPanel extends StatelessWidget {
                             SizedBox(
                                 width: 90,
                                 child: IntBinding(
+                                    key: ObjectKey((it, 'usesMax')),
                                     label: 'Uses/unit',
                                     value: it.usesMax,
                                     onChanged: (v) => ctrl.edit(

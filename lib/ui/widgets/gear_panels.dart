@@ -167,6 +167,7 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                               width: 90,
                               child: IntBinding(
+                                  key: ObjectKey((w, 'ammoMax')),
                                   label: 'Mag size',
                                   value: w.ammoMax,
                                   onChanged: (v) =>
@@ -175,6 +176,7 @@ class WeaponsPanel extends StatelessWidget {
                             SizedBox(
                                 width: 80,
                                 child: IntBinding(
+                                    key: ObjectKey((w, 'ammo')),
                                     label: 'Loaded',
                                     value: w.ammo,
                                     onChanged: (v) =>
@@ -182,6 +184,7 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                             width: 120,
                             child: IntBinding(
+                              key: ObjectKey((w, 'roundsPerShot')),
                               label: switch (w.firingMode) {
                                 FireMode.semi => 'Semi rounds/shot',
                                 FireMode.burst => 'Rounds/shot',
@@ -198,6 +201,7 @@ class WeaponsPanel extends StatelessWidget {
                             SizedBox(
                               width: 90,
                               child: IntBinding(
+                                key: ObjectKey((w, 'burstRounds')),
                                 label: 'Burst bullets',
                                 value: w.burstRounds,
                                 onChanged: (value) => ctrl.edit(
@@ -327,6 +331,7 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                               width: 90,
                               child: IntBinding(
+                                  key: ObjectKey((w, 'attackBonus')),
                                   label: 'Atk bonus',
                                   value: w.attackBonus,
                                   onChanged: (v) =>
@@ -334,6 +339,7 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                               width: 80,
                               child: IntBinding(
+                                  key: ObjectKey((w, 'hp')),
                                   label: 'HP',
                                   value: w.hp,
                                   onChanged: (v) =>
@@ -341,6 +347,7 @@ class WeaponsPanel extends StatelessWidget {
                           SizedBox(
                               width: 80,
                               child: IntBinding(
+                                  key: ObjectKey((w, 'hpMax')),
                                   label: 'Max HP',
                                   value: w.hpMax,
                                   onChanged: (v) =>
@@ -558,6 +565,7 @@ class ArmorPanel extends StatelessWidget {
                           SizedBox(
                               width: 80,
                               child: IntBinding(
+                                  key: ObjectKey((a, 'rating')),
                                   label: 'Rating',
                                   value: a.rating,
                                   onChanged: (v) =>
@@ -565,6 +573,7 @@ class ArmorPanel extends StatelessWidget {
                           SizedBox(
                               width: 80,
                               child: IntBinding(
+                                  key: ObjectKey((a, 'hp')),
                                   label: 'HP',
                                   value: a.hp,
                                   onChanged: (v) =>
@@ -572,6 +581,7 @@ class ArmorPanel extends StatelessWidget {
                           SizedBox(
                               width: 80,
                               child: IntBinding(
+                                  key: ObjectKey((a, 'hpMax')),
                                   label: 'Max HP',
                                   value: a.hpMax,
                                   onChanged: (v) =>
@@ -602,6 +612,7 @@ class ArmorPanel extends StatelessWidget {
                           SizedBox(
                             width: 125,
                             child: DoubleBinding(
+                              key: ObjectKey((a, 'weightKg')),
                               label: 'Weight (kg)',
                               value: a.weightKg,
                               onChanged: (value) =>
@@ -612,6 +623,7 @@ class ArmorPanel extends StatelessWidget {
                             SizedBox(
                               width: 145,
                               child: DoubleBinding(
+                                key: ObjectKey((a, 'carryCapacityKg')),
                                 label: 'Capacity (kg)',
                                 value: a.carryCapacityKg,
                                 onChanged: (value) =>
