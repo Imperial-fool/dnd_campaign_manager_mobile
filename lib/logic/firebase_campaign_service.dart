@@ -671,6 +671,7 @@ class FirebaseCampaignService extends ChangeNotifier {
         'weapons',
         'armor',
         'items',
+        'rig',
         'initiativeBonus',
         'speed',
         'armorClass',
@@ -703,7 +704,7 @@ class FirebaseCampaignService extends ChangeNotifier {
           armor.id: {'hp': armor.hp, 'equipped': armor.equipped},
       },
       'itemState': {
-        for (final item in character.items)
+        for (final item in character.allInventoryItems)
           item.id: {'quantity': item.quantity, 'uses': item.uses},
       },
     };
@@ -727,6 +728,7 @@ class FirebaseCampaignService extends ChangeNotifier {
       'weapons',
       'armor',
       'items',
+      'rig',
       'initiativeBonus',
       'speed',
       'armorClass',

@@ -235,7 +235,7 @@ class _SheetView extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-        length: 9,
+        length: 10,
         child: Scaffold(
           endDrawer: const Drawer(child: SafeArea(child: _RollHistoryDrawer())),
           appBar: AppBar(
@@ -249,6 +249,7 @@ class _SheetView extends StatelessWidget {
                 Tab(icon: Icon(Icons.sports_martial_arts), text: 'Combat'),
                 Tab(icon: Icon(Icons.auto_fix_high), text: 'Spells'),
                 Tab(icon: Icon(Icons.backpack_outlined), text: 'Inventory'),
+                Tab(icon: Icon(Icons.inventory_2_outlined), text: 'Rig'),
                 Tab(icon: Icon(Icons.military_tech_outlined), text: 'Feats'),
                 Tab(
                     icon: Icon(Icons.workspace_premium_outlined),
@@ -320,6 +321,10 @@ class _SheetView extends StatelessWidget {
               child: const SpellsPanel(),
             )),
             _scroll(items),
+            _scroll(AbsorbPointer(
+              absorbing: ctrl.isReadOnly,
+              child: const InventoryPanel(rig: true),
+            )),
             _scroll(feats),
             _scroll(features),
             _scroll(notes),

@@ -268,7 +268,7 @@ class CharacterListScreen extends StatelessWidget {
                           'Level ${c.level}${c.className.isEmpty ? '' : ' ${c.className}'}',
                           '${c.weapons.length} weapons',
                           '${c.armor.length} armor',
-                          '${c.items.length} inventory items',
+                          '${c.allInventoryItems.length} inventory items',
                           c.race,
                           if (c.background.isNotEmpty)
                             'Background: ${c.background}',

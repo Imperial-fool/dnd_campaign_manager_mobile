@@ -133,7 +133,13 @@ class Character {
   List<Weapon> weapons = [];
   List<Armor> armor = [];
   List<InventoryItem> items = [];
+  List<InventoryItem> rig = [];
   List<Trait> traits = [];
+
+  Iterable<InventoryItem> get allInventoryItems sync* {
+    yield* items;
+    yield* rig;
+  }
 
   String equipment = '';
   String proficiencies = '';
@@ -163,6 +169,7 @@ class Character {
     'subclassId',
     'subclassName',
     'items',
+    'rig',
     'proficiencyBonus',
     'initiativeBonus',
     'speed',
@@ -204,6 +211,7 @@ class Character {
     c.subclassId = asStr(j['subclassId']);
     c.subclassName = asStr(j['subclassName']);
     c.items = asMapList(j['items']).map(InventoryItem.fromJson).toList();
+    c.rig = asMapList(j['rig']).map(InventoryItem.fromJson).toList();
     c.initiativeBonus = asInt(j['initiativeBonus']);
     c.speed = asInt(j['speed'], 30);
     c.armorClass = asInt(j['armorClass'], 10);
@@ -286,6 +294,7 @@ class Character {
         'subclassId': subclassId,
         'subclassName': subclassName,
         'items': items.map((i) => i.toJson()).toList(),
+        'rig': rig.map((i) => i.toJson()).toList(),
         'initiativeBonus': initiativeBonus,
         'speed': speed,
         'armorClass': armorClass,

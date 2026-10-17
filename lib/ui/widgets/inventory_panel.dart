@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dnd_campaign_manager/logic/character_controller.dart';
 import 'package:dnd_campaign_manager/logic/rules.dart';
+import 'package:dnd_campaign_manager/models/gear.dart';
 import 'package:dnd_campaign_manager/ui/widgets/common.dart';
 import 'package:dnd_campaign_manager/ui/widgets/container_contents.dart';
 import 'package:dnd_campaign_manager/ui/widgets/equipment_rule_effects_field.dart';
@@ -13,17 +14,20 @@ String _formatKg(double value) =>
 
 /// Items held: consumables with uses, and ammo stacks that weapons draw from.
 class InventoryPanel extends StatelessWidget {
-  const InventoryPanel({super.key});
+  const InventoryPanel({super.key, this.rig = false});
+
+  final bool rig;
 
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<CharacterController>();
     final c = ctrl.character;
+    final items = rig ? c.rig : c.items;
 
     // "9x18mm: 90 · 5.45x39mm: 120"
     final ammoTotals = <String, int>{};
     for (final i
-        in c.items.where((i) => i.isAmmo && i.ammoType.trim().isNotEmpty)) {
+        in items.where((i) => i.isAmmo && i.ammoType.trim().isNotEmpty)) {
       ammoTotals.update(i.ammoType.trim(), (v) => v + i.quantity,
           ifAbsent: () => i.quantity);
     }
@@ -31,17 +35,24 @@ class InventoryPanel extends StatelessWidget {
     final carryCapacity = Rules.carryingCapacityKg(c);
 
     return SheetCard(
-      title: 'Items',
+      title: rig ? 'Rig' : 'Items',
       actions: [
         IconButton(
             tooltip: 'Add item',
             icon: const Icon(Icons.add),
-            onPressed: () => ctrl.addBlankItem()),
+            onPressed: () => ctrl.addBlankItem(rig: rig)),
         IconButton(
             tooltip: 'Add ammo',
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () => ctrl.addBlankItem(ammo: true)),
-        catalogButton(context, 'items', tooltip: 'Add item from catalog'),
+            onPressed: () => ctrl.addBlankItem(ammo: true, rig: rig)),
+        catalogButton(
+          context,
+          'items',
+          tooltip: 'Add item from catalog',
+          onSelected: (item) => ctrl.edit((ch) => items.add(
+                InventoryItem.fromJson(item.toJson()),
+              )),
+        ),
       ],
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text(
@@ -63,15 +74,15 @@ class InventoryPanel extends StatelessWidget {
             child: Text(
                 'Ammo: ${ammoTotals.entries.map((e) => '${e.key} ${e.value}').join('  ·  ')}'),
           ),
-        if (c.items.isEmpty) const Text('Nothing carried.'),
-        for (var i = 0; i < c.items.length; i++)
+        if (items.isEmpty) const Text('Nothing carried.'),
+        for (var i = 0; i < items.length; i++)
           Builder(
-              key: ObjectKey(c.items[i]),
+              key: ObjectKey(items[i]),
               builder: (context) {
-                final it = c.items[i];
+                final it = items[i];
                 return SheetTile(
                   index: i,
-                  onDelete: () => ctrl.edit((ch) => ch.items.remove(it)),
+                  onDelete: () => ctrl.edit((ch) => items.remove(it)),
                   children: [
                     Row(children: [
                       Expanded(
@@ -302,16 +313,33 @@ class InventoryPanel extends StatelessWidget {
                         owner: it,
                         slots: it.storageSlots,
                         stored: it.stored,
+                        destination: items,
                       ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: OutlinedButton.icon(
-                        icon: const Icon(Icons.inventory_2_outlined, size: 18),
+                        icon:
+                            const Icon(Icons.inventory_2_outlined, size: 18),
                         label: const Text('Move to player stash'),
                         onPressed: c.player.trim().isEmpty
                             ? null
                             : () =>
-                                moveCharacterItemToStash(context, 'items', it),
+                                moveCharacterItemToStash(
+                                  context,
+                                  rig ? 'rig' : 'items',
+                                  it,
+                                ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.inventory_2_outlined, size: 18),
+                        label: Text(rig ? 'Move to Items' : 'Move to Rig'),
+                        onPressed: () => ctrl.edit((ch) {
+                          items.remove(it);
+                          (rig ? ch.items : ch.rig).add(it);
+                        }),
                       ),
                     ),
                     if (!it.isAmmo)

@@ -44,6 +44,7 @@ void main() {
       'Combat',
       'Spells',
       'Inventory',
+      'Rig',
       'Feats',
       'Features & Traits',
       'Notes',
@@ -203,6 +204,68 @@ void main() {
     expect(find.text('x1'), findsNWidgets(2));
     expect(find.textContaining('Magazine 0/30'), findsOneWidget);
     expect(find.textContaining('Rating 4 · HP 7/10'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    editor.dispose();
+    campaign.dispose();
+  });
+
+  testWidgets('Rig panel adds items and moves item entities both ways',
+      (tester) async {
+    final repository = _MemoryRepository();
+    final campaign = CampaignController(
+      repository: repository,
+      assetBundle: ContentAssetBundle(),
+    );
+    await campaign.load();
+    final ration = InventoryItem(name: 'Ration');
+    final character = Character(id: 'rig-panel')..items = [ration];
+    final editor = CharacterController(
+      character: character,
+      repository: repository,
+    );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<CampaignController>.value(value: campaign),
+          ChangeNotifierProvider<CharacterController>.value(value: editor),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InventoryPanel(),
+                  InventoryPanel(rig: true),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Move to Rig'));
+    await tester.pump();
+    expect(character.items, isEmpty);
+    expect(identical(character.rig.single, ration), isTrue);
+
+    final addRigItem = find.byTooltip('Add item').last;
+    await tester.ensureVisible(addRigItem);
+    await tester.pumpAndSettle();
+    await tester.tap(addRigItem);
+    await tester.pump();
+    expect(character.rig, hasLength(2));
+    expect(character.rig.last.name, 'New Item');
+
+    final moveBack = find.text('Move to Items').first;
+    await tester.ensureVisible(moveBack);
+    await tester.pumpAndSettle();
+    await tester.tap(moveBack);
+    await tester.pump();
+    expect(character.items.single, same(ration));
+    expect(character.rig, hasLength(1));
 
     await tester.pumpWidget(const SizedBox.shrink());
     editor.dispose();

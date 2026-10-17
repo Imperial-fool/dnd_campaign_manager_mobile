@@ -35,7 +35,7 @@ class Inventory {
   /// Total rounds of [type] across all matching ammo stacks.
   static int available(Character c, String type) {
     if (type.trim().isEmpty) return 0;
-    return c.items
+    return c.allInventoryItems
         .where((i) => _matches(i, type))
         .fold(0, (s, i) => s + max(0, i.quantity));
   }
@@ -44,7 +44,7 @@ class Inventory {
   /// Returns how many were actually removed.
   static int consumeAmmo(Character c, String type, int amount) {
     var left = amount;
-    for (final i in c.items.where((i) => _matches(i, type))) {
+    for (final i in c.allInventoryItems.where((i) => _matches(i, type))) {
       if (left <= 0) break;
       final take = min(max(0, i.quantity), left);
       i.quantity -= take;

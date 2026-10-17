@@ -17,7 +17,7 @@ import 'package:dnd_campaign_manager/ui/widgets/roll_panel.dart';
 /// Button that lets the user pick an item from the catalog (via its content
 /// binding) and clone it onto the current character.
 Widget catalogButton(BuildContext context, String bindingKey,
-    {String? tooltip}) {
+    {String? tooltip, ValueChanged<CatalogItem>? onSelected}) {
   final ctrl = context.read<CharacterController>();
   final registry = context.read<CampaignController>().registry;
   return IconButton(
@@ -27,7 +27,13 @@ Widget catalogButton(BuildContext context, String bindingKey,
       final binding = registry[bindingKey];
       if (binding == null) return;
       final item = await pickCatalogItem(context, binding);
-      if (item != null) ctrl.applyCatalogItem(binding, item);
+      if (item != null) {
+        if (onSelected == null) {
+          ctrl.applyCatalogItem(binding, item);
+        } else {
+          onSelected(item);
+        }
+      }
     },
   );
 }

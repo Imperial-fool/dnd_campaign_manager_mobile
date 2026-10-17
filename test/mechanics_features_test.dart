@@ -519,6 +519,27 @@ void main() {
     expect(Inventory.available(sevenSixTwo, '7.62x51'), 0);
   });
 
+  test('Rig items persist and participate in inventory bookkeeping', () {
+    final character = Character(id: 'rig-inventory')
+      ..rig = [
+        InventoryItem(
+          name: 'Spare rounds',
+          kind: 'ammo',
+          ammoType: '5.56x45',
+          quantity: 5,
+          weightKg: 0.2,
+        ),
+      ];
+
+    final restored = Character.fromJson(character.toJson());
+
+    expect(restored.rig.single.name, 'Spare rounds');
+    expect(Inventory.available(restored, '5.56x45'), 5);
+    expect(Rules.carriedWeightKg(restored), 1);
+    expect(Inventory.consumeAmmo(restored, '5.56x45', 2), 2);
+    expect(restored.rig.single.quantity, 3);
+  });
+
   test('full auto can pull its rolled round count from inventory', () {
     final ammo = InventoryItem(
       name: 'Test ammo',
