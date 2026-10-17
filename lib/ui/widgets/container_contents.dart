@@ -15,6 +15,7 @@ class ContainerContents extends StatelessWidget {
     required this.owner,
     required this.slots,
     required this.stored,
+    this.destination,
   });
 
   /// The backpack or rig these contents belong to (excluded from the
@@ -22,6 +23,7 @@ class ContainerContents extends StatelessWidget {
   final Object owner;
   final Map<String, int> slots;
   final Map<String, List<InventoryItem>> stored;
+  final List<InventoryItem>? destination;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class ContainerContents extends StatelessWidget {
 
   Widget _slot(BuildContext context, String name) {
     final ctrl = context.read<CharacterController>();
+    final destination = this.destination ?? ctrl.character.items;
     final items = stored[name] ?? const <InventoryItem>[];
     final capacity = slots[name] ?? 0;
     final full = items.length >= capacity;
@@ -79,7 +82,7 @@ class ContainerContents extends StatelessWidget {
                   icon: const Icon(Icons.outbox_outlined),
                   onPressed: () => ctrl.edit((c) {
                     items.remove(item);
-                    c.items.add(item);
+                    destination.add(item);
                   }),
                 ),
                 IconButton(
@@ -97,7 +100,7 @@ class ContainerContents extends StatelessWidget {
   Future<void> _add(BuildContext context, String slot) async {
     final ctrl = context.read<CharacterController>();
     final registry = context.read<CampaignController>().registry;
-    final inventory = ctrl.character.items
+    final inventory = ctrl.character.allInventoryItems
         .where((i) => !identical(i, owner) && !i.isContainer)
         .toList();
     final choice = await showDialog<String>(
@@ -154,7 +157,10 @@ class ContainerContents extends StatelessWidget {
     if (item == null) return;
     final chosen = item;
     ctrl.edit((c) {
-      if (fromInventory) c.items.remove(chosen);
+      if (fromInventory) {
+        c.items.remove(chosen);
+        c.rig.remove(chosen);
+      }
       stored.putIfAbsent(slot, () => []).add(chosen);
     });
   }

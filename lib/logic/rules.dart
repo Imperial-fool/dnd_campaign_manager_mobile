@@ -45,7 +45,7 @@ class Rules {
     for (final w in c.weapons) {
       yield* w.effects;
     }
-    for (final item in c.items) {
+    for (final item in c.allInventoryItems) {
       if (item.active && !item.isAmmo) yield* item.effects;
     }
   }
@@ -55,7 +55,7 @@ class Rules {
     for (final armor in c.armor) {
       if (armor.equipped) yield* armor.ruleEffects;
     }
-    for (final item in c.items) {
+    for (final item in c.allInventoryItems) {
       if (item.active && !item.isAmmo) yield* item.ruleEffects;
     }
   }
@@ -65,8 +65,8 @@ class Rules {
         c.weapons.fold<double>(0, (sum, weapon) => sum + weapon.weightKg);
     final armorWeight = c.armor.fold<double>(
         0, (sum, armor) => sum + armor.weightKg + armor.storedWeightKg);
-    final itemWeight =
-        c.items.fold<double>(0, (sum, item) => sum + item.totalWeightKg);
+    final itemWeight = c.allInventoryItems
+        .fold<double>(0, (sum, item) => sum + item.totalWeightKg);
     return weaponWeight + armorWeight + itemWeight;
   }
 
@@ -76,7 +76,7 @@ class Rules {
       ...c.armor
           .where((armor) => armor.equipped && armor.isContainer)
           .map((armor) => armor.carryCapacityKg),
-      ...c.items
+      ...c.allInventoryItems
           .where((item) => item.active && item.isContainer)
           .map((item) => item.carryCapacityKg),
     ].where((capacity) => capacity > 0);

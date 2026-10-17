@@ -149,7 +149,7 @@ class CampaignController extends ChangeNotifier {
       }
       if (c.weapons.length > 100 ||
           c.armor.length > 100 ||
-          c.items.length > 500) {
+          c.allInventoryItems.length > 500) {
         throw StateError(
           'Player-created characters may have at most 100 weapons, 100 armor '
           'entries, and 500 inventory items.',
@@ -587,6 +587,7 @@ class CampaignController extends ChangeNotifier {
       'weapons' => character.weapons,
       'armor' => character.armor,
       'items' => character.items,
+      'rig' => character.rig,
       _ => null,
     };
     if (source == null) return false;
@@ -599,7 +600,7 @@ class CampaignController extends ChangeNotifier {
       item.uses = item.usesMax;
     }
     final entry = {
-      'kind': kind,
+      'kind': kind == 'rig' ? 'items' : kind,
       'item': item.toJson(),
     };
     final stash = _playerStashes.putIfAbsent(key, () => []);

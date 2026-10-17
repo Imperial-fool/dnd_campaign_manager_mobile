@@ -91,9 +91,12 @@ class CharacterController extends ChangeNotifier {
   void addBlankWeapon() =>
       edit((c) => c.weapons.add(Weapon(name: 'New Weapon')));
   void addBlankArmor() => edit((c) => c.armor.add(Armor(name: 'New Armor')));
-  void addBlankItem({bool ammo = false}) => edit((c) => c.items.add(ammo
-      ? InventoryItem(name: 'New Ammo', kind: 'ammo', quantity: 30)
-      : InventoryItem(name: 'New Item')));
+  void addBlankItem({bool ammo = false, bool rig = false}) => edit((c) {
+        final items = rig ? c.rig : c.items;
+        items.add(ammo
+            ? InventoryItem(name: 'New Ammo', kind: 'ammo', quantity: 30)
+            : InventoryItem(name: 'New Item'));
+      });
   void addBlankTrait({String category = 'trait'}) =>
       edit((c) => c.traits.add(Trait(
           name: 'New ${category == 'feature' ? 'Feature' : 'Trait'}',
@@ -138,6 +141,10 @@ class CharacterController extends ChangeNotifier {
               (c.subclassId.isNotEmpty &&
                   _hasOrigin(item.origin, subclassOrigin)));
           c.items.removeWhere((item) =>
+              _hasOrigin(item.origin, classOrigin) ||
+              (c.subclassId.isNotEmpty &&
+                  _hasOrigin(item.origin, subclassOrigin)));
+          c.rig.removeWhere((item) =>
               _hasOrigin(item.origin, classOrigin) ||
               (c.subclassId.isNotEmpty &&
                   _hasOrigin(item.origin, subclassOrigin)));
